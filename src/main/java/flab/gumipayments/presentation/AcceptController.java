@@ -18,17 +18,17 @@ public class AcceptController {
     private final ReAcceptRequesterApplication reAcceptRequesterApplication;
 
     // 인증 수락
-    @PostMapping("/signup/{acceptId}")
-    public ResponseEntity signupAccept(@PathVariable String acceptId) {
-        signupAcceptManagerApplication.accept(acceptId);
+    @PostMapping("/signup/{signupKey}")
+    public ResponseEntity signupAccept(@PathVariable String signupKey) {
+        signupAcceptManagerApplication.accept(signupKey);
 
         return ResponseEntity.ok("");
     }
 
     // 재인증 요청
-    @PostMapping("/re/{signupRequestId}")
-    public ResponseEntity reAcceptRequest(@PathVariable Long signupRequestId) {
-        reAcceptRequesterApplication.reAcceptRequest(signupRequestId);
+    @PostMapping("/re/{signupId}")
+    public ResponseEntity reAcceptRequest(@PathVariable Long signupId) {
+        reAcceptRequesterApplication.reAcceptRequest(signupId);
 
         return ResponseEntity.ok("");
     }

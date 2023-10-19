@@ -15,7 +15,7 @@ public class ReAcceptRequesterApplication {
     public void reAcceptRequest(Long id) {
         // 가입요청이 존재하지 않는 경우
         if(!signupRepository.existsById(id)) {
-            throw new RuntimeException();
+            throw new RuntimeException(); // TODO 예외 처리 방식 정하기
         }
 
         // 인증 요청
