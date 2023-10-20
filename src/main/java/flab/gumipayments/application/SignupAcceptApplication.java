@@ -17,7 +17,7 @@ public class SignupAcceptApplication {
 
     public void accept(String signupKey) {
         // findBy인증키
-        Signup signUp = signupRepository.findBySignupKey(signupKey);
+        Signup signUp = signupRepository.findByAcceptKey(signupKey).orElseThrow(()->new RuntimeException());
 
         // accept
         signUp.accept();

@@ -10,7 +10,7 @@ public class AcceptRequesterApplication {
 
     private final Sender sender;
 
-    public void requestSignupAccept() {
-        sender.send();
+    public void requestSignupAccept(String toAddress, String acceptKey) {
+        sender.sendSignupRequest(toAddress, acceptKey);
     }
 }

@@ -19,6 +19,6 @@ public class ReAcceptRequesterApplication {
         }
 
         // 인증 요청
-        acceptRequesterApplication.requestSignupAccept();
+//        acceptRequesterApplication.requestSignupAccept();
     }
 }

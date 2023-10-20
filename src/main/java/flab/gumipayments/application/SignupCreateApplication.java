@@ -15,6 +15,7 @@ public class SignupCreateApplication {
     private final SignupFactory signupFactory;
     private final AcceptRequesterApplication acceptRequestApplication;
     private final SignupRepository signupRepository;
+    private final KeyGeneratorApplication keyGeneratorApplication;
 
     @Transactional
     public Signup signup(SignupCommand signupCommand) {
@@ -24,12 +25,13 @@ public class SignupCreateApplication {
         }
         Signup signup = signupFactory.create(signupCommand);
 
-        // TODO 인증 키 생성을 어디서 할지 정하기
+        // 인증키 생성
+        String acceptKey = keyGeneratorApplication.generateAcceptKey();
 
         // 인증 요청
-        acceptRequestApplication.requestSignupAccept();
+        acceptRequestApplication.requestSignupAccept(signup.getEmail(),acceptKey);
 
-        // 가입요청 저장
+        // 가입 요청 저장
         signupRepository.save(signup);
 
         return signup;
@@ -37,7 +39,6 @@ public class SignupCreateApplication {
 
     private boolean isReject(SignupCommand signupCommand) {
         // 중복체크
-
-        return false;
+        return signupRepository.existsByEmail(signupCommand.getEmail());
     }
 }
