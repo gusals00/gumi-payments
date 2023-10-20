@@ -13,4 +13,6 @@ public class AcceptRequesterApplication {
     public void requestSignupAccept(String toAddress, String acceptKey) {
         sender.sendSignupRequest(toAddress, acceptKey);
     }
+
+    // branch test
 }
