@@ -10,8 +10,8 @@ public class AcceptRequesterApplication {
 
     private final Sender sender;
 
-    public void requestSignupAccept(String toAddress, String acceptKey) {
-        sender.sendSignupRequest(toAddress, acceptKey);
+    public void requestSignupAccept(String toAddress, String signupKey) {
+        sender.sendSignupRequest(toAddress, signupKey);
     }
 
     // branch test

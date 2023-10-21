@@ -1,5 +1,6 @@
 package flab.gumipayments.domain.signup;
 
+import flab.gumipayments.domain.KeyFactory;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,11 +18,11 @@ public class SignupAccept {
     @Column(name = "signup_key")
     private String key;
 
-    private LocalDateTime expire_date;
+    private LocalDateTime expireDate;
 
     @Builder
-    public SignupAccept(String key, LocalDateTime expire_date) {
+    public SignupAccept(String key, LocalDateTime expireDate) {
+        this.expireDate = expireDate;
         this.key = key;
-        this.expire_date = expire_date;
     }
 }

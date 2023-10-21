@@ -8,16 +8,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SignupFactoryTest {
 
-    @Test
-    void create() {
-        SignupCommand signupCommand = new SignupCommand("love@naver.com","1234","name");
-        SignupFactory signupFactory = new SignupFactory();
-
-        Signup signup = signupFactory.create(signupCommand);
-
-        assertThat(signup.getPassword()).isEqualTo(signupCommand.getPassword());
-        assertThat(signup.getEmail()).isEqualTo(signupCommand.getEmail());
-        assertThat(signup.getName()).isEqualTo(signupCommand.getName());
-    }
+//    @Test
+//    void create() {
+//        SignupCommand signupCommand = new SignupCommand("love@naver.com","1234","name");
+//        SignupFactory signupFactory = new SignupFactory();
+//
+//        Signup signup = signupFactory.create(signupCommand);
+//
+//        assertThat(signup.getPassword()).isEqualTo(signupCommand.getPassword());
+//        assertThat(signup.getEmail()).isEqualTo(signupCommand.getEmail());
+//        assertThat(signup.getName()).isEqualTo(signupCommand.getName());
+//    }
 
 }

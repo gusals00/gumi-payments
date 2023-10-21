@@ -19,21 +19,11 @@ public class Signup {
     @Enumerated(EnumType.STRING)
     private SignupStatus status;
 
-    private String email;
-
-    private String password;
-
-    private String name;
-
-    @OneToOne
-    @JoinColumn(name = "signup_key")
-    private SignupAccept signupAccept;
+    private String signupKey;
 
     @Builder
-    public Signup(String email, String password, String name) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
+    public Signup(String signupKey) {
+        this.signupKey = signupKey;
         status = SignupStatus.SIGNUP_REQUEST;
     }
 

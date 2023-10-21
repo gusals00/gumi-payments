@@ -5,11 +5,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class SignupFactory {
 
-    public Signup create(SignupCommand signupCommand) {
+    public Signup create(String signupKey) {
         return Signup.builder()
-                .email(signupCommand.getEmail())
-                .name(signupCommand.getName())
-                .password(signupCommand.getPassword())
+                .signupKey(signupKey)
                 .build();
     }
 }

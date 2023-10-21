@@ -13,7 +13,6 @@ import java.util.List;
 public class SignupAcceptApplication {
 
     private final SignupRepository signupRepository;
-    private final AccountFactory accountFactory;
 
     public void accept(String signupKey) {
         // findBy인증키
@@ -22,8 +21,7 @@ public class SignupAcceptApplication {
         // accept
         signUp.accept();
 
-        // 계정 생성 요청
-        accountFactory.create(signUp);
+        // TODO role 추가
     }
 
     public void timeout() {
