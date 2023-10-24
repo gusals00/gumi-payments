@@ -1,16 +1,15 @@
 package flab.gumipayments.domain.account;
 
-import flab.gumipayments.domain.signup.SignupCommand;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AccountFactory {
-    public Account create(SignupCommand signupCommand, Long signupId) {
+
+    public Account create(AccountCommand accountCommand, String email) {
         return Account.builder()
-                .email(signupCommand.getEmail())
-                .name(signupCommand.getName())
-                .password(signupCommand.getPassword())
-                .signupId(signupId)
+                .email(email)
+                .name(accountCommand.getName())
+                .password(accountCommand.getPassword())
                 .build();
     }
 }

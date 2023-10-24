@@ -28,11 +28,11 @@ public class SignupController {
         SignupCommand signupCommand = convertToSignupCommand(request);
         signupRequesterApplication.signup(signupCommand);
 
-        return ResponseEntity.ok(new SignupResponse("이메일을 확인해주세요"));
+        return ResponseEntity.ok(new Message("이메일을 확인해주세요"));
     }
 
     private SignupCommand convertToSignupCommand(SignupRequest request) {
-        return new SignupCommand(request.getEmail(), request.getPassword(), request.getName());
+        return new SignupCommand(request.getEmail());
     }
 
     @NoArgsConstructor
@@ -40,7 +40,7 @@ public class SignupController {
     static class SignupRequest {
         @Email(message = "올바른 이메일 형식이 아닙니다.")
         private String email;
-        @Pattern(regexp = "[a-zA-Z0-9]{6,12}",message = "비밀번호는 영어와 숫자를 포함한 6~12자리 이내로 입력해주세요.")
+        @Pattern(regexp = "[a-zA-Z0-9]{6,12}", message = "비밀번호는 영어와 숫자를 포함한 6~12자리 이내로 입력해주세요.")
         @NotBlank(message = "비밀번호를 입력해주세요")
         private String password;
         @NotBlank(message = "이름을 입력해주세요")
@@ -49,8 +49,7 @@ public class SignupController {
 
     @AllArgsConstructor
     @Getter
-    static class SignupResponse{
+    static class Message{
         private String message;
-
     }
 }

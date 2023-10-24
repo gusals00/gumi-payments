@@ -1,10 +1,11 @@
-package flab.gumipayments.domain.signup;
+package flab.gumipayments.application;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class SignupCommand {
+public class AcceptCommand {
+    private String signupKey;
     private String email;
 }

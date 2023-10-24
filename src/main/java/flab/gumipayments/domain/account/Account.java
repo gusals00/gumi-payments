@@ -23,13 +23,10 @@ public class Account {
 
     private String name;
 
-    private Long signupId;
-
     @Builder
-    public Account(String email, String password, String name, Long signupId) {
+    public Account(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.signupId = signupId;
     }
 }

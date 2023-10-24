@@ -1,35 +1,46 @@
 package flab.gumipayments.presentation;
 
-import flab.gumipayments.application.ReAcceptRequesterApplication;
+import flab.gumipayments.application.AcceptCommand;
 import flab.gumipayments.application.SignupAcceptApplication;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/accept")
+@Slf4j
 public class AcceptController {
 
     private final SignupAcceptApplication signupAcceptManagerApplication;
-    private final ReAcceptRequesterApplication reAcceptRequesterApplication;
 
     // 인증 수락
-    @PostMapping("/signup/{signupKey}")
-    public ResponseEntity signupAccept(@PathVariable String signupKey) {
-        signupAcceptManagerApplication.accept(signupKey);
-
-        return ResponseEntity.ok("");
+    @PostMapping("/signup")
+    public ResponseEntity signupAccept(AcceptInfoRequest acceptInfoRequest) {
+        Long signupId = signupAcceptManagerApplication.accept(convert(acceptInfoRequest));
+        return ResponseEntity.ok(new AcceptResponse(signupId));
     }
 
-    // 재인증 요청
-    @PostMapping("/re/{signupId}")
-    public ResponseEntity reAcceptRequest(@PathVariable Long signupId) {
-        reAcceptRequesterApplication.reAcceptRequest(signupId);
+    private AcceptCommand convert(AcceptInfoRequest acceptInfoRequest) {
+        return new AcceptCommand(acceptInfoRequest.getSignupKey(), acceptInfoRequest.getEmail());
+    }
 
-        return ResponseEntity.ok("");
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    static class AcceptInfoRequest {
+        @NotBlank
+        private String signupKey;
+        @Email
+        private String email;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    static class AcceptResponse {
+        private Long signupId;
     }
 }

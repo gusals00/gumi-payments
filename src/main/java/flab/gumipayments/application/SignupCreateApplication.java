@@ -1,14 +1,15 @@
 package flab.gumipayments.application;
 
 import flab.gumipayments.domain.KeyFactory;
-import flab.gumipayments.domain.account.Account;
-import flab.gumipayments.domain.account.AccountRepository;
 import flab.gumipayments.domain.signup.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -17,49 +18,43 @@ public class SignupCreateApplication {
     private final SignupFactory signupFactory;
     private final AcceptRequesterApplication acceptRequestApplication;
     private final SignupRepository signupRepository;
-    private final AccountCreateManagerApplication accountCreateManagerApplication;
-    private final AccountRepository accountRepository;
-    private final SignupAcceptRepository signupAcceptRepository;
-
-    private static final int KEY_EXPIRE_DAYS = 7;
 
     @Transactional
-    public Signup signup(SignupCommand signupCommand) {
-        // 중복체크
-        if(isReject(signupCommand)) {
-            throw new RuntimeException(); // TODO 예외 처리 방식 정하기
-        }
-
-        // 가입인증키 생성
-        String signupKey = KeyFactory.createSignupKey();
+    public void signup(SignupCommand signupCommand) {
 
         // 가입 생성
-        Signup signup = signupFactory.create(signupKey);
-        // 가입 저장
-        signupRepository.save(signup);
+        Signup signup = create(signupCommand);
 
         // 인증 요청
-        acceptRequestApplication.requestSignupAccept(signupCommand.getEmail(), signupKey);
+        acceptRequestApplication.requestSignupAccept(signupCommand.getEmail(), signup.getSignupKey());
 
-        // 가입인증 저장
-        signupAcceptRepository.save(createSignupAccept(signupKey, KEY_EXPIRE_DAYS));
-
-        // 계정 생성
-        Account account = accountCreateManagerApplication.create(signupCommand, signup.getId());
-        // 계정 저장
-        accountRepository.save(account);
-
-        return signup;
+        // 가입 저장
+        signupRepository.save(signup);
     }
 
-    private boolean isReject(SignupCommand signupCommand) {
-        return accountRepository.existsByEmail(signupCommand.getEmail());
+
+    private Signup create(SignupCommand signupCommand){
+
+        // 해당 email로 계정이 생성 되었는지 확인
+        validEmail(signupCommand);
+
+        // 인증키 생성
+        String signupKey = KeyFactory.generateSignupKey();
+
+        // 가입 요청이 존재하면 삭제
+        Optional<Signup> findSignup = signupRepository.findByEmail(signupCommand.getEmail());
+        findSignup.ifPresent(signupRepository::delete);
+
+        // 가입 생성
+        return signupFactory.create(signupCommand, signupKey, ExpireDays.SIGNUP_KEY_EXPIRE_DAYS);
     }
 
-    private SignupAccept createSignupAccept(String signupKey, int expireDays) {
-        return SignupAccept.builder()
-                .key(signupKey)
-                .expireDate(LocalDateTime.now().plusDays(expireDays))
-                .build();
+    private void validEmail(SignupCommand signupCommand) {
+        signupRepository.findByEmail(signupCommand.getEmail())
+                .ifPresent(signup -> {
+                    if (signup.isAccountCreated()) {
+                        throw new IllegalArgumentException("해당 이메일로 생성한 계정이 이미 존재합니다.");
+                    }
+                });
     }
 }
