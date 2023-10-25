@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,7 @@ public class EmailSender implements Sender {
 
             message.setText(body,"UTF-8", "html");
             javaMailSender.send(message);
-        } catch (MessagingException e) {
+        } catch (MessagingException | MailException e) {
             log.error("error = ",e);
             throw new RuntimeException("다시 시도해주세요.");
         }

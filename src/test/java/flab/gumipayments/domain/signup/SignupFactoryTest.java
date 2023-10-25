@@ -31,7 +31,7 @@ class SignupFactoryTest {
     }
 
     @Test
-    @DisplayName("가입 요청을 생성한다.")
+    @DisplayName("가입 요청 생성")
     void create() {
         SignupCommand signupCommand = new SignupCommand("love@naver.com");
         SignupFactory signupFactory = new SignupFactory();

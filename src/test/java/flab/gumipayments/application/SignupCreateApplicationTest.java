@@ -47,7 +47,7 @@ class SignupCreateApplicationTest {
     }
     @Test
     @DisplayName("가입 요청 성공(가입 요청한 적이 없는 이메일)")
-    void signupFirstSignup() {
+    void haveNeverSignedUpEmail() {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.empty());
         when(signupFactory.create(any(), any(), eq(EXPIRE_DAYS))).thenReturn(signup);
         doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
@@ -63,7 +63,7 @@ class SignupCreateApplicationTest {
 
     @Test
     @DisplayName("가입 요청 성공(가입 요청한 적이 있지만, 해당 이메일로 계정이 생성된 적이 없는 경우)")
-    void signupSignup() {
+    void haveSignedUpButNotCreatedAccount() {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));
         when(signupFactory.create(any(), any(), eq(EXPIRE_DAYS))).thenReturn(signup);
         doNothing().when(signupRepository).delete(signup);
