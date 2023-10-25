@@ -49,14 +49,14 @@ class SignupCreateApplicationTest {
     @DisplayName("가입 요청 성공(가입 요청한 적이 없는 이메일)")
     void haveNeverSignedUpEmail() {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.empty());
-        when(signupFactory.create(any(), any(), eq(EXPIRE_DAYS))).thenReturn(signup);
+        when(signupFactory.create(any(), any())).thenReturn(signup);
         doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
         when(signupRepository.save(signup)).thenReturn(signup);
 
         signupCreateApplication.signup(signupCommand);
 
         verify(signupRepository,times(2)).findByEmail(signup.getEmail());
-        verify(signupFactory).create(any(), any(),eq(EXPIRE_DAYS));
+        verify(signupFactory).create(any(), any());
         verify(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
         verify(signupRepository).save(signup);
     }
@@ -65,7 +65,7 @@ class SignupCreateApplicationTest {
     @DisplayName("가입 요청 성공(가입 요청한 적이 있지만, 해당 이메일로 계정이 생성된 적이 없는 경우)")
     void haveSignedUpButNotCreatedAccount() {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));
-        when(signupFactory.create(any(), any(), eq(EXPIRE_DAYS))).thenReturn(signup);
+        when(signupFactory.create(any(), any())).thenReturn(signup);
         doNothing().when(signupRepository).delete(signup);
         doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
         when(signupRepository.save(signup)).thenReturn(signup);
@@ -74,7 +74,7 @@ class SignupCreateApplicationTest {
 
         verify(signupRepository,times(2)).findByEmail(signup.getEmail());
         verify(signupRepository).delete(signup);
-        verify(signupFactory).create(any(), any(),eq(EXPIRE_DAYS));
+        verify(signupFactory).create(any(), any());
         verify(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
         verify(signupRepository).save(signup);
     }
