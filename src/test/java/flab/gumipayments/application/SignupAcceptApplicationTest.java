@@ -28,6 +28,7 @@ class SignupAcceptApplicationTest {
     SignupRepository signupRepository;
 
     private Signup signup;
+    private AcceptCommand acceptCommand;
 
     @BeforeEach
     void setup() {
@@ -35,12 +36,14 @@ class SignupAcceptApplicationTest {
         String signupKey= KeyFactory.generateSignupKey();
         signup = Signup.builder().signupKey(signupKey)
                 .email(email)
-                .expireDate(LocalDateTime.now().plusDays(1)).build();
+                .expireDate(LocalDateTime.now().plusDays(1))
+                .build();
+        acceptCommand =  new AcceptCommand(signup.getSignupKey(), signup.getEmail());
+
     }
     @Test
     @DisplayName("가입 인증 성공")
     void signupAccept() {
-        AcceptCommand acceptCommand = new AcceptCommand(signup.getSignupKey(), signup.getEmail());
         when(signupRepository.findBySignupKeyAndEmail(acceptCommand.getSignupKey(), acceptCommand.getEmail()))
                 .thenReturn(Optional.of(signup));
 
@@ -52,8 +55,7 @@ class SignupAcceptApplicationTest {
 
     @Test
     @DisplayName("timeout된 인증키로 인증 시도")
-    void invalidSignupAccept() {
-        AcceptCommand acceptCommand = new AcceptCommand(signup.getSignupKey(), signup.getEmail());
+    void useTimeoutSignupKeyToAccept() {
         signup.timeout();
 
         when(signupRepository.findBySignupKeyAndEmail(signup.getSignupKey(), signup.getEmail()))
@@ -65,8 +67,8 @@ class SignupAcceptApplicationTest {
     }
 
     @Test
-    @DisplayName("조건에 맞는 signup이 없는 경우")
-    void invalidSignupAccept2() {
+    @DisplayName("해당 signupKey와 email을 가지는 signup이 없는 경우")
+    void doNotHaveSignupWithSignupKeyAndEmail() {
         String email = "love4@naver.com";
         String signupKey= KeyFactory.generateSignupKey();
         when(signupRepository.findBySignupKeyAndEmail(signupKey, email))

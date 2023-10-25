@@ -43,14 +43,14 @@ class SignupTest {
 
     @Test
     @DisplayName("accept status로 변경")
-    void changeAccept() {
+    void changeToAccept() {
         signup.accept();
         statusCheck(signup.getStatus(),SignupStatus.ACCEPT);
     }
 
     @Test
     @DisplayName("timeout status로 변경")
-    void changeTimeout() {
+    void changeToTimeout() {
         signup.timeout();
         statusCheck(signup.getStatus(),SignupStatus.TIMEOUT);
     }
@@ -62,8 +62,8 @@ class SignupTest {
     }
 
     @Test
-    @DisplayName("status를 accept 에서 timeout으로 변경")
-    void changeInvalidTimeout() {
+    @DisplayName("status를 accept에서 timeout으로 변경")
+    void changeToInvalidTimeout() {
         signup.accept();
 
         assertThatThrownBy(()->signup.timeout())
@@ -73,7 +73,7 @@ class SignupTest {
 
     @Test
     @DisplayName("status를 timeout에서 accept로 변경")
-    void changeInvalidAccept() {
+    void changeToInvalidAccept() {
         signup.timeout();
 
         assertThatThrownBy(()->signup.accept())

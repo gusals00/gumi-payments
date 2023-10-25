@@ -20,7 +20,7 @@ class AcceptRequesterApplicationTest {
     Sender sender;
 
     @Test
-    @DisplayName("sender를 호출한다.")
+    @DisplayName("sender를 호출")
     void requestSignupAccept() {
         String toAddress ="123@naver.com";
         String signupKey = KeyFactory.generateSignupKey();

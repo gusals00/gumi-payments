@@ -3,13 +3,10 @@ package flab.gumipayments.application;
 import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +43,7 @@ public class SignupCreateApplication {
         findSignup.ifPresent(signupRepository::delete);
 
         // 가입 생성
-        return signupFactory.create(signupCommand, signupKey, ExpireDays.SIGNUP_KEY_EXPIRE_DAYS);
+        return signupFactory.create(signupCommand, signupKey);
     }
 
     private void validEmail(SignupCommand signupCommand) {
