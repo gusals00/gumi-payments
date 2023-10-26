@@ -12,7 +12,7 @@ public class TimeoutSchedulerApplication {
 
     private final SignupAcceptApplication signupAcceptApplication;
 
-    @Scheduled(cron = "0 0 4 * * ?")
+    @Scheduled(cron = "${schedules.cron.timeout}")
     public void timeout() {
         log.info("timeout 스케줄러 실행");
         signupAcceptApplication.timeout();

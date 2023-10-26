@@ -36,3 +36,7 @@ spring:
   profiles:
     include:
       - secretfile
+
+schedules:
+  cron:
+    timeout: 0 0 4 * * ?
