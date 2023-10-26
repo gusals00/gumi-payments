@@ -14,13 +14,13 @@ public class SignupCreateApplication {
     private final SignupRepository signupRepository;
 
     @Transactional
-    public void signup(SignupCreateCommand signupCommand) {
+    public void signup(SignupCreateCommand signupCreateCommand) {
 
         // 가입 생성
-        Signup signup = create(signupCommand);
+        Signup signup = create(signupCreateCommand);
 
         // 인증 요청
-        acceptRequestApplication.requestSignupAccept(signupCommand.getEmail(), signup.getSignupKey());
+        acceptRequestApplication.requestSignupAccept(signupCreateCommand.getEmail(), signup.getSignupKey());
 
         // 가입 저장
         signupRepository.save(signup);

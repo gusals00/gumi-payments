@@ -23,7 +23,7 @@ public class AccountCreateManagerApplication {
     private final SignupRepository signupRepository;
 
     @Transactional
-    public Account create(AccountCreateCommand accountCommand, Long signupId) {
+    public Account create(AccountCreateCommand accountCreateCommand, Long signupId) {
         // 가입 찾기
         Signup signup = signupRepository.findById(signupId)
                 .orElseThrow(() -> new NoSuchElementException("signup이 존재하지 않습니다."));
@@ -33,7 +33,7 @@ public class AccountCreateManagerApplication {
             throw new IllegalArgumentException("해당 이메일로 생성한 계정이 이미 존재합니다.");
 
         // 계정 생성
-        Account account = accountFactory.create(accountCommand, signup.getEmail());
+        Account account = accountFactory.create(accountCreateCommand, signup.getEmail());
 
         // 계정 저장
         accountRepository.save(account);

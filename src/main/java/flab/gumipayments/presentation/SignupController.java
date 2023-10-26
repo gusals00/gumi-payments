@@ -28,11 +28,13 @@ public class SignupController {
     // 가입요청
     @PostMapping
     public ResponseEntity signup(@RequestBody @Valid SignupRequest request) {
+        // 만료 기간
         LocalDateTime expireDate = createExpireDate(SIGNUP_KEY_EXPIRE_DAYS, SIGNUP_KEY_EXPIRE_HOURS, SIGNUP_KEY_EXPIRE_MINUTES);
+        // 인증키 생성
         String signupKey = KeyFactory.generateSignupKey();
-        SignupCreateCommand signupCommand = convertToSignupCommand(request,expireDate,signupKey);
+        SignupCreateCommand signupCreateCommand = convertToSignupCommand(request,expireDate,signupKey);
 
-        signupRequesterApplication.signup(signupCommand);
+        signupRequesterApplication.signup(signupCreateCommand);
 
         return ResponseEntity.ok(new Message("이메일을 확인해주세요"));
     }
