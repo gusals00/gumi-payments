@@ -14,20 +14,20 @@ public class SignupCreateApplication {
     private final SignupRepository signupRepository;
 
     @Transactional
-    public void signup(SignupCommand signupCommand) {
+    public void signup(SignupCreateCommand signupCreateCommand) {
 
         // 가입 생성
-        Signup signup = create(signupCommand);
+        Signup signup = create(signupCreateCommand);
 
         // 인증 요청
-        acceptRequestApplication.requestSignupAccept(signupCommand.getEmail(), signup.getSignupKey());
+        acceptRequestApplication.requestSignupAccept(signupCreateCommand.getEmail(), signup.getSignupKey());
 
         // 가입 저장
         signupRepository.save(signup);
     }
 
 
-    private Signup create(SignupCommand signupCommand){
+    private Signup create(SignupCreateCommand signupCommand){
 
         // 해당 email로 계정이 생성 되었는지 확인
         validateEmail(signupCommand);
@@ -39,7 +39,7 @@ public class SignupCreateApplication {
         return signupFactory.create(signupCommand);
     }
 
-    private void validateEmail(SignupCommand signupCommand) {
+    private void validateEmail(SignupCreateCommand signupCommand) {
         signupRepository.findByEmail(signupCommand.getEmail())
                 .ifPresent(signup -> {
                     if (signup.isAccountCreated()) {

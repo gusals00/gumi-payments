@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
-public class SignupCommand {
+public class SignupCreateCommand {
     private String email;
     private LocalDateTime expireDate;
     private String signupKey;

@@ -1,6 +1,5 @@
 package flab.gumipayments.domain.signup;
 
-import flab.gumipayments.domain.KeyFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 import static flab.gumipayments.application.Expire.*;
 import static flab.gumipayments.domain.KeyFactory.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class SignupFactoryTest {
 
@@ -35,14 +33,14 @@ class SignupFactoryTest {
     @DisplayName("가입 요청 생성")
     void create() {
         LocalDateTime expireDate = createExpireDate(SIGNUP_KEY_EXPIRE_DAYS, SIGNUP_KEY_EXPIRE_HOURS, SIGNUP_KEY_EXPIRE_MINUTES);
-        SignupCommand signupCommand = new SignupCommand("love@naver.com",expireDate, generateSignupKey());
+        SignupCreateCommand signupCreateCommand = new SignupCreateCommand("love@naver.com",expireDate, generateSignupKey());
         SignupFactory signupFactory = new SignupFactory();
 
-        Signup signup = signupFactory.create(signupCommand);
+        Signup signup = signupFactory.create(signupCreateCommand);
 
-        assertThat(signup.getEmail()).isEqualTo(signupCommand.getEmail());
-        assertThat(signup.getSignupKey()).isEqualTo(signupCommand.getSignupKey());
-        assertThat(signup.getExpireDate()).isEqualTo(signupCommand.getExpireDate());
+        assertThat(signup.getEmail()).isEqualTo(signupCreateCommand.getEmail());
+        assertThat(signup.getSignupKey()).isEqualTo(signupCreateCommand.getSignupKey());
+        assertThat(signup.getExpireDate()).isEqualTo(signupCreateCommand.getExpireDate());
     }
 
     private LocalDateTime createExpireDate(int days, int hours, int minutes) {

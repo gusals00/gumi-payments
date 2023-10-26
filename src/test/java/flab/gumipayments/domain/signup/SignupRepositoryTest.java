@@ -1,7 +1,6 @@
 package flab.gumipayments.domain.signup;
 
 import flab.gumipayments.domain.KeyFactory;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,6 @@ import java.util.NoSuchElementException;
 
 import static flab.gumipayments.domain.signup.SignupStatus.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

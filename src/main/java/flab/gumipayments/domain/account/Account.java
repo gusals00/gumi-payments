@@ -1,6 +1,5 @@
 package flab.gumipayments.domain.account;
 
-import flab.gumipayments.domain.signup.Signup;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

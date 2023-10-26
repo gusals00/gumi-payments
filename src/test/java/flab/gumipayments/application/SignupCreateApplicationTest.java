@@ -1,8 +1,7 @@
 package flab.gumipayments.application;
 
-import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.Signup;
-import flab.gumipayments.domain.signup.SignupCommand;
+import flab.gumipayments.domain.signup.SignupCreateCommand;
 import flab.gumipayments.domain.signup.SignupFactory;
 import flab.gumipayments.domain.signup.SignupRepository;
 import org.assertj.core.api.Assertions;
@@ -32,7 +31,7 @@ class SignupCreateApplicationTest {
     @InjectMocks
     private SignupCreateApplication signupCreateApplication;
 
-    private SignupCommand signupCommand;
+    private SignupCreateCommand signupCreateCommand;
     private Signup signup;
 
     private static final int EXPIRE_DAYS=7;
@@ -44,25 +43,25 @@ class SignupCreateApplicationTest {
                 .plusDays(EXPIRE_DAYS)
                 .withHour(EXPIRE_HOURS)
                 .withMinute(EXPIRE_MINUTES);
-        signupCommand = new SignupCommand("love47024702@naver.com",expireDate, generateSignupKey());
+        signupCreateCommand = new SignupCreateCommand("love47024702@naver.com",expireDate, generateSignupKey());
         signup = Signup.builder()
-                .signupKey(signupCommand.getSignupKey())
-                .expireDate(signupCommand.getExpireDate())
-                .email(signupCommand.getEmail())
+                .signupKey(signupCreateCommand.getSignupKey())
+                .expireDate(signupCreateCommand.getExpireDate())
+                .email(signupCreateCommand.getEmail())
                 .build();
     }
     @Test
     @DisplayName("가입 요청 성공(가입 요청한 적이 없는 이메일)")
     void haveNeverSignedUpEmail() {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.empty());
-        when(signupFactory.create(signupCommand)).thenReturn(signup);
+        when(signupFactory.create(signupCreateCommand)).thenReturn(signup);
         doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
         when(signupRepository.save(signup)).thenReturn(signup);
 
-        signupCreateApplication.signup(signupCommand);
+        signupCreateApplication.signup(signupCreateCommand);
 
         verify(signupRepository,times(2)).findByEmail(signup.getEmail());
-        verify(signupFactory).create(signupCommand);
+        verify(signupFactory).create(signupCreateCommand);
         verify(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
         verify(signupRepository).save(signup);
     }
@@ -71,16 +70,16 @@ class SignupCreateApplicationTest {
     @DisplayName("가입 요청 성공(가입 요청한 적이 있지만, 해당 이메일로 계정이 생성된 적이 없는 경우)")
     void haveSignedUpButNotCreatedAccount() {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));
-        when(signupFactory.create(signupCommand)).thenReturn(signup);
+        when(signupFactory.create(signupCreateCommand)).thenReturn(signup);
         doNothing().when(signupRepository).delete(signup);
         doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
         when(signupRepository.save(signup)).thenReturn(signup);
 
-        signupCreateApplication.signup(signupCommand);
+        signupCreateApplication.signup(signupCreateCommand);
 
         verify(signupRepository,times(2)).findByEmail(signup.getEmail());
         verify(signupRepository).delete(signup);
-        verify(signupFactory).create(signupCommand);
+        verify(signupFactory).create(signupCreateCommand);
         verify(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
         verify(signupRepository).save(signup);
     }
@@ -91,7 +90,7 @@ class SignupCreateApplicationTest {
         signup.accountCreated();
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));
 
-        Assertions.assertThatThrownBy(()-> signupCreateApplication.signup(signupCommand))
+        Assertions.assertThatThrownBy(()-> signupCreateApplication.signup(signupCreateCommand))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 이메일로 생성한 계정이 이미 존재합니다.");
 

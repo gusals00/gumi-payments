@@ -1,7 +1,7 @@
 package flab.gumipayments.application;
 
 import flab.gumipayments.domain.KeyFactory;
-import flab.gumipayments.domain.account.AccountCommand;
+import flab.gumipayments.domain.account.AccountCreateCommand;
 import flab.gumipayments.domain.account.AccountFactory;
 import flab.gumipayments.domain.account.AccountRepository;
 import flab.gumipayments.domain.signup.Signup;
@@ -33,7 +33,7 @@ class AccountCreateManagerApplicationTest {
     @Mock
     private AccountRepository accountRepository;
     @Mock
-    private AccountCommand accountCommand;
+    private AccountCreateCommand accountCreateCommand;
 
     private Signup signup;
 
@@ -51,7 +51,7 @@ class AccountCreateManagerApplicationTest {
     void accountCreate() {
         when(signupRepository.findById(any())).thenReturn(Optional.of(signup));
 
-        accountCreateManagerApplication.create(accountCommand, signup.getId());
+        accountCreateManagerApplication.create(accountCreateCommand, signup.getId());
 
         verify(signupRepository).findById(any());
         verify(accountFactory).create(any(), any());
@@ -65,7 +65,7 @@ class AccountCreateManagerApplicationTest {
         signup.accountCreated();
         when(signupRepository.findById(any())).thenReturn(Optional.of(signup));
 
-        assertThatThrownBy(() -> accountCreateManagerApplication.create(accountCommand, signup.getId()))
+        assertThatThrownBy(() -> accountCreateManagerApplication.create(accountCreateCommand, signup.getId()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 이메일로 생성한 계정이 이미 존재합니다.");
     }
