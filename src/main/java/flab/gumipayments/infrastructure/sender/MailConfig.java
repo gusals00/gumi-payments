@@ -23,6 +23,24 @@ public class MailConfig {
     @Value("${spring.mail.port}")
     private int port;
 
+    @Value("${spring.mail.properties.protocol}")
+    private String protocol;
+
+    @Value("${spring.mail.properties.stmp.auth}")
+    private String auth;
+
+    @Value("${spring.mail.properties.stmp.starttls.enable}")
+    private String starttlsEnable;
+
+    @Value("${spring.mail.properties.debug}")
+    private String debug;
+
+    @Value("${spring.mail.properties.stmp.ssl.trust}")
+    private String sslTrust;
+
+    @Value("${spring.mail.properties.stmp.ssl.enable}")
+    private String sslEnable;
+
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
@@ -39,13 +57,12 @@ public class MailConfig {
 
     private Properties getMailProperties() {
         Properties properties = new Properties();
-        properties.setProperty("mail.transport.protocol", "smtp");
-        properties.setProperty("mail.smtp.auth", "true");
-        properties.setProperty("mail.smtp.starttls.enable", "true");
-        properties.setProperty("mail.debug", "true");
-        properties.setProperty("mail.smtp.ssl.trust","smtp.naver.com");
-        properties.setProperty("mail.smtp.ssl.enable","true");
-
+        properties.setProperty("mail.transport.protocol", protocol);
+        properties.setProperty("mail.smtp.auth", auth);
+        properties.setProperty("mail.smtp.starttls.enable", starttlsEnable);
+        properties.setProperty("mail.debug", debug);
+        properties.setProperty("mail.smtp.ssl.trust",sslTrust);
+        properties.setProperty("mail.smtp.ssl.enable",sslEnable);
         return properties;
     }
 }
