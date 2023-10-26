@@ -12,17 +12,11 @@ import static flab.gumipayments.application.Expire.*;
 @RequiredArgsConstructor
 public class SignupFactory {
 
-    public Signup create(SignupCommand signupCommand, String signupKey) {
-        LocalDateTime expireDate = LocalDateTime.now().plusDays(SIGNUP_KEY_EXPIRE_DAYS)
-                .withHour(SIGNUP_KEY_EXPIRE_HOURS)
-                .withMinute(SIGNUP_KEY_EXPIRE_MINUTES)
-                .withSecond(0)
-                .withNano(0);
-
+    public Signup create(SignupCommand signupCommand) {
         return Signup.builder()
-                .expireDate(expireDate)
+                .expireDate(signupCommand.getExpireDate())
                 .email(signupCommand.getEmail())
-                .signupKey(signupKey)
+                .signupKey(signupCommand.getSignupKey())
                 .build();
     }
 }

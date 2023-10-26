@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static flab.gumipayments.domain.KeyFactory.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,13 +36,18 @@ class SignupCreateApplicationTest {
     private Signup signup;
 
     private static final int EXPIRE_DAYS=7;
-
+    private static final int EXPIRE_HOURS=7;
+    private static final int EXPIRE_MINUTES=0;
     @BeforeEach
     void setup() {
-        signupCommand = new SignupCommand("love47024702@naver.com");
+        LocalDateTime expireDate = LocalDateTime.now()
+                .plusDays(EXPIRE_DAYS)
+                .withHour(EXPIRE_HOURS)
+                .withMinute(EXPIRE_MINUTES);
+        signupCommand = new SignupCommand("love47024702@naver.com",expireDate, generateSignupKey());
         signup = Signup.builder()
-                .signupKey(KeyFactory.generateSignupKey())
-                .expireDate(LocalDateTime.now().plusDays(EXPIRE_DAYS))
+                .signupKey(signupCommand.getSignupKey())
+                .expireDate(signupCommand.getExpireDate())
                 .email(signupCommand.getEmail())
                 .build();
     }
@@ -49,14 +55,14 @@ class SignupCreateApplicationTest {
     @DisplayName("가입 요청 성공(가입 요청한 적이 없는 이메일)")
     void haveNeverSignedUpEmail() {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.empty());
-        when(signupFactory.create(any(), any())).thenReturn(signup);
+        when(signupFactory.create(signupCommand)).thenReturn(signup);
         doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
         when(signupRepository.save(signup)).thenReturn(signup);
 
         signupCreateApplication.signup(signupCommand);
 
         verify(signupRepository,times(2)).findByEmail(signup.getEmail());
-        verify(signupFactory).create(any(), any());
+        verify(signupFactory).create(signupCommand);
         verify(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
         verify(signupRepository).save(signup);
     }
@@ -65,7 +71,7 @@ class SignupCreateApplicationTest {
     @DisplayName("가입 요청 성공(가입 요청한 적이 있지만, 해당 이메일로 계정이 생성된 적이 없는 경우)")
     void haveSignedUpButNotCreatedAccount() {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));
-        when(signupFactory.create(any(), any())).thenReturn(signup);
+        when(signupFactory.create(signupCommand)).thenReturn(signup);
         doNothing().when(signupRepository).delete(signup);
         doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
         when(signupRepository.save(signup)).thenReturn(signup);
@@ -74,7 +80,7 @@ class SignupCreateApplicationTest {
 
         verify(signupRepository,times(2)).findByEmail(signup.getEmail());
         verify(signupRepository).delete(signup);
-        verify(signupFactory).create(any(), any());
+        verify(signupFactory).create(signupCommand);
         verify(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
         verify(signupRepository).save(signup);
     }
