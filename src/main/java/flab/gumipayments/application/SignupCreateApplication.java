@@ -1,12 +1,9 @@
 package flab.gumipayments.application;
 
-import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,20 +30,16 @@ public class SignupCreateApplication {
     private Signup create(SignupCommand signupCommand){
 
         // 해당 email로 계정이 생성 되었는지 확인
-        validEmail(signupCommand);
-
-        // 인증키 생성
-        String signupKey = KeyFactory.generateSignupKey();
+        validateEmail(signupCommand);
 
         // 가입 요청이 존재하면 삭제
-        Optional<Signup> findSignup = signupRepository.findByEmail(signupCommand.getEmail());
-        findSignup.ifPresent(signupRepository::delete);
+        signupRepository.findByEmail(signupCommand.getEmail()).ifPresent(signupRepository::delete);
 
         // 가입 생성
-        return signupFactory.create(signupCommand, signupKey);
+        return signupFactory.create(signupCommand);
     }
 
-    private void validEmail(SignupCommand signupCommand) {
+    private void validateEmail(SignupCommand signupCommand) {
         signupRepository.findByEmail(signupCommand.getEmail())
                 .ifPresent(signup -> {
                     if (signup.isAccountCreated()) {

@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import java.time.LocalDateTime;
 
 import static flab.gumipayments.application.Expire.*;
+import static flab.gumipayments.domain.KeyFactory.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,16 +34,15 @@ class SignupFactoryTest {
     @Test
     @DisplayName("가입 요청 생성")
     void create() {
-        SignupCommand signupCommand = new SignupCommand("love@naver.com");
-        SignupFactory signupFactory = new SignupFactory();
-        String signupKey = KeyFactory.generateSignupKey();
         LocalDateTime expireDate = createExpireDate(SIGNUP_KEY_EXPIRE_DAYS, SIGNUP_KEY_EXPIRE_HOURS, SIGNUP_KEY_EXPIRE_MINUTES);
+        SignupCommand signupCommand = new SignupCommand("love@naver.com",expireDate, generateSignupKey());
+        SignupFactory signupFactory = new SignupFactory();
 
-        Signup signup = signupFactory.create(signupCommand, signupKey);
+        Signup signup = signupFactory.create(signupCommand);
 
         assertThat(signup.getEmail()).isEqualTo(signupCommand.getEmail());
-        assertThat(signup.getSignupKey()).isEqualTo(signupKey);
-        assertThat(signup.getExpireDate()).isEqualTo(expireDate);
+        assertThat(signup.getSignupKey()).isEqualTo(signupCommand.getSignupKey());
+        assertThat(signup.getExpireDate()).isEqualTo(signupCommand.getExpireDate());
     }
 
     private LocalDateTime createExpireDate(int days, int hours, int minutes) {
