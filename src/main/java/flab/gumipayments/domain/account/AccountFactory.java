@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountFactory {
 
-    public Account create(AccountCommand accountCommand, String email) {
+    public Account create(AccountCreateCommand accountCommand, String email) {
         return Account.builder()
                 .email(email)
                 .name(accountCommand.getName())

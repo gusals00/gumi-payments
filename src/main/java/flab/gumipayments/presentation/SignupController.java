@@ -2,11 +2,9 @@ package flab.gumipayments.presentation;
 
 import flab.gumipayments.application.SignupCreateApplication;
 import flab.gumipayments.domain.KeyFactory;
-import flab.gumipayments.domain.signup.SignupCommand;
+import flab.gumipayments.domain.signup.SignupCreateCommand;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,15 +30,15 @@ public class SignupController {
     public ResponseEntity signup(@RequestBody @Valid SignupRequest request) {
         LocalDateTime expireDate = createExpireDate(SIGNUP_KEY_EXPIRE_DAYS, SIGNUP_KEY_EXPIRE_HOURS, SIGNUP_KEY_EXPIRE_MINUTES);
         String signupKey = KeyFactory.generateSignupKey();
-        SignupCommand signupCommand = convertToSignupCommand(request,expireDate,signupKey);
+        SignupCreateCommand signupCommand = convertToSignupCommand(request,expireDate,signupKey);
 
         signupRequesterApplication.signup(signupCommand);
 
         return ResponseEntity.ok(new Message("이메일을 확인해주세요"));
     }
 
-    private SignupCommand convertToSignupCommand(SignupRequest request,LocalDateTime expireDate, String signupKey) {
-        return new SignupCommand(request.getEmail(),expireDate,signupKey);
+    private SignupCreateCommand convertToSignupCommand(SignupRequest request,LocalDateTime expireDate, String signupKey) {
+        return new SignupCreateCommand(request.getEmail(),expireDate,signupKey);
     }
 
     private LocalDateTime createExpireDate(int days,int hours,int minutes){

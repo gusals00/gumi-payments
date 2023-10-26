@@ -16,7 +16,7 @@ class AccountFactoryTest {
         String name = "이름";
         AccountFactory accountFactory = new AccountFactory();
 
-        Account account = accountFactory.create(new AccountCommand(password, name), email);
+        Account account = accountFactory.create(new AccountCreateCommand(password, name), email);
 
         assertThat(account.getEmail()).isEqualTo(email);
         assertThat(account.getName()).isEqualTo(name);

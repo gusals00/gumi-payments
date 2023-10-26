@@ -1,8 +1,7 @@
 package flab.gumipayments.application;
 
-import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.Signup;
-import flab.gumipayments.domain.signup.SignupCommand;
+import flab.gumipayments.domain.signup.SignupCreateCommand;
 import flab.gumipayments.domain.signup.SignupFactory;
 import flab.gumipayments.domain.signup.SignupRepository;
 import org.assertj.core.api.Assertions;
@@ -32,7 +31,7 @@ class SignupCreateApplicationTest {
     @InjectMocks
     private SignupCreateApplication signupCreateApplication;
 
-    private SignupCommand signupCommand;
+    private SignupCreateCommand signupCommand;
     private Signup signup;
 
     private static final int EXPIRE_DAYS=7;
@@ -44,7 +43,7 @@ class SignupCreateApplicationTest {
                 .plusDays(EXPIRE_DAYS)
                 .withHour(EXPIRE_HOURS)
                 .withMinute(EXPIRE_MINUTES);
-        signupCommand = new SignupCommand("love47024702@naver.com",expireDate, generateSignupKey());
+        signupCommand = new SignupCreateCommand("love47024702@naver.com",expireDate, generateSignupKey());
         signup = Signup.builder()
                 .signupKey(signupCommand.getSignupKey())
                 .expireDate(signupCommand.getExpireDate())

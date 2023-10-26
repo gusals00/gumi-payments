@@ -1,7 +1,7 @@
 package flab.gumipayments.application;
 
 import flab.gumipayments.domain.KeyFactory;
-import flab.gumipayments.domain.account.AccountCommand;
+import flab.gumipayments.domain.account.AccountCreateCommand;
 import flab.gumipayments.domain.account.AccountFactory;
 import flab.gumipayments.domain.account.AccountRepository;
 import flab.gumipayments.domain.signup.Signup;
@@ -33,7 +33,7 @@ class AccountCreateManagerApplicationTest {
     @Mock
     private AccountRepository accountRepository;
     @Mock
-    private AccountCommand accountCommand;
+    private AccountCreateCommand accountCommand;
 
     private Signup signup;
 

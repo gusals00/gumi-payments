@@ -1,7 +1,7 @@
 package flab.gumipayments.presentation;
 
-import flab.gumipayments.domain.account.AccountCommand;
 import flab.gumipayments.application.AccountCreateManagerApplication;
+import flab.gumipayments.domain.account.AccountCreateCommand;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -26,8 +26,8 @@ public class AccountController {
         return ResponseEntity.ok(new Message("계정 생성 성공"));
     }
 
-    private AccountCommand convert(AccountCreateRequest createRequest) {
-        return new AccountCommand(createRequest.getPassword(), createRequest.getName());
+    private AccountCreateCommand convert(AccountCreateRequest createRequest) {
+        return new AccountCreateCommand(createRequest.getPassword(), createRequest.getName());
     }
 
     @NoArgsConstructor

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class AccountCommand {
+public class AccountCreateCommand {
     private String password;
     private String name;
 }
