@@ -1,7 +1,9 @@
 package flab.gumipayments.presentation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import flab.gumipayments.application.SignupCreateApplication;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +31,25 @@ class SignupControllerTest {
     @MockBean
     private SignupCreateApplication signupCreateApplication;
 
+    private String body;
+
+    @BeforeEach
+    void setUp() throws JsonProcessingException {
+        body = mapper.writeValueAsString(new SignupController.SignupRequest("gusals@naver.com"));
+    }
+
     @Test
     @WithMockUser
     @DisplayName("가입 요청 API[POST] 테스트")
     void signup() throws Exception {
-        String email = "love470@naver.com";
         doNothing().when(signupCreateApplication).signup(any());
 
-        String body = mapper.writeValueAsString(new SignupController.SignupRequest(email));
         mockMvc.perform(post("/api/signup")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").exists());
+        verify(signupCreateApplication).signup(any());
     }
 }

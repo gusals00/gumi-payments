@@ -29,6 +29,7 @@ public class AcceptController {
     }
 
     @NoArgsConstructor
+    @AllArgsConstructor
     @Getter
     @Setter
     static class AcceptInfoRequest {
