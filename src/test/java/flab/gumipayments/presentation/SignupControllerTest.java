@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(SignupController.class)
@@ -50,6 +51,19 @@ class SignupControllerTest {
                         .content(body))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").exists());
+        verify(signupCreateApplication).signup(any());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("가입 요청 API[POST] 예외테스트")
+    void signupException() throws Exception {
+        doThrow(new IllegalArgumentException()).when(signupCreateApplication).signup(any());
+        mockMvc.perform(post("/api/signup")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isBadRequest());
         verify(signupCreateApplication).signup(any());
     }
 }
