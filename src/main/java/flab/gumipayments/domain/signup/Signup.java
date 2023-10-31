@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import static flab.gumipayments.domain.signup.SignupStatus.*;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,35 +25,40 @@ public class Signup {
     @Enumerated(EnumType.STRING)
     private SignupStatus status;
 
+    @Column(unique = true)
     private String signupKey;
 
     private LocalDateTime expireDate;
-    private boolean isAccountCreated;
 
     @Builder
-    public Signup(String email,String signupKey, LocalDateTime expireDate) {
+    public Signup(String email, String signupKey, LocalDateTime expireDate) {
         this.email = email;
         this.signupKey = signupKey;
         this.expireDate = expireDate;
-        status = SignupStatus.SIGNUP_REQUEST;
-        isAccountCreated = false;
+        status = SIGNUP_REQUEST;
     }
 
     public void accept() {
-        if(status==SignupStatus.TIMEOUT){
+        if (LocalDateTime.now().isAfter(expireDate)) {
             throw new IllegalStateException("올바르지 않은 가입 요청 status 변경입니다.");
         }
-        status = SignupStatus.ACCEPT;
+        updateStatus(SIGNUP_REQUEST, ACCEPT);
+
     }
 
     public void timeout() {
-        if(status==SignupStatus.ACCEPT){
-            throw new IllegalStateException("올바르지 않은 가입 요청 status 변경입니다.");
-        }
-        status = SignupStatus.TIMEOUT;
+        updateStatus(SIGNUP_REQUEST, TIMEOUT);
     }
 
     public void accountCreated() {
-        isAccountCreated = true;
+        updateStatus(ACCEPT, ACCOUNT_CREATED);
+    }
+
+    private void updateStatus(SignupStatus fromStatus, SignupStatus toStatus) {
+        if (this.status == fromStatus) {
+            this.status = toStatus;
+        } else {
+            throw new IllegalStateException("올바르지 않은 가입 요청 status 변경입니다.");
+        }
     }
 }

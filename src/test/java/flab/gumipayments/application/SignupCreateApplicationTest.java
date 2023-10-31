@@ -41,8 +41,8 @@ class SignupCreateApplicationTest {
     void setup() {
         LocalDateTime expireDate = LocalDateTime.now()
                 .plusDays(EXPIRE_DAYS)
-                .withHour(EXPIRE_HOURS)
-                .withMinute(EXPIRE_MINUTES);
+                .plusDays(EXPIRE_HOURS)
+                .plusMinutes(EXPIRE_MINUTES);
         signupCreateCommand = new SignupCreateCommand("love47024702@naver.com",expireDate, generateSignupKey());
         signup = Signup.builder()
                 .signupKey(signupCreateCommand.getSignupKey())
@@ -50,19 +50,20 @@ class SignupCreateApplicationTest {
                 .email(signupCreateCommand.getEmail())
                 .build();
     }
+
     @Test
     @DisplayName("가입 요청 성공(가입 요청한 적이 없는 이메일)")
     void haveNeverSignedUpEmail() {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.empty());
         when(signupFactory.create(signupCreateCommand)).thenReturn(signup);
-        doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
+        doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey(),signupCreateCommand.getExpireDate());
         when(signupRepository.save(signup)).thenReturn(signup);
 
         signupCreateApplication.signup(signupCreateCommand);
 
         verify(signupRepository,times(2)).findByEmail(signup.getEmail());
         verify(signupFactory).create(signupCreateCommand);
-        verify(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
+        verify(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey(),signupCreateCommand.getExpireDate());
         verify(signupRepository).save(signup);
     }
 
@@ -72,7 +73,7 @@ class SignupCreateApplicationTest {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));
         when(signupFactory.create(signupCreateCommand)).thenReturn(signup);
         doNothing().when(signupRepository).delete(signup);
-        doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
+        doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey(),signupCreateCommand.getExpireDate());
         when(signupRepository.save(signup)).thenReturn(signup);
 
         signupCreateApplication.signup(signupCreateCommand);
@@ -80,13 +81,14 @@ class SignupCreateApplicationTest {
         verify(signupRepository,times(2)).findByEmail(signup.getEmail());
         verify(signupRepository).delete(signup);
         verify(signupFactory).create(signupCreateCommand);
-        verify(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey());
+        verify(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey(),signupCreateCommand.getExpireDate());
         verify(signupRepository).save(signup);
     }
 
     @Test
     @DisplayName("가입 요청으로 계정 생성한 적이 있는 경우")
     void signupAlreadyExistEmail() {
+        signup.accept();
         signup.accountCreated();
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));
 

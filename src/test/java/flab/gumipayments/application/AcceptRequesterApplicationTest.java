@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,10 +26,11 @@ class AcceptRequesterApplicationTest {
     void requestSignupAccept() {
         String toAddress ="123@naver.com";
         String signupKey = KeyFactory.generateSignupKey();
-        doNothing().when(sender).sendSignupRequest(toAddress,signupKey);
+        LocalDateTime now = LocalDateTime.now();
+        doNothing().when(sender).sendSignupRequest(toAddress,signupKey,now);
 
-        acceptRequesterApplication.requestSignupAccept(toAddress,signupKey);
+        acceptRequesterApplication.requestSignupAccept(toAddress,signupKey,now);
 
-        verify(sender).sendSignupRequest(toAddress,signupKey);
+        verify(sender).sendSignupRequest(toAddress,signupKey,now);
     }
 }

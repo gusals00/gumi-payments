@@ -38,18 +38,18 @@ class SignupAcceptApplicationTest {
                 .email(email)
                 .expireDate(LocalDateTime.now().plusDays(1))
                 .build();
-        acceptCommand =  new AcceptCommand(signup.getSignupKey(), signup.getEmail());
+        acceptCommand =  new AcceptCommand(signup.getSignupKey(), signup.getExpireDate());
 
     }
     @Test
     @DisplayName("가입 인증 성공")
     void signupAccept() {
-        when(signupRepository.findBySignupKeyAndEmail(acceptCommand.getSignupKey(), acceptCommand.getEmail()))
+        when(signupRepository.findBySignupKey(acceptCommand.getSignupKey()))
                 .thenReturn(Optional.of(signup));
 
         signupAcceptApplication.accept(acceptCommand);
 
-        verify(signupRepository).findBySignupKeyAndEmail(acceptCommand.getSignupKey(), acceptCommand.getEmail());
+        verify(signupRepository).findBySignupKey(acceptCommand.getSignupKey());
         assertThat(signup.getStatus()).isEqualTo(SignupStatus.ACCEPT);
     }
 
@@ -58,7 +58,7 @@ class SignupAcceptApplicationTest {
     void useTimeoutSignupKeyToAccept() {
         signup.timeout();
 
-        when(signupRepository.findBySignupKeyAndEmail(signup.getSignupKey(), signup.getEmail()))
+        when(signupRepository.findBySignupKey(signup.getSignupKey()))
                 .thenReturn(Optional.of(signup));
 
         assertThatThrownBy(()->signupAcceptApplication.accept(acceptCommand))
@@ -67,16 +67,27 @@ class SignupAcceptApplicationTest {
     }
 
     @Test
-    @DisplayName("해당 signupKey와 email을 가지는 signup이 없는 경우")
+    @DisplayName("해당 signupKey을 가지는 signup이 없는 경우")
     void doNotHaveSignupWithSignupKeyAndEmail() {
-        String email = "love4@naver.com";
-        String signupKey= KeyFactory.generateSignupKey();
-        when(signupRepository.findBySignupKeyAndEmail(signupKey, email))
+        when(signupRepository.findBySignupKey(any()))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(()->signupAcceptApplication.accept(new AcceptCommand(signupKey,email)))
+        assertThatThrownBy(()->signupAcceptApplication.accept(acceptCommand))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("signup이 존재하지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("만료 시간이 올바르지 않은 경우")
+    void doesNotRightExpiredDate() {
+        LocalDateTime invalidExpireDate = acceptCommand.getExpireDate().plusDays(1);
+        AcceptCommand invalidCommand = new AcceptCommand(acceptCommand.getSignupKey(), invalidExpireDate);
+        when(signupRepository.findBySignupKey(signup.getSignupKey()))
+               .thenReturn(Optional.of(signup));
+
+        assertThatThrownBy(()->signupAcceptApplication.accept(invalidCommand))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("만료시간이 올바르지 않습니다.");
     }
 
     @Test
