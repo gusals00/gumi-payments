@@ -28,10 +28,6 @@ public class AccountCreateManagerApplication {
         Signup signup = signupRepository.findById(signupId)
                 .orElseThrow(() -> new NoSuchElementException("signup이 존재하지 않습니다."));
 
-        // 이미 생성된 계정이 있는지 확인
-        if(signup.isAccountCreated())
-            throw new IllegalArgumentException("해당 이메일로 생성한 계정이 이미 존재합니다.");
-
         // 계정 생성
         Account account = accountFactory.create(accountCreateCommand, signup.getEmail());
 

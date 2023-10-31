@@ -20,9 +20,13 @@ public class SignupAcceptApplication {
 
     @Transactional
     public Long accept(AcceptCommand acceptCommand) {
-        // findBy인증키And이메일
-        Signup signup = signupRepository.findBySignupKeyAndEmail(acceptCommand.getSignupKey(), acceptCommand.getEmail())
+        // findBy인증키
+        Signup signup = signupRepository.findBySignupKey(acceptCommand.getSignupKey())
                 .orElseThrow(()->new NoSuchElementException("signup이 존재하지 않습니다."));
+
+        if(!signup.getExpireDate().isEqual(acceptCommand.getExpireDate())){
+            throw new IllegalArgumentException("만료시간이 올바르지 않습니다.");
+        }
 
         // accept
         signup.accept();

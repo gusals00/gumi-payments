@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface SignupRepository extends JpaRepository<Signup, Long> {
-    Optional<Signup> findBySignupKeyAndEmail(String signupKey,String email);
+    Optional<Signup> findBySignupKey(String signupKey);
 
     @Modifying(clearAutomatically = true)
     @Query("update Signup s set s.status = flab.gumipayments.domain.signup.SignupStatus.TIMEOUT where s.expireDate < :datetime and s.status = :status")

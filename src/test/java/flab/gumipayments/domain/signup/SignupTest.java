@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
+import static flab.gumipayments.domain.signup.SignupStatus.*;
 import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,22 +46,29 @@ class SignupTest {
     @DisplayName("accept status로 변경")
     void changeToAccept() {
         signup.accept();
-        statusCheck(signup.getStatus(),SignupStatus.ACCEPT);
+        statusCheck(signup.getStatus(), ACCEPT);
     }
 
     @Test
     @DisplayName("timeout status로 변경")
     void changeToTimeout() {
         signup.timeout();
-        statusCheck(signup.getStatus(),SignupStatus.TIMEOUT);
+        statusCheck(signup.getStatus(), TIMEOUT);
     }
 
     @Test
     @DisplayName("초기 가입 상태")
     void initStatus() {
-        statusCheck(signup.getStatus(),SignupStatus.SIGNUP_REQUEST);
+        statusCheck(signup.getStatus(), SIGNUP_REQUEST);
     }
 
+    @Test
+    @DisplayName("accept 에서 account created로 변경")
+    void changeToAcceptCreated() {
+        signup.accept();
+        signup.accountCreated();
+        statusCheck(signup.getStatus(), ACCOUNT_CREATED);
+    }
     @Test
     @DisplayName("status를 accept에서 timeout으로 변경")
     void changeToInvalidTimeout() {
@@ -82,16 +90,16 @@ class SignupTest {
     }
 
     @Test
-    @DisplayName("isAccountCreated = true로 변경")
-    void changeIsAccountCreated() {
-        // isAccountCreated 변경 전
-        assertThat(signup.isAccountCreated()).isFalse();
+    @DisplayName("status를 accept인 상태가 아닐 때 accountCreated로 변경")
+    void changeToinvalidccountCreated() {
+        assertThatThrownBy(()->signup.accountCreated())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("올바르지 않은 가입 요청 status 변경입니다.");
 
-        signup.accountCreated();
-
-        // isAccountCreated 변경 후
-        assertThat(signup.isAccountCreated()).isTrue();
-
+        signup.timeout();
+        assertThatThrownBy(()->signup.accountCreated())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("올바르지 않은 가입 요청 status 변경입니다.");
     }
 
     private void statusCheck(SignupStatus actual,SignupStatus expected) {

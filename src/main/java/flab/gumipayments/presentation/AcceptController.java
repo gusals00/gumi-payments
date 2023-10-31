@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/accept")
@@ -20,12 +22,13 @@ public class AcceptController {
     // 인증 수락
     @PostMapping("/signup")
     public ResponseEntity signupAccept(AcceptInfoRequest acceptInfoRequest) {
+        log.info("date = {}",acceptInfoRequest.getExpireDate());
         Long signupId = signupAcceptManagerApplication.accept(convert(acceptInfoRequest));
         return ResponseEntity.ok(new AcceptResponse(signupId));
     }
 
     private AcceptCommand convert(AcceptInfoRequest acceptInfoRequest) {
-        return new AcceptCommand(acceptInfoRequest.getSignupKey(), acceptInfoRequest.getEmail());
+        return new AcceptCommand(acceptInfoRequest.getSignupKey(), acceptInfoRequest.getExpireDate());
     }
 
     @NoArgsConstructor
@@ -35,8 +38,7 @@ public class AcceptController {
     static class AcceptInfoRequest {
         @NotBlank
         private String signupKey;
-        @Email
-        private String email;
+        private LocalDateTime expireDate;
     }
 
     @AllArgsConstructor

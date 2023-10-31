@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.time.LocalDateTime;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,7 +38,7 @@ class AcceptControllerTest {
     void setUp() {
         request = new LinkedMultiValueMap<>();
         request.add("signupKey", KeyFactory.generateSignupKey());
-        request.add("email", "gusals@naver.com");
+        request.add("expireKey", LocalDateTime.now().toString());
     }
 
     @Test

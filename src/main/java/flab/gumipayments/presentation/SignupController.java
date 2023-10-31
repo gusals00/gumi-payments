@@ -44,11 +44,10 @@ public class SignupController {
     }
 
     private LocalDateTime createExpireDate(int days,int hours,int minutes){
-        return LocalDateTime.now().plusDays(days)
-                .withHour(hours)
-                .withMinute(minutes)
-                .withSecond(0)
-                .withNano(0);
+        return LocalDateTime.now()
+                .plusDays(days)
+                .plusHours(hours)
+                .plusMinutes(minutes);
     }
 
     @NoArgsConstructor
