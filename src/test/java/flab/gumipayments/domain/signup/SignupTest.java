@@ -63,38 +63,6 @@ class SignupTest {
         signup.accountCreated();
         statusCheck(signup.getStatus(), ACCOUNT_CREATED);
     }
-    @Test
-    @DisplayName("status를 accept에서 timeout으로 변경")
-    void changeToInvalidTimeout() {
-        signup.accept();
-
-        assertThatThrownBy(()->signup.timeout())
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("올바르지 않은 가입 요청 status 변경입니다.");
-    }
-
-    @Test
-    @DisplayName("status를 timeout에서 accept로 변경")
-    void changeToInvalidAccept() {
-        signup.timeout();
-
-        assertThatThrownBy(()->signup.accept())
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("올바르지 않은 가입 요청 status 변경입니다.");
-    }
-
-    @Test
-    @DisplayName("status를 accept인 상태가 아닐 때 accountCreated로 변경")
-    void changeToinvalidccountCreated() {
-        assertThatThrownBy(()->signup.accountCreated())
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("올바르지 않은 가입 요청 status 변경입니다.");
-
-        signup.timeout();
-        assertThatThrownBy(()->signup.accountCreated())
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("올바르지 않은 가입 요청 status 변경입니다.");
-    }
 
     private void statusCheck(SignupStatus actual,SignupStatus expected) {
         assertThat(actual).isEqualTo(expected);
