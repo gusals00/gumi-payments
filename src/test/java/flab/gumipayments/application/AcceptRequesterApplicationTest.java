@@ -26,11 +26,10 @@ class AcceptRequesterApplicationTest {
     void requestSignupAccept() {
         String toAddress ="123@naver.com";
         String signupKey = KeyFactory.generateSignupKey();
-        LocalDateTime now = LocalDateTime.now();
-        doNothing().when(sender).sendSignupRequest(toAddress,signupKey,now);
+        doNothing().when(sender).sendSignupRequest(toAddress,signupKey);
 
-        acceptRequesterApplication.requestSignupAccept(toAddress,signupKey,now);
+        acceptRequesterApplication.requestSignupAccept(toAddress,signupKey);
 
-        verify(sender).sendSignupRequest(toAddress,signupKey,now);
+        verify(sender).sendSignupRequest(toAddress,signupKey);
     }
 }

@@ -4,5 +4,5 @@ import java.time.LocalDateTime;
 
 public interface Sender {
     void
-    sendSignupRequest(String toAddress, String signupKey, LocalDateTime expireDate);
+    sendSignupRequest(String toAddress, String signupKey);
 }

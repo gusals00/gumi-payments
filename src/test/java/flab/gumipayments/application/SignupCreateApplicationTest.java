@@ -56,14 +56,12 @@ class SignupCreateApplicationTest {
     void haveNeverSignedUpEmail() {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.empty());
         when(signupFactory.create(signupCreateCommand)).thenReturn(signup);
-        doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey(),signupCreateCommand.getExpireDate());
         when(signupRepository.save(signup)).thenReturn(signup);
 
         signupCreateApplication.signup(signupCreateCommand);
 
         verify(signupRepository,times(2)).findByEmail(signup.getEmail());
         verify(signupFactory).create(signupCreateCommand);
-        verify(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey(),signupCreateCommand.getExpireDate());
         verify(signupRepository).save(signup);
     }
 
@@ -73,7 +71,6 @@ class SignupCreateApplicationTest {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));
         when(signupFactory.create(signupCreateCommand)).thenReturn(signup);
         doNothing().when(signupRepository).delete(signup);
-        doNothing().when(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey(),signupCreateCommand.getExpireDate());
         when(signupRepository.save(signup)).thenReturn(signup);
 
         signupCreateApplication.signup(signupCreateCommand);
@@ -81,7 +78,6 @@ class SignupCreateApplicationTest {
         verify(signupRepository,times(2)).findByEmail(signup.getEmail());
         verify(signupRepository).delete(signup);
         verify(signupFactory).create(signupCreateCommand);
-        verify(acceptRequestApplication).requestSignupAccept(signup.getEmail(), signup.getSignupKey(),signupCreateCommand.getExpireDate());
         verify(signupRepository).save(signup);
     }
 

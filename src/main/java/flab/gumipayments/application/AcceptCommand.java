@@ -9,5 +9,4 @@ import java.time.LocalDateTime;
 @Getter
 public class AcceptCommand {
     private String signupKey;
-    private LocalDateTime expireDate;
 }

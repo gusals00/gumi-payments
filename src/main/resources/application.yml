@@ -39,4 +39,3 @@ spring:
 
 schedules:
   cron:
-    timeout: 0 0 4 * * ?

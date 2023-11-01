@@ -38,7 +38,7 @@ class SignupAcceptApplicationTest {
                 .email(email)
                 .expireDate(LocalDateTime.now().plusDays(1))
                 .build();
-        acceptCommand =  new AcceptCommand(signup.getSignupKey(), signup.getExpireDate());
+        acceptCommand =  new AcceptCommand(signup.getSignupKey());
 
     }
     @Test
@@ -53,18 +53,7 @@ class SignupAcceptApplicationTest {
         assertThat(signup.getStatus()).isEqualTo(SignupStatus.ACCEPT);
     }
 
-    @Test
-    @DisplayName("timeout된 인증키로 인증 시도")
-    void useTimeoutSignupKeyToAccept() {
-        signup.timeout();
 
-        when(signupRepository.findBySignupKey(signup.getSignupKey()))
-                .thenReturn(Optional.of(signup));
-
-        assertThatThrownBy(()->signupAcceptApplication.accept(acceptCommand))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("올바르지 않은 가입 요청 status 변경입니다.");
-    }
 
     @Test
     @DisplayName("해당 signupKey을 가지는 signup이 없는 경우")
@@ -80,14 +69,13 @@ class SignupAcceptApplicationTest {
     @Test
     @DisplayName("만료 시간이 올바르지 않은 경우")
     void doesNotRightExpiredDate() {
-        LocalDateTime invalidExpireDate = acceptCommand.getExpireDate().plusDays(1);
-        AcceptCommand invalidCommand = new AcceptCommand(acceptCommand.getSignupKey(), invalidExpireDate);
+        AcceptCommand invalidCommand = new AcceptCommand(acceptCommand.getSignupKey());
         when(signupRepository.findBySignupKey(signup.getSignupKey()))
                .thenReturn(Optional.of(signup));
 
         assertThatThrownBy(()->signupAcceptApplication.accept(invalidCommand))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("만료시간이 올바르지 않습니다.");
+                .hasMessage("만료 시간이 지났습니다.");
     }
 
     @Test

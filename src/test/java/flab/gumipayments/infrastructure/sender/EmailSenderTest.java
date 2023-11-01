@@ -27,14 +27,12 @@ class EmailSenderTest {
     private String toAddress;
     private String signupKey;
     private MimeMessage message;
-    private LocalDateTime now;
 
     @BeforeEach
     void setup() {
         toAddress = "123@naver.com";
         signupKey = "12345";
         message = mock(MimeMessage.class);
-        now = LocalDateTime.now();
     }
 
 
@@ -44,7 +42,7 @@ class EmailSenderTest {
         when(javaMailSender.createMimeMessage()).thenReturn(message);
         doNothing().when(javaMailSender).send(any(MimeMessage.class));
 
-        emailSender.sendSignupRequest(toAddress, signupKey, now);
+        emailSender.sendSignupRequest(toAddress, signupKey);
 
         verify(javaMailSender).createMimeMessage();
         verify(javaMailSender).send(any(MimeMessage.class));
@@ -56,7 +54,7 @@ class EmailSenderTest {
         when(javaMailSender.createMimeMessage()).thenReturn(message);
         doThrow(MailSendException.class).when(javaMailSender).send(any(MimeMessage.class));
 
-        assertThatThrownBy(() -> emailSender.sendSignupRequest(toAddress, signupKey, now))
+        assertThatThrownBy(() -> emailSender.sendSignupRequest(toAddress, signupKey))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("다시 시도해주세요.");
         verify(javaMailSender).createMimeMessage();
