@@ -3,15 +3,17 @@ package flab.gumipayments.presentation;
 import flab.gumipayments.application.SignupCreateApplication;
 import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.SignupCreateCommand;
+import flab.gumipayments.domain.signup.exception.IllegalSignupStatusException;
+import flab.gumipayments.domain.signup.exception.SignupAcceptTimeoutException;
+import flab.gumipayments.presentation.exception.ErrorCode.ErrorCode;
+import flab.gumipayments.presentation.exception.ExceptionResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -36,7 +38,7 @@ public class SignupController {
 
         signupRequesterApplication.signup(signupCreateCommand);
 
-        return ResponseEntity.ok(new Message("이메일을 확인해주세요"));
+        return ResponseEntity.ok().build();
     }
 
     private SignupCreateCommand convertToSignupCommand(SignupRequest request,LocalDateTime expireDate, String signupKey) {
@@ -48,6 +50,16 @@ public class SignupController {
                 .plusDays(days)
                 .plusHours(hours)
                 .plusMinutes(minutes);
+    }
+
+    @ExceptionHandler(value = IllegalSignupStatusException.class)
+    public ResponseEntity<ExceptionResponse> noSuchElementExceptionHandler(IllegalSignupStatusException e){
+        return ExceptionResponse.exception(ErrorCode.INVALID_STATUS, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = SignupAcceptTimeoutException.class)
+    public ResponseEntity<ExceptionResponse> signupAcceptTimeoutException(SignupAcceptTimeoutException e){
+        return ExceptionResponse.exception(ErrorCode.TIMEOUT, HttpStatus.BAD_REQUEST);
     }
 
     @NoArgsConstructor

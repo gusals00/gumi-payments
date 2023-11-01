@@ -23,7 +23,7 @@ public class AccountController {
     public ResponseEntity createAccount(@PathVariable Long signupId, @RequestBody @Valid AccountCreateRequest createRequest) {
         accountCreateManagerApplication.create(convert(createRequest), signupId);
 
-        return ResponseEntity.ok(new Message("계정 생성 성공"));
+        return ResponseEntity.ok().build();
     }
 
     private AccountCreateCommand convert(AccountCreateRequest createRequest) {
@@ -46,4 +46,5 @@ public class AccountController {
     static class Message{
         private String message;
     }
+
 }

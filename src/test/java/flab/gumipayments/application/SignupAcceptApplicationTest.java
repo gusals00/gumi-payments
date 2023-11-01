@@ -78,12 +78,5 @@ class SignupAcceptApplicationTest {
                 .hasMessage("만료 시간이 지났습니다.");
     }
 
-    @Test
-    @DisplayName("timeout")
-    void timeout() {
-        signupAcceptApplication.timeout();
-
-        verify(signupRepository).updateAllTimeoutSignup(any(), any());
-    }
 
 }

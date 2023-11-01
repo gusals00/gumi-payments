@@ -28,9 +28,9 @@ public class EmailSender implements Sender {
         try {
             setSignupAcceptMessage(message,toAddress,signupKey);
             javaMailSender.send(message);
-        } catch (MessagingException | MailException e) {
+        } catch (MessagingException e) {
             log.error("error = ",e);
-            throw new RuntimeException("다시 시도해주세요.");
+            throw new RuntimeException("mime message를 확인해주세요.");
         }
     }
 
