@@ -24,21 +24,9 @@ public class SignupAcceptApplication {
         Signup signup = signupRepository.findBySignupKey(acceptCommand.getSignupKey())
                 .orElseThrow(()->new NoSuchElementException("signup이 존재하지 않습니다."));
 
-        if(!signup.getExpireDate().isEqual(acceptCommand.getExpireDate())){
-            throw new IllegalArgumentException("만료시간이 올바르지 않습니다.");
-        }
-
         // accept
         signup.accept();
 
         return signup.getId();
-    }
-
-    @Transactional
-    public void timeout() {
-        // 만료된 가입요청 timeout
-        int timeoutSignup = signupRepository.updateAllTimeoutSignup(LocalDateTime.now(), SignupStatus.SIGNUP_REQUEST);
-
-        log.info("timeout 가입요청 개수 = {}", timeoutSignup);
     }
 }

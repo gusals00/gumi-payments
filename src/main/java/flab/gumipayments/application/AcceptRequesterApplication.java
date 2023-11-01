@@ -16,9 +16,9 @@ public class AcceptRequesterApplication {
     private final Sender sender;
 
     @Async("emailExecutor")
-    public void requestSignupAccept(String toAddress, String signupKey, LocalDateTime expireDate) {
+    public void requestSignupAccept(String toAddress, String signupKey) {
         log.info("email 전송");
-        sender.sendSignupRequest(toAddress, signupKey,expireDate);
+        sender.sendSignupRequest(toAddress, signupKey);
     }
 
 }

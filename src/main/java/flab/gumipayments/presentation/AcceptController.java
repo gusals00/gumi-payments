@@ -22,13 +22,12 @@ public class AcceptController {
     // 인증 수락
     @PostMapping("/signup")
     public ResponseEntity signupAccept(AcceptInfoRequest acceptInfoRequest) {
-        log.info("date = {}",acceptInfoRequest.getExpireDate());
         Long signupId = signupAcceptManagerApplication.accept(convert(acceptInfoRequest));
         return ResponseEntity.ok(new AcceptResponse(signupId));
     }
 
     private AcceptCommand convert(AcceptInfoRequest acceptInfoRequest) {
-        return new AcceptCommand(acceptInfoRequest.getSignupKey(), acceptInfoRequest.getExpireDate());
+        return new AcceptCommand(acceptInfoRequest.getSignupKey());
     }
 
     @NoArgsConstructor
@@ -38,7 +37,6 @@ public class AcceptController {
     static class AcceptInfoRequest {
         @NotBlank
         private String signupKey;
-        private LocalDateTime expireDate;
     }
 
     @AllArgsConstructor

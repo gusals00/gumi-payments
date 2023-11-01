@@ -34,24 +34,6 @@ class SignupRepositoryTest {
                 .build();
     }
 
-    @Test
-    @DisplayName("만료된 가입요청 timeout")
-    void updateTimeoutSignup() {
-        Signup timeoutSignup = getTimeoutSignup("asdas22@naver.com");
-        Signup timeoutSignup2 = getTimeoutSignup("asdas222@naver.com");
-        signupRepository.saveAll(List.of(signup, timeoutSignup, timeoutSignup2));
-
-        int timeoutSignupCount = signupRepository.updateAllTimeoutSignup(LocalDateTime.now(), SIGNUP_REQUEST);
-        timeoutSignup = signupRepository.findByEmail("asdas22@naver.com")
-                .orElseThrow(() -> new NoSuchElementException("signup이 존재하지 않습니다."));
-        timeoutSignup2 = signupRepository.findByEmail("asdas222@naver.com")
-                .orElseThrow(() -> new NoSuchElementException("signup이 존재하지 않습니다."));
-
-        assertThat(timeoutSignupCount).isEqualTo(2);
-        assertThat(timeoutSignup.getStatus()).isEqualTo(TIMEOUT);
-        assertThat(timeoutSignup2.getStatus()).isEqualTo(TIMEOUT);
-        assertThat(signup.getStatus()).isEqualTo(SIGNUP_REQUEST);
-    }
 
     private Signup getTimeoutSignup(String email) {
         return Signup.builder()

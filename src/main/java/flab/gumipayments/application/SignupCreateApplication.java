@@ -22,7 +22,7 @@ public class SignupCreateApplication {
         Signup signup = create(signupCreateCommand);
 
         // 인증 요청
-        acceptRequestApplication.requestSignupAccept(signupCreateCommand.getEmail(), signup.getSignupKey(),signup.getExpireDate());
+        acceptRequestApplication.requestSignupAccept(signupCreateCommand.getEmail(), signup.getSignupKey());
 
         // 가입 저장
         signupRepository.save(signup);

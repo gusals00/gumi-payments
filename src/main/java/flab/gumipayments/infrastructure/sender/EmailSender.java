@@ -23,10 +23,10 @@ public class EmailSender implements Sender {
     private String id;
 
     @Override
-    public void sendSignupRequest(String toAddress, String signupKey, LocalDateTime expireDate) {
+    public void sendSignupRequest(String toAddress, String signupKey) {
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
-            setSignupAcceptMessage(message,toAddress,signupKey,expireDate);
+            setSignupAcceptMessage(message,toAddress,signupKey);
             javaMailSender.send(message);
         } catch (MessagingException | MailException e) {
             log.error("error = ",e);
@@ -34,13 +34,13 @@ public class EmailSender implements Sender {
         }
     }
 
-    private void setSignupAcceptMessage(MimeMessage message, String toAddress, String signupKey,LocalDateTime expireDate) throws MessagingException {
+    private void setSignupAcceptMessage(MimeMessage message, String toAddress, String signupKey) throws MessagingException {
         message.setFrom(id+"@naver.com");
         message.setRecipients(MimeMessage.RecipientType.TO, toAddress);
         message.setSubject("[구미 페이먼츠] 회원가입 인증 코드");
         String body = "";
         body += "구미 페이먼츠 인증 코드입니다." + "<br>";
-        body +="<a href=\"https://localhost:3000/api/accept/signup?signupKey="+signupKey+"&expireDate="+expireDate+"\" >가입 인증</a>";
+        body +="<a href=\"https://localhost:3000/api/accept/signup?signupKey="+signupKey+"\" >가입 인증</a>";
         body += "<br>" +"지금 받은 이메일로 구미 페이먼츠를 가입하신 적이 없으면, 이메일을 무시해주세요.";
         message.setText(body,"UTF-8", "html");
     }

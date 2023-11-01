@@ -49,12 +49,6 @@ class SignupTest {
         statusCheck(signup.getStatus(), ACCEPT);
     }
 
-    @Test
-    @DisplayName("timeout status로 변경")
-    void changeToTimeout() {
-        signup.timeout();
-        statusCheck(signup.getStatus(), TIMEOUT);
-    }
 
     @Test
     @DisplayName("초기 가입 상태")
