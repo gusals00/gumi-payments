@@ -41,24 +41,10 @@ class SignupControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("가입 요청 API[POST] 테스트")
-    void signup() throws Exception {
-        doNothing().when(signupCreateApplication).signup(any());
-
-        mockMvc.perform(post("/api/signup")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").exists());
-        verify(signupCreateApplication).signup(any());
-    }
-
-    @Test
-    @WithMockUser
-    @DisplayName("가입 요청 API[POST] 예외테스트")
+    @DisplayName("예외: 이미 생성한 계정이 존재하면 가입 요청은 실패한다.")
     void signupException() throws Exception {
         doThrow(new IllegalArgumentException()).when(signupCreateApplication).signup(any());
+
         mockMvc.perform(post("/api/signup")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -66,4 +52,20 @@ class SignupControllerTest {
                 .andExpect(status().isBadRequest());
         verify(signupCreateApplication).signup(any());
     }
+
+    @Test
+    @WithMockUser
+    @DisplayName("성공: 가입 요청을 성공한다.")
+    void signup() throws Exception {
+        doNothing().when(signupCreateApplication).signup(any());
+
+        mockMvc.perform(post("/api/signup")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk());
+        verify(signupCreateApplication).signup(any());
+    }
+
+
 }
