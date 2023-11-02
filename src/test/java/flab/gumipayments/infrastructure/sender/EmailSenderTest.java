@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -35,9 +36,20 @@ class EmailSenderTest {
         message = mock(MimeMessage.class);
     }
 
+    @Test
+    @DisplayName("예외: 메일 형식이 올바르지 않으면 메일 발송이 실패한다.")
+    void sendEmailFail() {
+        toAddress = "123";
+        when(javaMailSender.createMimeMessage()).thenReturn(message);
+        doThrow(MailSendException.class).when(javaMailSender).send(any(MimeMessage.class));
+
+        assertThatThrownBy(() -> emailSender.sendSignupRequest(toAddress, signupKey))
+                .isInstanceOf(MailException.class);
+        verify(javaMailSender).createMimeMessage();
+    }
 
     @Test
-    @DisplayName("인증 메일 발송 성공")
+    @DisplayName("성공: 가입 요청 인증 이메일 발송을 성공한다.")
     void sendEmail() {
         when(javaMailSender.createMimeMessage()).thenReturn(message);
         doNothing().when(javaMailSender).send(any(MimeMessage.class));
@@ -48,15 +60,4 @@ class EmailSenderTest {
         verify(javaMailSender).send(any(MimeMessage.class));
     }
 
-    @Test
-    @DisplayName("인증 메일 발송 실패")
-    void sendEmailFail() {
-        when(javaMailSender.createMimeMessage()).thenReturn(message);
-        doThrow(MailSendException.class).when(javaMailSender).send(any(MimeMessage.class));
-
-        assertThatThrownBy(() -> emailSender.sendSignupRequest(toAddress, signupKey))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("다시 시도해주세요.");
-        verify(javaMailSender).createMimeMessage();
-    }
 }

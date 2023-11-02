@@ -1,5 +1,7 @@
 package flab.gumipayments.domain.signup;
 
+import flab.gumipayments.domain.signup.exception.IllegalSignupStatusException;
+import flab.gumipayments.domain.signup.exception.SignupAcceptTimeoutException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,24 +19,15 @@ import static org.assertj.core.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class SignupTest {
 
-    private Signup signup;
+    private Signup sut;
     private MockedStatic<LocalDateTime> localDateMockedStatic;
+    private Signup.SignupBuilder sutBuilder;
 
+    private
     @BeforeEach
     void setup() {
-        setNowLocalDateTime(2023,10,23,1,0);
-
-        signup = Signup.builder()
-                .email("love@naver.com")
-                .signupKey("1234")
-                .expireDate(LocalDateTime.now())
-                .build();
-    }
-
-    private void setNowLocalDateTime(int year,int month,int day,int hour,int minute) {
-        LocalDateTime date = LocalDateTime.of(year, month, day, hour, minute);
-        localDateMockedStatic = Mockito.mockStatic(LocalDateTime.class);
-        localDateMockedStatic.when(LocalDateTime::now).thenReturn(date);
+        sutBuilder = Signup.builder();
+        freezeLocalDateTimeNow();
     }
 
     @AfterEach
@@ -42,30 +35,71 @@ class SignupTest {
         localDateMockedStatic.close();
     }
 
-    @Test
-    @DisplayName("accept status로 변경")
-    void changeToAccept() {
-        signup.accept();
-        statusCheck(signup.getStatus(), ACCEPT);
-    }
-
-
-    @Test
-    @DisplayName("초기 가입 상태")
-    void initStatus() {
-        statusCheck(signup.getStatus(), SIGNUP_REQUEST);
+    private void freezeLocalDateTimeNow() {
+        LocalDateTime date = LocalDateTime.of(2023, 10, 23, 0, 0);
+        localDateMockedStatic = Mockito.mockStatic(LocalDateTime.class);
+        localDateMockedStatic.when(LocalDateTime::now).thenReturn(date);
     }
 
     @Test
-    @DisplayName("accept 에서 account created로 변경")
-    void changeToAcceptCreated() {
+    @DisplayName("예외: 기간이 만료된 인증은 실패한다.")
+    void acceptTimeout() {
+        sut = sutBuilder
+                .expireDate(LocalDateTime.now().minusDays(1)).build();
+
+        assertThatThrownBy(() -> sut.accept()).isInstanceOf(SignupAcceptTimeoutException.class);
+    }
+
+    @Test
+    @DisplayName("예외: 인증되지 않았으면 계정 생성은 실패한다")
+    void notAccept() {
+        sut = sutBuilder.build();
+
+        assertThatThrownBy(() -> sut.accountCreated()).isInstanceOf(IllegalSignupStatusException.class);
+    }
+
+    @Test
+    @DisplayName("예외: 계정이 이미 존재하면 계정 생성은 실패한다.")
+    void alreadyAccountCreated() {
+        sut = alreadyAccountCreatedSignup();
+
+        assertThatThrownBy(() -> sut.accountCreated()).isInstanceOf(IllegalSignupStatusException.class);
+    }
+
+    @Test
+    @DisplayName("성공: 가입 요청이 인증에 성공한다")
+    void acceptSignup() {
+        sut = sutBuilder
+                .expireDate(LocalDateTime.now().plusDays(1)).build();
+
+        sut.accept();
+
+        assertThat(sut.getStatus()).isEqualTo(ACCEPT);
+    }
+
+    @Test
+    @DisplayName("성공: 인증이 되었으면 계정 생성에 성공한다.")
+    void accountCreate() {
+        sut = acceptedSignup();
+
+        sut.accountCreated();
+
+        assertThat(sut.getStatus()).isEqualTo(ACCOUNT_CREATED);
+    }
+
+    private Signup alreadyAccountCreatedSignup() {
+        Signup signup =  sutBuilder
+                .expireDate(LocalDateTime.now().plusDays(1)).build();
         signup.accept();
         signup.accountCreated();
-        statusCheck(signup.getStatus(), ACCOUNT_CREATED);
+
+        return signup;
     }
 
-    private void statusCheck(SignupStatus actual,SignupStatus expected) {
-        assertThat(actual).isEqualTo(expected);
+    private Signup acceptedSignup() {
+        Signup signup = sutBuilder
+                .expireDate(LocalDateTime.now().plusDays(1)).build();
+        signup.accept();
+        return signup;
     }
-
 }

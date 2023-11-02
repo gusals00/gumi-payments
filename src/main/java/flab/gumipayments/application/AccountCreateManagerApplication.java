@@ -28,14 +28,14 @@ public class AccountCreateManagerApplication {
         Signup signup = signupRepository.findById(signupId)
                 .orElseThrow(() -> new NoSuchElementException("signup이 존재하지 않습니다."));
 
+        // 계정 생성 상태로 변경
+        signup.accountCreated();
+
         // 계정 생성
         Account account = accountFactory.create(accountCreateCommand, signup.getEmail());
 
         // 계정 저장
         accountRepository.save(account);
-
-        // 계정 생성 상태로 변경
-        signup.accountCreated();
 
         return account;
     }
