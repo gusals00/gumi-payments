@@ -2,6 +2,7 @@ package flab.gumipayments.application;
 
 import flab.gumipayments.domain.signup.Signup;
 import flab.gumipayments.domain.signup.SignupCreateCommand;
+import flab.gumipayments.domain.signup.SignupCreateCommand.SignupCreateCommandBuilder;
 import flab.gumipayments.domain.signup.SignupFactory;
 import flab.gumipayments.domain.signup.SignupRepository;
 import org.assertj.core.api.Assertions;
@@ -12,11 +13,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.testcontainers.shaded.org.yaml.snakeyaml.constructor.DuplicateKeyException;
 
+import javax.management.openmbean.KeyAlreadyExistsException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static flab.gumipayments.domain.KeyFactory.*;
+import static flab.gumipayments.domain.signup.SignupCreateCommand.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,25 +29,26 @@ class SignupCreateApplicationTest {
     @Mock
     private SignupFactory signupFactory;
     @Mock
-    private AcceptRequesterApplication acceptRequestApplication;
-    @Mock
     private SignupRepository signupRepository;
     @InjectMocks
     private SignupCreateApplication signupCreateApplication;
 
     private SignupCreateCommand signupCreateCommand;
+    private SignupCreateCommandBuilder signupCreateCommandBuilder;
     private Signup signup;
 
-    private static final int EXPIRE_DAYS=7;
-    private static final int EXPIRE_HOURS=7;
-    private static final int EXPIRE_MINUTES=0;
+    private static final int EXPIRE_MINUTES=5;
+
     @BeforeEach
     void setup() {
         LocalDateTime expireDate = LocalDateTime.now()
-                .plusDays(EXPIRE_DAYS)
-                .plusDays(EXPIRE_HOURS)
                 .plusMinutes(EXPIRE_MINUTES);
-        signupCreateCommand = new SignupCreateCommand("love47024702@naver.com",expireDate, generateSignupKey());
+
+        signupCreateCommand = new SignupCreateCommand("email@naver.com", expireDate, generateSignupKey());
+        signupCreateCommandBuilder = builder()
+                .expireDate(expireDate)
+                .signupKey(signupCreateCommand.getSignupKey());
+
         signup = Signup.builder()
                 .signupKey(signupCreateCommand.getSignupKey())
                 .expireDate(signupCreateCommand.getExpireDate())
@@ -52,11 +57,9 @@ class SignupCreateApplicationTest {
     }
 
     @Test
-    @DisplayName("가입 요청 성공(가입 요청한 적이 없는 이메일)")
-    void haveNeverSignedUpEmail() {
-        when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.empty());
+    @DisplayName("성공 : 가입 요청 시 사용한 이메일로 생성된 계정이 없으면 가입 요청을 성공한다.")
+    void signupSuccess() {
         when(signupFactory.create(signupCreateCommand)).thenReturn(signup);
-        when(signupRepository.save(signup)).thenReturn(signup);
 
         signupCreateApplication.signup(signupCreateCommand);
 
@@ -66,31 +69,19 @@ class SignupCreateApplicationTest {
     }
 
     @Test
-    @DisplayName("가입 요청 성공(가입 요청한 적이 있지만, 해당 이메일로 계정이 생성된 적이 없는 경우)")
-    void haveSignedUpButNotCreatedAccount() {
-        when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));
-        when(signupFactory.create(signupCreateCommand)).thenReturn(signup);
-        doNothing().when(signupRepository).delete(signup);
-        when(signupRepository.save(signup)).thenReturn(signup);
-
-        signupCreateApplication.signup(signupCreateCommand);
-
-        verify(signupRepository,times(2)).findByEmail(signup.getEmail());
-        verify(signupRepository).delete(signup);
-        verify(signupFactory).create(signupCreateCommand);
-        verify(signupRepository).save(signup);
-    }
-
-    @Test
-    @DisplayName("가입 요청으로 계정 생성한 적이 있는 경우")
+    @DisplayName("예외 : 같은 이메일로 생성한 계정이 존재하면 가입 요청이 실패한다.")
     void signupAlreadyExistEmail() {
+        setAccountCreated();
+        when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));
+        SignupCreateCommand createCommand = signupCreateCommandBuilder.email(signup.getEmail()).build();
+
+        Assertions.assertThatThrownBy(()-> signupCreateApplication.signup(createCommand))
+                .isInstanceOf(DuplicateException.class)
+                .hasMessage("해당 이메일로 생성한 계정이 이미 존재합니다.");
+    }
+
+    private void setAccountCreated() {
         signup.accept();
         signup.accountCreated();
-        when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));
-
-        Assertions.assertThatThrownBy(()-> signupCreateApplication.signup(signupCreateCommand))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 이메일로 생성한 계정이 이미 존재합니다.");
-
     }
 }
