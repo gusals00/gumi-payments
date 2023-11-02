@@ -13,9 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.testcontainers.shaded.org.yaml.snakeyaml.constructor.DuplicateKeyException;
 
-import javax.management.openmbean.KeyAlreadyExistsException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -31,7 +29,7 @@ class SignupCreateApplicationTest {
     @Mock
     private SignupRepository signupRepository;
     @InjectMocks
-    private SignupCreateApplication signupCreateApplication;
+    private SignupCreateApplication sut;
 
     private SignupCreateCommand signupCreateCommand;
     private SignupCreateCommandBuilder signupCreateCommandBuilder;
@@ -61,7 +59,7 @@ class SignupCreateApplicationTest {
     void signupSuccess() {
         when(signupFactory.create(signupCreateCommand)).thenReturn(signup);
 
-        signupCreateApplication.signup(signupCreateCommand);
+        sut.signup(signupCreateCommand);
 
         verify(signupRepository,times(2)).findByEmail(signup.getEmail());
         verify(signupFactory).create(signupCreateCommand);
@@ -75,7 +73,7 @@ class SignupCreateApplicationTest {
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));
         SignupCreateCommand createCommand = signupCreateCommandBuilder.email(signup.getEmail()).build();
 
-        Assertions.assertThatThrownBy(()-> signupCreateApplication.signup(createCommand))
+        Assertions.assertThatThrownBy(()-> sut.signup(createCommand))
                 .isInstanceOf(DuplicateException.class)
                 .hasMessage("해당 이메일로 생성한 계정이 이미 존재합니다.");
     }
