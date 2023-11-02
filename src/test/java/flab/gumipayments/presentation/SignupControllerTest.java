@@ -2,6 +2,7 @@ package flab.gumipayments.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import flab.gumipayments.application.DuplicateException;
 import flab.gumipayments.application.SignupCreateApplication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,13 +44,13 @@ class SignupControllerTest {
     @WithMockUser
     @DisplayName("예외: 이미 생성한 계정이 존재하면 가입 요청은 실패한다.")
     void signupException() throws Exception {
-        doThrow(new IllegalArgumentException()).when(signupCreateApplication).signup(any());
+        doThrow(new DuplicateException()).when(signupCreateApplication).signup(any());
 
         mockMvc.perform(post("/api/signup")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isConflict());
         verify(signupCreateApplication).signup(any());
     }
 

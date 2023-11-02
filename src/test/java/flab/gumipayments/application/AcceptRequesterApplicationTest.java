@@ -1,6 +1,5 @@
 package flab.gumipayments.application;
 
-import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.infrastructure.sender.Sender;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,14 +8,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AcceptRequesterApplicationTest {
     @InjectMocks
-    AcceptRequesterApplication acceptRequesterApplication;
+    AcceptRequesterApplication sut;
 
     @Mock
     Sender sender;
@@ -27,7 +24,7 @@ class AcceptRequesterApplicationTest {
         String toAddress ="123@naver.com";
         String signupKey = "key";
 
-        acceptRequesterApplication.requestSignupAccept(toAddress,signupKey);
+        sut.requestSignupAccept(toAddress,signupKey);
 
         verify(sender).sendSignupRequest(toAddress,signupKey);
     }

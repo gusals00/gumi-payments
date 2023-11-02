@@ -12,8 +12,6 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import java.time.LocalDateTime;
-
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -23,7 +21,7 @@ class EmailSenderTest {
     @Mock
     JavaMailSender javaMailSender;
     @InjectMocks
-    EmailSender emailSender;
+    EmailSender sut;
 
     private String toAddress;
     private String signupKey;
@@ -43,7 +41,7 @@ class EmailSenderTest {
         when(javaMailSender.createMimeMessage()).thenReturn(message);
         doThrow(MailSendException.class).when(javaMailSender).send(any(MimeMessage.class));
 
-        assertThatThrownBy(() -> emailSender.sendSignupRequest(toAddress, signupKey))
+        assertThatThrownBy(() -> sut.sendSignupRequest(toAddress, signupKey))
                 .isInstanceOf(MailException.class);
         verify(javaMailSender).createMimeMessage();
     }
@@ -54,7 +52,7 @@ class EmailSenderTest {
         when(javaMailSender.createMimeMessage()).thenReturn(message);
         doNothing().when(javaMailSender).send(any(MimeMessage.class));
 
-        emailSender.sendSignupRequest(toAddress, signupKey);
+        sut.sendSignupRequest(toAddress, signupKey);
 
         verify(javaMailSender).createMimeMessage();
         verify(javaMailSender).send(any(MimeMessage.class));
