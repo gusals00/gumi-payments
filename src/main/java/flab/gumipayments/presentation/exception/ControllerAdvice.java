@@ -1,6 +1,7 @@
 package flab.gumipayments.presentation.exception;
 
 
+import flab.gumipayments.application.DuplicateException;
 import flab.gumipayments.presentation.exception.ErrorCode.ErrorCode;
 import flab.gumipayments.presentation.exception.ExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -24,5 +25,10 @@ public class ControllerAdvice {
     @ExceptionHandler(value = NoSuchElementException.class)
     public ResponseEntity<ExceptionResponse> noSuchElementExceptionHandler(NoSuchElementException e){
         return ExceptionResponse.exception(ErrorCode.NOT_FOUND,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = DuplicateException.class)
+    public ResponseEntity<ExceptionResponse> duplicateExceptionHandler(DuplicateException e){
+        return ExceptionResponse.exception(ErrorCode.DUPLICATED,HttpStatus.CONFLICT);
     }
 }

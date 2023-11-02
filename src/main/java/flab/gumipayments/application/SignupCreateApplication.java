@@ -46,7 +46,7 @@ public class SignupCreateApplication {
         signupRepository.findByEmail(signupCommand.getEmail())
                 .ifPresent(signup -> {
                     if (signup.getStatus() == ACCOUNT_CREATED) {
-                        throw new IllegalArgumentException("해당 이메일로 생성한 계정이 이미 존재합니다.");
+                        throw new DuplicateException("해당 이메일로 생성한 계정이 이미 존재합니다.");
                     }
                 });
     }

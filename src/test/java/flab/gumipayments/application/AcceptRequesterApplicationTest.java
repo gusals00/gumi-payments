@@ -22,11 +22,10 @@ class AcceptRequesterApplicationTest {
     Sender sender;
 
     @Test
-    @DisplayName("sender를 호출")
+    @DisplayName("성공 : 가입 요청 인증 이메일 발송을 성공한다.")
     void requestSignupAccept() {
         String toAddress ="123@naver.com";
-        String signupKey = KeyFactory.generateSignupKey();
-        doNothing().when(sender).sendSignupRequest(toAddress,signupKey);
+        String signupKey = "key";
 
         acceptRequesterApplication.requestSignupAccept(toAddress,signupKey);
 
