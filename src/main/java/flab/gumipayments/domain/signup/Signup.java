@@ -1,7 +1,5 @@
 package flab.gumipayments.domain.signup;
 
-import flab.gumipayments.domain.signup.exception.IllegalSignupStatusException;
-import flab.gumipayments.domain.signup.exception.SignupAcceptTimeoutException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -55,7 +53,7 @@ public class Signup {
         if (this.status == fromStatus) {
             this.status = toStatus;
         } else {
-            throw new IllegalSignupStatusException("올바르지 않은 가입 요청 status 변경입니다.");
+            throw new SignupIllegalStatusException("올바르지 않은 가입 요청 status 변경입니다.");
         }
     }
 }

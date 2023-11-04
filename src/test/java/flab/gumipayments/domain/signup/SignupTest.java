@@ -1,7 +1,5 @@
 package flab.gumipayments.domain.signup;
 
-import flab.gumipayments.domain.signup.exception.IllegalSignupStatusException;
-import flab.gumipayments.domain.signup.exception.SignupAcceptTimeoutException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +53,7 @@ class SignupTest {
     void notAccept() {
         sut = sutBuilder.build();
 
-        assertThatThrownBy(() -> sut.accountCreated()).isInstanceOf(IllegalSignupStatusException.class);
+        assertThatThrownBy(() -> sut.accountCreated()).isInstanceOf(SignupIllegalStatusException.class);
     }
 
     @Test
@@ -63,7 +61,7 @@ class SignupTest {
     void alreadyAccountCreated() {
         sut = alreadyAccountCreatedSignup();
 
-        assertThatThrownBy(() -> sut.accountCreated()).isInstanceOf(IllegalSignupStatusException.class);
+        assertThatThrownBy(() -> sut.accountCreated()).isInstanceOf(SignupIllegalStatusException.class);
     }
 
     @Test

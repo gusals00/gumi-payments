@@ -1,4 +1,4 @@
-package flab.gumipayments.presentation.exception.ErrorCode;
+package flab.gumipayments.presentation.exceptionhandling.ErrorCode;
 
 public enum ErrorCode {
 
@@ -6,6 +6,7 @@ public enum ErrorCode {
     DUPLICATED,
     TRY_AGAIN,
     INVALID_STATUS,
-    TIMEOUT
+    TIMEOUT,
+    BINDING
 
 }

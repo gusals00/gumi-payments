@@ -5,6 +5,7 @@ import flab.gumipayments.domain.account.AccountCreateCommand;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +36,9 @@ public class AccountController {
     @Setter
     static class AccountCreateRequest {
         @Pattern(regexp = "[a-zA-Z0-9]{6,12}", message = "비밀번호는 영어와 숫자를 포함한 6~12자리 이내로 입력해주세요.")
-        @NotBlank(message = "비밀번호를 입력해주세요")
         private String password;
         @NotBlank(message = "이름을 입력해주세요")
+        @Size(min = 2, max = 16, message = "이름은 2자 이상 16자 이하여야 합니다.")
         private String name;
     }
 

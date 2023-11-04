@@ -1,4 +1,4 @@
-package flab.gumipayments.domain.signup.exception;
+package flab.gumipayments.domain.signup;
 
 public class SignupAcceptTimeoutException extends RuntimeException {
     public SignupAcceptTimeoutException() {

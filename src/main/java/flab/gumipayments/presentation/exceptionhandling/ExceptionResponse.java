@@ -1,6 +1,6 @@
-package flab.gumipayments.presentation.exception;
+package flab.gumipayments.presentation.exceptionhandling;
 
-import flab.gumipayments.presentation.exception.ErrorCode.ErrorCode;
+import flab.gumipayments.presentation.exceptionhandling.ErrorCode.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
