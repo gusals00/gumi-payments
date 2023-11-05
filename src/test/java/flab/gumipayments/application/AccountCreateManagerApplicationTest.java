@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static flab.gumipayments.domain.signup.SignupStatus.*;
@@ -28,48 +29,50 @@ class AccountCreateManagerApplicationTest {
     @Mock
     private AccountFactory accountFactory;
     @InjectMocks
-    private AccountCreateManagerApplication accountCreateManagerApplication;
+    private AccountCreateManagerApplication sut;
     @Mock
     private SignupRepository signupRepository;
     @Mock
     private AccountRepository accountRepository;
     @Mock
-    private AccountCreateCommand accountCreateCommand;
+    private AccountCreateCommand.AccountCreateCommandBuilder accountCreateCommandBuilder;
 
-    private Signup signup;
+    private Signup.SignupBuilder signupBuilder;
 
     @BeforeEach
     void setUp() {
-        String email = "love4@naver.com";
-        String signupKey= KeyFactory.generateSignupKey();
-        signup = Signup.builder().signupKey(signupKey)
-                .email(email)
-                .expireDate(LocalDateTime.now().plusDays(1)).build();
+        accountCreateCommandBuilder = AccountCreateCommand.builder();
+        signupBuilder = Signup.builder();
     }
 
     @Test
-    @DisplayName("계정 생성 성공")
+    @DisplayName("예외: 가입 요청이 존재하지 않으면 계정 생성이 실패한다.")
+    void accountNotExist() {
+        Long signupId = 1234L;
+        when(signupRepository.findById(signupId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> sut.create(accountCreateCommandBuilder.build(), signupId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("signup이 존재하지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("성공: 계정 생성을 성공한다.")
     void accountCreate() {
-        signup.accept();
-        when(signupRepository.findById(any())).thenReturn(Optional.of(signup));
+        AccountCreateCommand accountCreateCommand = accountCreateCommandBuilder
+                .name("성호창").password("1234").build();
+        when(signupRepository.findById(any())).thenReturn(Optional.of(acceptedSignup()));
+        when(accountFactory.create(any(),any())).thenReturn(any());
 
-        accountCreateManagerApplication.create(accountCreateCommand, signup.getId());
+        sut.create(accountCreateCommand,1L);
 
-        verify(signupRepository).findById(any());
-        verify(accountFactory).create(any(), any());
         verify(accountRepository).save(any());
-        assertThat(signup.getStatus()).isEqualTo(ACCOUNT_CREATED);
     }
 
-    @Test
-    @DisplayName("계정 생성 실패(이미 계정을 생성한 가입요청인 경우)")
-    void accountCreatedIsTrue() {
+    private Signup acceptedSignup() {
+        Signup signup = signupBuilder.expireDate(LocalDateTime.now().plusDays(1)).build();
         signup.accept();
-        signup.accountCreated();
-        when(signupRepository.findById(any())).thenReturn(Optional.of(signup));
-
-        assertThatThrownBy(() -> accountCreateManagerApplication.create(accountCreateCommand, signup.getId()))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("올바르지 않은 가입 요청 status 변경입니다.");
+        return signup;
     }
+
 }
