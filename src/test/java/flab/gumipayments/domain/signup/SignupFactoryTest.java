@@ -9,44 +9,49 @@ import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 
-import static flab.gumipayments.application.Expire.*;
-import static flab.gumipayments.domain.KeyFactory.*;
 import static org.assertj.core.api.Assertions.*;
 
 class SignupFactoryTest {
 
     private MockedStatic<LocalDateTime> localDateMockedStatic;
-
+    private SignupCreateCommand.SignupCreateCommandBuilder signupCreateCommandBuilder;
+    private SignupFactory signupFactory;
     @BeforeEach
     void setup() {
-        LocalDateTime date = LocalDateTime.of(2023, 10, 23, 1, 0);
+        freezeLocalDateTimeNow();
+
+        signupCreateCommandBuilder = SignupCreateCommand.builder();
+        signupFactory = new SignupFactory();
+    }
+    private void freezeLocalDateTimeNow() {
+        LocalDateTime date = LocalDateTime.of(2023, 10, 23, 0, 0);
         localDateMockedStatic = Mockito.mockStatic(LocalDateTime.class);
         localDateMockedStatic.when(LocalDateTime::now).thenReturn(date);
     }
-
     @AfterEach
     void close() {
         localDateMockedStatic.close();
     }
 
     @Test
-    @DisplayName("가입 요청 생성")
+    @DisplayName("성공: 가입 요청 생성을 성공한다.")
     void create() {
-        LocalDateTime expireDate = createExpireDate(SIGNUP_KEY_EXPIRE_DAYS, SIGNUP_KEY_EXPIRE_HOURS, SIGNUP_KEY_EXPIRE_MINUTES);
-        SignupCreateCommand signupCreateCommand = new SignupCreateCommand("love@naver.com",expireDate, generateSignupKey());
-        SignupFactory signupFactory = new SignupFactory();
+        String email = "love@naver.com";
+        LocalDateTime expireDate  = LocalDateTime.now().plusDays(1);
+        String signupKey = "1234";
 
-        Signup signup = signupFactory.create(signupCreateCommand);
+        Signup signup = signupFactory.create(signupCreateCommand(signupKey,expireDate, email));
 
-        assertThat(signup.getEmail()).isEqualTo(signupCreateCommand.getEmail());
-        assertThat(signup.getSignupKey()).isEqualTo(signupCreateCommand.getSignupKey());
-        assertThat(signup.getExpireDate()).isEqualTo(signupCreateCommand.getExpireDate());
+        assertThat(signup.getEmail()).isEqualTo(email);
+        assertThat(signup.getSignupKey()).isEqualTo(signupKey);
+        assertThat(signup.getExpireDate()).isEqualTo(expireDate);
     }
 
-    private LocalDateTime createExpireDate(int days, int hours, int minutes) {
-        return LocalDateTime.now()
-                .plusDays(days)
-                .withHour(hours)
-                .withMinute(minutes);
+    private SignupCreateCommand signupCreateCommand(String signupKey, LocalDateTime expireDate, String email){
+        return signupCreateCommandBuilder
+                .signupKey(signupKey)
+                .expireDate(expireDate)
+                .email(email)
+                .build();
     }
 }

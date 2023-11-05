@@ -9,6 +9,8 @@ import flab.gumipayments.presentation.exceptionhandling.ErrorCode.ErrorCode;
 import flab.gumipayments.presentation.exceptionhandling.ExceptionResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -57,16 +59,12 @@ public class SignupController {
         return ExceptionResponse.exception(ErrorCode.INVALID_STATUS, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = SignupAcceptTimeoutException.class)
-    public ResponseEntity<ExceptionResponse> signupAcceptTimeoutException(SignupAcceptTimeoutException e){
-        return ExceptionResponse.exception(ErrorCode.TIMEOUT, HttpStatus.BAD_REQUEST);
-    }
 
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter
     static class SignupRequest {
-        @Email(message = "올바른 이메일 형식이 아닙니다.")
+        @Pattern(regexp = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",message = "올바른 이메일 형식이 아닙니다.")
         private String email;
     }
 

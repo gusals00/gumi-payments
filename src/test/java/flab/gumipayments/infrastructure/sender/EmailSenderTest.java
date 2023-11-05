@@ -23,27 +23,15 @@ class EmailSenderTest {
     @InjectMocks
     EmailSender sut;
 
-    private String toAddress;
+    private String email;
     private String signupKey;
     private MimeMessage message;
 
     @BeforeEach
     void setup() {
-        toAddress = "123@naver.com";
+        email = "123@naver.com";
         signupKey = "12345";
         message = mock(MimeMessage.class);
-    }
-
-    @Test
-    @DisplayName("예외: 메일 형식이 올바르지 않으면 메일 발송이 실패한다.")
-    void sendEmailFail() {
-        toAddress = "123";
-        when(javaMailSender.createMimeMessage()).thenReturn(message);
-        doThrow(MailSendException.class).when(javaMailSender).send(any(MimeMessage.class));
-
-        assertThatThrownBy(() -> sut.sendSignupRequest(toAddress, signupKey))
-                .isInstanceOf(MailException.class);
-        verify(javaMailSender).createMimeMessage();
     }
 
     @Test
@@ -52,7 +40,7 @@ class EmailSenderTest {
         when(javaMailSender.createMimeMessage()).thenReturn(message);
         doNothing().when(javaMailSender).send(any(MimeMessage.class));
 
-        sut.sendSignupRequest(toAddress, signupKey);
+        sut.sendSignupRequest(email, signupKey);
 
         verify(javaMailSender).createMimeMessage();
         verify(javaMailSender).send(any(MimeMessage.class));

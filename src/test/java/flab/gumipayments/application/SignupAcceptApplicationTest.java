@@ -23,60 +23,47 @@ import static org.mockito.Mockito.*;
 class SignupAcceptApplicationTest {
 
     @InjectMocks
-    SignupAcceptApplication signupAcceptApplication;
+    SignupAcceptApplication sut;
     @Mock
     SignupRepository signupRepository;
+
+    private AcceptCommand.AcceptCommandBuilder acceptCommandBuilder;
+    private Signup.SignupBuilder signupBuilder;
 
     private Signup signup;
     private AcceptCommand acceptCommand;
 
     @BeforeEach
     void setup() {
-        String email = "love4@naver.com";
-        String signupKey= KeyFactory.generateSignupKey();
-        signup = Signup.builder().signupKey(signupKey)
-                .email(email)
-                .expireDate(LocalDateTime.now().plusDays(1))
-                .build();
-        acceptCommand =  new AcceptCommand(signup.getSignupKey());
-
-    }
-    @Test
-    @DisplayName("가입 인증 성공")
-    void signupAccept() {
-        when(signupRepository.findBySignupKey(acceptCommand.getSignupKey()))
-                .thenReturn(Optional.of(signup));
-
-        signupAcceptApplication.accept(acceptCommand);
-
-        verify(signupRepository).findBySignupKey(acceptCommand.getSignupKey());
-        assertThat(signup.getStatus()).isEqualTo(SignupStatus.ACCEPT);
+        acceptCommandBuilder = AcceptCommand.builder();
+        signupBuilder = Signup.builder();
     }
 
-
-
     @Test
-    @DisplayName("해당 signupKey을 가지는 signup이 없는 경우")
+    @DisplayName("예외: 가입 요청이 존재하지 않으면 계정 생성이 실패한다.")
     void doNotHaveSignupWithSignupKeyAndEmail() {
-        when(signupRepository.findBySignupKey(any()))
+        acceptCommand = acceptCommandBuilder
+                .signupKey("1234").build();
+        when(signupRepository.findBySignupKey(acceptCommand.getSignupKey()))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(()->signupAcceptApplication.accept(acceptCommand))
+        assertThatThrownBy(()-> sut.accept(acceptCommand))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("signup이 존재하지 않습니다.");
     }
 
     @Test
-    @DisplayName("만료 시간이 올바르지 않은 경우")
-    void doesNotRightExpiredDate() {
-        AcceptCommand invalidCommand = new AcceptCommand(acceptCommand.getSignupKey());
-        when(signupRepository.findBySignupKey(signup.getSignupKey()))
-               .thenReturn(Optional.of(signup));
+    @DisplayName("성공: 가입 요청의 인증이 성공한다.")
+    void signupAccept() {
+        acceptCommand = acceptCommandBuilder
+                .signupKey("1234").build();
+        signup = signupBuilder
+                .signupKey("1234").expireDate(LocalDateTime.now().plusDays(1)).build();
+        when(signupRepository.findBySignupKey(acceptCommand.getSignupKey()))
+                .thenReturn(Optional.of(signup));
 
-        assertThatThrownBy(()->signupAcceptApplication.accept(invalidCommand))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("만료 시간이 지났습니다.");
+        sut.accept(acceptCommand);
+
+        assertThat(signup.getStatus()).isEqualTo(SignupStatus.ACCEPT);
     }
-
-
 }
