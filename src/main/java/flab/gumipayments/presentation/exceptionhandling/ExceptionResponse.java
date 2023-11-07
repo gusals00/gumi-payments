@@ -9,16 +9,14 @@ import org.springframework.http.ResponseEntity;
 @Getter
 public class ExceptionResponse {
     private ErrorCode code;
+    private String message;
 
-    public ExceptionResponse(ErrorCode errorCode) {
-        this.code = errorCode;
-    }
-
-    public static ResponseEntity<ExceptionResponse> exception(ErrorCode errorCode, HttpStatus status) {
+    public static ResponseEntity<ExceptionResponse> of(ErrorCode errorCode, HttpStatus status, String message) {
         return ResponseEntity
                 .status(status)
                 .body(ExceptionResponse.builder()
                         .code(errorCode)
+                        .message(message)
                         .build());
     }
 }

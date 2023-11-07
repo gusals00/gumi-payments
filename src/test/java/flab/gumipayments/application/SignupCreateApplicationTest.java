@@ -30,6 +30,8 @@ class SignupCreateApplicationTest {
     private SignupRepository signupRepository;
     @InjectMocks
     private SignupCreateApplication sut;
+    @Mock
+    private AcceptRequesterApplication acceptRequestApplication;
 
     private SignupCreateCommand signupCreateCommand;
     private SignupCreateCommandBuilder signupCreateCommandBuilder;
@@ -57,6 +59,7 @@ class SignupCreateApplicationTest {
     @Test
     @DisplayName("성공: 가입 요청 시 가입 요청을 성공한다.")
     void signupSuccess() {
+        doNothing().when(acceptRequestApplication).requestSignupAccept(any(), any());
         when(signupFactory.create(signupCreateCommand)).thenReturn(signup);
 
         sut.signup(signupCreateCommand);

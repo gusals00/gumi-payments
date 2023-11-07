@@ -4,12 +4,9 @@ import flab.gumipayments.application.SignupCreateApplication;
 import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.SignupCreateCommand;
 import flab.gumipayments.domain.signup.SignupIllegalStatusException;
-import flab.gumipayments.domain.signup.SignupAcceptTimeoutException;
 import flab.gumipayments.presentation.exceptionhandling.ErrorCode.ErrorCode;
 import flab.gumipayments.presentation.exceptionhandling.ExceptionResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +53,7 @@ public class SignupController {
 
     @ExceptionHandler(value = SignupIllegalStatusException.class)
     public ResponseEntity<ExceptionResponse> noSuchElementExceptionHandler(SignupIllegalStatusException e){
-        return ExceptionResponse.exception(ErrorCode.INVALID_STATUS, HttpStatus.BAD_REQUEST);
+        return ExceptionResponse.of(ErrorCode.INVALID_STATUS, HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
 
