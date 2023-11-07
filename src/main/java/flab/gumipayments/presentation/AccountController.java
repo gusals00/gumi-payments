@@ -32,6 +32,7 @@ public class AccountController {
     }
 
     @NoArgsConstructor
+    @AllArgsConstructor
     @Getter
     @Setter
     static class AccountCreateRequest {

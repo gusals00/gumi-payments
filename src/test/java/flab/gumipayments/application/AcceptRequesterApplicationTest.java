@@ -21,11 +21,11 @@ class AcceptRequesterApplicationTest {
     @Test
     @DisplayName("성공 : 가입 요청 인증 이메일 발송을 성공한다.")
     void requestSignupAccept() {
-        String toAddress ="123@naver.com";
+        String email ="123@naver.com";
         String signupKey = "key";
 
-        sut.requestSignupAccept(toAddress,signupKey);
+        sut.requestSignupAccept(email,signupKey);
 
-        verify(sender).sendSignupRequest(toAddress,signupKey);
+        verify(sender).sendSignupRequest(email,signupKey);
     }
 }

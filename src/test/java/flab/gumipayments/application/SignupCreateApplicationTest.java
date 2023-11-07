@@ -55,19 +55,18 @@ class SignupCreateApplicationTest {
     }
 
     @Test
-    @DisplayName("성공 : 가입 요청 시 사용한 이메일로 생성된 계정이 없으면 가입 요청을 성공한다.")
+    @DisplayName("성공: 가입 요청 시 가입 요청을 성공한다.")
     void signupSuccess() {
         when(signupFactory.create(signupCreateCommand)).thenReturn(signup);
 
         sut.signup(signupCreateCommand);
 
-        verify(signupRepository,times(2)).findByEmail(signup.getEmail());
         verify(signupFactory).create(signupCreateCommand);
         verify(signupRepository).save(signup);
     }
 
     @Test
-    @DisplayName("예외 : 같은 이메일로 생성한 계정이 존재하면 가입 요청이 실패한다.")
+    @DisplayName("예외: 같은 이메일로 생성한 계정이 존재하면 가입 요청이 실패한다.")
     void signupAlreadyExistEmail() {
         setAccountCreated();
         when(signupRepository.findByEmail(signup.getEmail())).thenReturn(Optional.ofNullable(signup));

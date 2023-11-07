@@ -2,10 +2,15 @@ package flab.gumipayments.presentation;
 
 import flab.gumipayments.application.AcceptCommand;
 import flab.gumipayments.application.SignupAcceptApplication;
+import flab.gumipayments.domain.signup.SignupAcceptTimeoutException;
+import flab.gumipayments.domain.signup.SignupIllegalStatusException;
+import flab.gumipayments.presentation.exceptionhandling.ErrorCode.ErrorCode;
+import flab.gumipayments.presentation.exceptionhandling.ExceptionResponse;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +33,11 @@ public class AcceptController {
 
     private AcceptCommand convert(AcceptInfoRequest acceptInfoRequest) {
         return new AcceptCommand(acceptInfoRequest.getSignupKey());
+    }
+
+    @ExceptionHandler(value = SignupAcceptTimeoutException.class)
+    public ResponseEntity<ExceptionResponse> noSuchElementExceptionHandler(SignupAcceptTimeoutException e){
+        return ExceptionResponse.exception(ErrorCode.TIMEOUT, HttpStatus.BAD_REQUEST);
     }
 
     @NoArgsConstructor
