@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static flab.gumipayments.domain.signup.Signup.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -28,7 +29,7 @@ class SignupAcceptApplicationTest {
     SignupRepository signupRepository;
 
     private AcceptCommand.AcceptCommandBuilder acceptCommandBuilder;
-    private Signup.SignupBuilder signupBuilder;
+    private SignupBuilder signupBuilder;
 
     private Signup signup;
     private AcceptCommand acceptCommand;
@@ -36,7 +37,10 @@ class SignupAcceptApplicationTest {
     @BeforeEach
     void setup() {
         acceptCommandBuilder = AcceptCommand.builder();
-        signupBuilder = Signup.builder();
+        signupBuilder = builder();
+        signup = signupBuilder
+                .signupKey("1234").expireDate(LocalDateTime.now().plusDays(1)).build();
+
     }
 
     @Test
@@ -57,9 +61,7 @@ class SignupAcceptApplicationTest {
     void signupAccept() {
         acceptCommand = acceptCommandBuilder
                 .signupKey("1234").build();
-        signup = signupBuilder
-                .signupKey("1234").expireDate(LocalDateTime.now().plusDays(1)).build();
-        when(signupRepository.findBySignupKey(acceptCommand.getSignupKey()))
+        when(signupRepository.findBySignupKey("1234"))
                 .thenReturn(Optional.of(signup));
 
         sut.accept(acceptCommand);
