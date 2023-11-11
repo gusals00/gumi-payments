@@ -22,7 +22,7 @@ public class AcceptController {
 
     // 인증 수락
     @PostMapping("/signup")
-    public ResponseEntity signupAccept(AcceptInfoRequest acceptInfoRequest) {
+    public ResponseEntity signupAccept(@RequestBody AcceptInfoRequest acceptInfoRequest) {
         Long signupId = signupAcceptManagerApplication.accept(convert(acceptInfoRequest));
         return ResponseEntity.ok(new AcceptResponse(signupId));
     }
