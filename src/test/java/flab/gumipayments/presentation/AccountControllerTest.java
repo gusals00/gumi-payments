@@ -9,10 +9,14 @@ import flab.gumipayments.presentation.AccountController.AccountCreateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,11 +28,17 @@ import static flab.gumipayments.domain.account.Account.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(AccountController.class)
+@AutoConfigureRestDocs
 class AccountControllerTest {
 
     @Autowired
@@ -65,7 +75,21 @@ class AccountControllerTest {
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+
+                .andDo(document("account/create_account",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("signupId").description("계정 생성할 signup id")
+                        ),
+                        requestFields(
+                                fieldWithPath("password").type(JsonFieldType.STRING)
+                                        .description("회원 가입 시 비밀번호"),
+                                fieldWithPath("name").type(JsonFieldType.STRING)
+                                        .description("회원가입 시 이름")
+                        )
+                ));
     }
 
     @Test
@@ -149,5 +173,4 @@ class AccountControllerTest {
                         assertThat(result.getResolvedException().getClass()).isEqualTo(MethodArgumentNotValidException.class)
                 );
     }
-
 }
