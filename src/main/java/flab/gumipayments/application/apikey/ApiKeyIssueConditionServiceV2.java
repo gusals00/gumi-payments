@@ -50,4 +50,5 @@ public class ApiKeyIssueConditionServiceV2 {
     private ApiKeyIssueCondition existApiKey(){
         return candidate -> apiKeyRepository.existsByAccountIdAndType(candidate.getAccountId(), candidate.getApiKeyType());
     }
+
 }
