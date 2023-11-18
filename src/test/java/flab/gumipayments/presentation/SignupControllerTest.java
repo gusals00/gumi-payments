@@ -3,7 +3,7 @@ package flab.gumipayments.presentation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import flab.gumipayments.application.DuplicateException;
-import flab.gumipayments.application.SignupCreateApplication;
+import flab.gumipayments.application.signup.SignupCreateApplication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
