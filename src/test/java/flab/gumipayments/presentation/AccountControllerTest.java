@@ -2,7 +2,7 @@ package flab.gumipayments.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import flab.gumipayments.application.AccountCreateManagerApplication;
+import flab.gumipayments.application.account.AccountCreateManagerApplication;
 import flab.gumipayments.domain.account.Account;
 import flab.gumipayments.domain.signup.SignupIllegalStatusException;
 import flab.gumipayments.presentation.AccountController.AccountCreateRequest;

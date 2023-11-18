@@ -1,6 +1,6 @@
 package flab.gumipayments.presentation;
 
-import flab.gumipayments.application.SignupCreateApplication;
+import flab.gumipayments.application.signup.SignupCreateApplication;
 import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.SignupCreateCommand;
 import flab.gumipayments.domain.signup.SignupIllegalStatusException;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
-import static flab.gumipayments.application.Expire.*;
+import static flab.gumipayments.application.signup.Expire.*;
 
 @RestController
 @RequiredArgsConstructor

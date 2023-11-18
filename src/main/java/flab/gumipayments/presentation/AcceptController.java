@@ -1,7 +1,7 @@
 package flab.gumipayments.presentation;
 
-import flab.gumipayments.application.AcceptCommand;
-import flab.gumipayments.application.SignupAcceptApplication;
+import flab.gumipayments.application.signup.AcceptCommand;
+import flab.gumipayments.application.signup.SignupAcceptApplication;
 import flab.gumipayments.domain.signup.SignupAcceptTimeoutException;
 import flab.gumipayments.presentation.exceptionhandling.ErrorCode.ErrorCode;
 import flab.gumipayments.presentation.exceptionhandling.ExceptionResponse;
