@@ -1,5 +1,6 @@
 package flab.gumipayments.application.apikey;
 
+import flab.gumipayments.application.apikey.v3.ApiKeyIssueConditionService;
 import flab.gumipayments.domain.apikey.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,14 +17,14 @@ public class ApiKeyIssueRequesterApplication {
     private final ApiKeyRepository apiKeyRepository;
     private final ApiKeyFactory apiKeyFactory;
 
-    private final ApiKeyIssueConditionServiceV1 issueConditionService;
+    private final ApiKeyIssueConditionServiceV1 issueConditionServiceV1;
+    private final ApiKeyIssueConditionService issueConditionService;
 
-    @Transactional
     //api 키 발급
-    public ApiKeyPair issueApiKey(ApiKeyIssueCommand issueCommand){
-
+    @Transactional
+    public ApiKeyPair issueApiKey(ApiKeyIssueCommand issueCommand) {
         // 발급 조건 확인
-        if(!issueConditionService.getIssueCondition(issueCommand.getKeyType()).isSatisfiedBy(convert(issueCommand))){
+        if (!issueConditionService.isSatisfy(issueCommand.getKeyType(), issueCommand.getAccountId())) {
             throw new ApiKeyIssueException("api 키 발급을 실패했습니다.");
         }
 
@@ -41,9 +42,9 @@ public class ApiKeyIssueRequesterApplication {
 
     @Transactional
     //api 키 재발급
-    public ApiKeyPair reIssueApiKey(ApiKeyReIssueCommand reIssueCommand){
+    public ApiKeyPair reIssueApiKey(ApiKeyReIssueCommand reIssueCommand) {
         // 재발급 조건
-        if(issueConditionService.getReIssueCondition(reIssueCommand.getKeyType()).isSatisfiedBy(convert(reIssueCommand))){
+        if (issueConditionServiceV1.getReIssueCondition(reIssueCommand.getKeyType()).isSatisfiedBy(convert(reIssueCommand))) {
             throw new ApiKeyIssueException("api 키 재발급을 실패했습니다.");
         }
 
@@ -71,7 +72,7 @@ public class ApiKeyIssueRequesterApplication {
         apiKeyRepository.delete(apiKey);
     }
 
-    private ApiKeyCreateCommand convertApiKeyCreateCommand(ApiKeyIssueCommand issueCommand,ApiKeyPair keyPair) {
+    private ApiKeyCreateCommand convertApiKeyCreateCommand(ApiKeyIssueCommand issueCommand, ApiKeyPair keyPair) {
         return ApiKeyCreateCommand.builder()
                 .apiKeyType(issueCommand.getKeyType())
                 .secretKey(keyPair.getSecretKey())
@@ -80,7 +81,7 @@ public class ApiKeyIssueRequesterApplication {
                 .build();
     }
 
-    private ApiKeyCreateCommand convertApiKeyCreateCommand(ApiKeyReIssueCommand issueCommand,ApiKeyPair keyPair) {
+    private ApiKeyCreateCommand convertApiKeyCreateCommand(ApiKeyReIssueCommand issueCommand, ApiKeyPair keyPair) {
         return ApiKeyCreateCommand.builder()
                 .apiKeyType(issueCommand.getKeyType())
                 .secretKey(keyPair.getSecretKey())
