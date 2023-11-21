@@ -1,0 +1,32 @@
+openapi: 3.0.0
+servers:
+  - url: 'http://test.swagger.io/v3'
+info:
+  description: test
+  version: 1.0.0
+  title: test
+  license:
+    name: Apache-2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: tag
+    description: tag description
+paths: # 아래로 API Path를 명시한다
+  '/test': # /test API에 대한 명세
+    get: # HTTP get Method를 사용한다.
+      tags: # 문서 초기부분에 작성해둔 태그로 구분지을 수 있다.
+        - tag
+      summary: 테스트 # 설명
+      security: # 인증정보를 표현한다.
+        - cookieAuth: [ ] # 쿠키를 이용한 인증정보 (위에서 정의한 인증정보)
+      responses:
+        '200': # HTTP Status Code
+          description: 요청 성공
+          content: # 응답값
+            applicaion/json:
+              schema:
+                properties:
+                  hello:
+                    type: string
+                    example: world
+
