@@ -1,6 +1,5 @@
 package flab.gumipayments.application.apikey;
 
-import flab.gumipayments.application.apikey.v3.ApiKeyIssueConditionService;
 import flab.gumipayments.domain.apikey.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,14 +16,12 @@ public class ApiKeyIssueRequesterApplication {
     private final ApiKeyRepository apiKeyRepository;
     private final ApiKeyFactory apiKeyFactory;
 
-    private final ApiKeyIssueConditionServiceV1 issueConditionServiceV1;
-    private final ApiKeyIssueConditionService issueConditionService;
+    private final ApiKeyIssueConditionService apiKeyIssueConditionService;
 
-    //api 키 발급
     @Transactional
     public ApiKeyPair issueApiKey(ApiKeyIssueCommand issueCommand) {
         // 발급 조건 확인
-        if (!issueConditionService.isSatisfy(issueCommand.getKeyType(), issueCommand.getAccountId())) {
+        if (!apiKeyIssueConditionService.isSatisfy(issueCommand.getKeyType(), issueCommand.getAccountId())) {
             throw new ApiKeyIssueException("api 키 발급을 실패했습니다.");
         }
 
@@ -44,9 +41,9 @@ public class ApiKeyIssueRequesterApplication {
     //api 키 재발급
     public ApiKeyPair reIssueApiKey(ApiKeyReIssueCommand reIssueCommand) {
         // 재발급 조건
-        if (issueConditionServiceV1.getReIssueCondition(reIssueCommand.getKeyType()).isSatisfiedBy(convert(reIssueCommand))) {
-            throw new ApiKeyIssueException("api 키 재발급을 실패했습니다.");
-        }
+//        if (issueConditionServiceV1.getReIssueCondition(reIssueCommand.getKeyType()).isSatisfiedBy(convert(reIssueCommand))) {
+//            throw new ApiKeyIssueException("api 키 재발급을 실패했습니다.");
+//        }
 
         // 기존 api 키 삭제
         deleteApiKey(reIssueCommand);
@@ -87,18 +84,6 @@ public class ApiKeyIssueRequesterApplication {
                 .secretKey(keyPair.getSecretKey())
                 .expireDate(issueCommand.getExpireDate())
                 .accountId(issueCommand.getAccountId())
-                .build();
-    }
-
-    private ApiKeyIssueCandidate convert(ApiKeyIssueCommand issueCommand) {
-        return ApiKeyIssueCandidate.builder()
-                .accountId(issueCommand.getAccountId())
-                .build();
-    }
-
-    private ApiKeyIssueCandidate convert(ApiKeyReIssueCommand reIssueCommand) {
-        return ApiKeyIssueCandidate.builder()
-                .accountId(reIssueCommand.getAccountId())
                 .build();
     }
 }
