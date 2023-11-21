@@ -6,7 +6,9 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class ApiKeyIssueCandidate {
-    private Long accountId;
+public class ApiKeyIssueAvailableCheckRequest {
     private ApiKeyType apiKeyType;
+    private boolean accountExist;
+    private boolean apiKeyExist;
+    private boolean contractCompleteExist;
 }
