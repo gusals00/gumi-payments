@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ApiKeyFactory {
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder encoder;
 
     public ApiKey create(ApiKeyCreateCommand apiKeyCreateCommand) {
         return ApiKey.builder()
-                .secretKey(passwordEncoder.encode(apiKeyCreateCommand.getSecretKey()))
+                .secretKey(encoder.encode(apiKeyCreateCommand.getSecretKey()))
                 .accountId(apiKeyCreateCommand.getAccountId())
                 .type(apiKeyCreateCommand.getApiKeyType())
                 .expireDate(apiKeyCreateCommand.getExpireDate())
