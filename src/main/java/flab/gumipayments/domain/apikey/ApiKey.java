@@ -41,5 +41,6 @@ public class ApiKey {
         if(!expireDate.isAfter(this.expireDate)){
             throw new ApiKeyExpireException("올바른 기간 연장이 아닙니다.");
         }
+        this.expireDate = expireDate;
     }
 }

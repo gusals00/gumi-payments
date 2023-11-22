@@ -25,7 +25,7 @@ public class ApiKeyIssueRequesterApplication {
             throw new ApiKeyIssueException("api 키 발급을 실패했습니다.");
         }
 
-        // api 키 쌍 생성
+        // 시크릿, 클라이언트 키 생성
         ApiKeyPair apiKeyPair = apiKeyPairFactory.generateApiKeyPair();
 
         // api 키 생성
@@ -41,9 +41,6 @@ public class ApiKeyIssueRequesterApplication {
     //api 키 재발급
     public ApiKeyPair reIssueApiKey(ApiKeyReIssueCommand reIssueCommand) {
         // 재발급 조건
-//        if (issueConditionServiceV1.getReIssueCondition(reIssueCommand.getKeyType()).isSatisfiedBy(convert(reIssueCommand))) {
-//            throw new ApiKeyIssueException("api 키 재발급을 실패했습니다.");
-//        }
 
         // 기존 api 키 삭제
         deleteApiKey(reIssueCommand);
