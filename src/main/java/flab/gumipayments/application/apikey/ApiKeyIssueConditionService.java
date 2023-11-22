@@ -19,16 +19,15 @@ public class ApiKeyIssueConditionService {
     private final ApiKeyRepository apiKeyRepository;
     private final ContractRepository contractRepository;
 
-    private final ApiKeyIssueAvailableCheck apiKeyIssueAvailableCheck;
+    private final ApiKeyIssueAvailableConditionChecker apiKeyIssueAvailableConditionChecker;
 
     @Transactional
     public boolean isSatisfy(ApiKeyType type, Long accountId) {
-        ApiKeyIssueAvailableCheckRequest issueAvailableCheckRequest = createIssueAvailableCheckRequest(type, accountId);
-
-        return apiKeyIssueAvailableCheck.test(issueAvailableCheckRequest);
+        ApiKeyIssueAvailableCheckRequest request = createIssueAvailabilityCheckRequest(type, accountId);
+        return apiKeyIssueAvailableConditionChecker.check(request);
     }
 
-    private ApiKeyIssueAvailableCheckRequest createIssueAvailableCheckRequest(ApiKeyType type, Long accountId) {
+    private ApiKeyIssueAvailableCheckRequest createIssueAvailabilityCheckRequest(ApiKeyType type, Long accountId) {
         return  ApiKeyIssueAvailableCheckRequest.builder()
                 .apiKeyExist(apiKeyRepository.existsByAccountIdAndType(accountId, type))
                 .accountExist(accountRepository.existsById(accountId))
