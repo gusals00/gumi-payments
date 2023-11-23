@@ -9,13 +9,34 @@ import static flab.gumipayments.domain.apikey.ApiKeyType.*;
 
 @Component
 public class ApiKeyIssueConditions {
-    public static final Predicate<ApiKeyIssueAvailableCheckRequest> isProductApiKey = new ApiKeyTypeCondition(PRODUCTION);
-    public static final Predicate<ApiKeyIssueAvailableCheckRequest> isTestApiKey = new ApiKeyTypeCondition(TEST);
-    public static final Predicate<ApiKeyIssueAvailableCheckRequest> existAccount = new ExistAccountCondition();
-    public static final Predicate<ApiKeyIssueAvailableCheckRequest> existApiKey = new ExistApiKeyCondition();
-    public static final Predicate<ApiKeyIssueAvailableCheckRequest> isContractComplete = new ContractCompleteCondition();
+    private static final Predicate<ApiKeyIssueCheckRequest> isProductApiKey = new ApiKeyTypeCondition(PRODUCTION);
+    private static final Predicate<ApiKeyIssueCheckRequest> isTestApiKey = new ApiKeyTypeCondition(TEST);
+    private static final Predicate<ApiKeyIssueCheckRequest> existAccount = new ExistAccountCondition();
+    private static final Predicate<ApiKeyIssueCheckRequest> existApiKey = new ExistApiKeyCondition();
+    private static final Predicate<ApiKeyIssueCheckRequest> isContractComplete = new ContractCompleteCondition();
 
-    public static class ApiKeyTypeCondition implements Predicate<ApiKeyIssueAvailableCheckRequest> {
+    private static final ApiKeyIssueCondition testApiKeyIssueCondition = new ApiKeyIssueCondition(
+            isTestApiKey
+                    .and(existAccount)
+                    .and(isContractComplete)
+                    .and(existApiKey.negate())
+    );
+
+    private static final ApiKeyIssueCondition productApiKeyIssueCondition = new ApiKeyIssueCondition(
+            isProductApiKey
+                    .and(existAccount)
+                    .and(existApiKey.negate())
+    );
+
+    private static final ApiKeyIssueCondition apiKeyIssueCondition = new ApiKeyIssueCondition(
+            testApiKeyIssueCondition.or(productApiKeyIssueCondition)
+    );
+
+    public ApiKeyIssueCondition apiKeyIssueCondition() {
+        return apiKeyIssueCondition;
+    }
+
+    public static class ApiKeyTypeCondition implements Predicate<ApiKeyIssueCheckRequest> {
         private ApiKeyType apiKeyType;
 
         public ApiKeyTypeCondition(ApiKeyType apiKeyType) {
@@ -23,42 +44,43 @@ public class ApiKeyIssueConditions {
         }
 
         @Override
-        public boolean test(ApiKeyIssueAvailableCheckRequest request) {
+        public boolean test(ApiKeyIssueCheckRequest request) {
             return request.getApiKeyType() == apiKeyType;
         }
     }
 
-    public static class ExistAccountCondition implements Predicate<ApiKeyIssueAvailableCheckRequest> {
+    public static class ExistAccountCondition implements Predicate<ApiKeyIssueCheckRequest> {
         @Override
-        public boolean test(ApiKeyIssueAvailableCheckRequest request) {
+        public boolean test(ApiKeyIssueCheckRequest request) {
             return request.isAccountExist();
         }
     }
 
-    public static class ExistApiKeyCondition implements Predicate<ApiKeyIssueAvailableCheckRequest> {
+    public static class ExistApiKeyCondition implements Predicate<ApiKeyIssueCheckRequest> {
         @Override
-        public boolean test(ApiKeyIssueAvailableCheckRequest request) {
+        public boolean test(ApiKeyIssueCheckRequest request) {
             return request.isApiKeyExist();
         }
     }
 
-    public static class ContractCompleteCondition implements Predicate<ApiKeyIssueAvailableCheckRequest> {
+    public static class ContractCompleteCondition implements Predicate<ApiKeyIssueCheckRequest> {
         @Override
-        public boolean test(ApiKeyIssueAvailableCheckRequest request) {
+        public boolean test(ApiKeyIssueCheckRequest request) {
             return request.isContractCompleteExist();
         }
     }
 
-    public static class ApiKeyIssueCondition implements Predicate<ApiKeyIssueAvailableCheckRequest> {
-        private Predicate<ApiKeyIssueAvailableCheckRequest> condition;
+    public static class ApiKeyIssueCondition implements Predicate<ApiKeyIssueCheckRequest> {
+        private Predicate<ApiKeyIssueCheckRequest> condition;
 
-        public ApiKeyIssueCondition(Predicate<ApiKeyIssueAvailableCheckRequest> condition) {
+        public ApiKeyIssueCondition(Predicate<ApiKeyIssueCheckRequest> condition) {
             this.condition = condition;
         }
 
         @Override
-        public boolean test(ApiKeyIssueAvailableCheckRequest request) {
+        public boolean test(ApiKeyIssueCheckRequest request) {
             return condition.test(request);
         }
     }
+
 }
