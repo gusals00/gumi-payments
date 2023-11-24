@@ -13,6 +13,10 @@ import java.time.LocalDateTime;
 public class ApiKeyIssueCommand {
 
     private Long accountId;
-    private ApiKeyType keyType;
     private LocalDateTime expireDate;
+
+    private ApiKeyType apiKeyType;
+    private boolean accountExist;
+    private boolean apiKeyExist;
+    private boolean contractCompleteExist;
 }

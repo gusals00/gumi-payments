@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Builder
 public class ApiKeyCreateCommand {
 
-    private String secretKey;
     private ApiKeyType apiKeyType;
     private LocalDateTime expireDate;
     private Long accountId;
