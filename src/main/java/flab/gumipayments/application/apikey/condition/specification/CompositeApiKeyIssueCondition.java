@@ -1,23 +1,9 @@
 package flab.gumipayments.application.apikey.condition.specification;
 
 
-import flab.gumipayments.application.apikey.ApiKeyIssueCommand;
 
 public abstract class CompositeApiKeyIssueCondition implements ApiKeyIssueCondition {
 
-    private static final ApiKeyIssueCondition TRUE_CONDITION = new CompositeApiKeyIssueCondition() {
-        @Override
-        public boolean isSatisfiedBy(ApiKeyIssueCommand command) {
-            return true;
-        }
-    };
-
-    private static final ApiKeyIssueCondition FALSE_CONDITION = new CompositeApiKeyIssueCondition() {
-        @Override
-        public boolean isSatisfiedBy(ApiKeyIssueCommand command) {
-            return false;
-        }
-    };
 
     @Override
     public ApiKeyIssueCondition and(ApiKeyIssueCondition other) {
@@ -35,7 +21,7 @@ public abstract class CompositeApiKeyIssueCondition implements ApiKeyIssueCondit
     }
 
     public static ApiKeyIssueCondition and(ApiKeyIssueCondition... condition) {
-        ApiKeyIssueCondition curCondition = TRUE_CONDITION;
+        ApiKeyIssueCondition curCondition = new TrueCondition();
         for (ApiKeyIssueCondition apiKeyIssueCondition : condition) {
             curCondition = curCondition.and(apiKeyIssueCondition);
         }
@@ -43,7 +29,7 @@ public abstract class CompositeApiKeyIssueCondition implements ApiKeyIssueCondit
     }
 
     public static ApiKeyIssueCondition or(ApiKeyIssueCondition... condition) {
-        ApiKeyIssueCondition curCondition = FALSE_CONDITION;
+        ApiKeyIssueCondition curCondition = new FalseCondition();
         for (ApiKeyIssueCondition apiKeyIssueCondition : condition) {
             curCondition = curCondition.or(apiKeyIssueCondition);
         }
