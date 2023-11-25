@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.*;
 class ApiKeyPairFactoryTest {
 
     @Test
-    @DisplayName("성공: api 키 쌍 생성을 성공한다.")
+    @DisplayName("성공: API 키 쌍 생성을 성공한다.")
     void create() {
         ApiKeyPairFactory sut = new ApiKeyPairFactory();
 

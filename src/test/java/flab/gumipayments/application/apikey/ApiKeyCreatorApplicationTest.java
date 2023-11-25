@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static flab.gumipayments.domain.apikey.ApiKeyPair.*;
 import static org.mockito.Mockito.*;
 
 
@@ -22,7 +23,7 @@ class ApiKeyCreatorApplicationTest {
     private ApiKeyPairFactory apiKeyPairFactory;
     @Mock
     private ApiKeyFactory apiKeyFactory;
-    private ApiKeyPair.ApiKeyPairBuilder apiKeyPairBuilder;
+    private ApiKeyPairBuilder apiKeyPairBuilder;
     private ApiKey.ApiKeyBuilder apiKeyBuilder;
 
     @BeforeEach

@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+
 import static flab.gumipayments.domain.apikey.ApiKeyCreateCommand.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -30,9 +32,13 @@ class ApiKeyFactoryTest {
     }
 
     @Test
-    @DisplayName("성공: 암호화된 API 키 생성을 성공한다.")
+    @DisplayName("성공: API 키 생성을 성공한다.")
     void create() {
-        ApiKeyCreateCommand createCommand = apiKeyCreateCommandBuilder.build();
+        ApiKeyCreateCommand createCommand = apiKeyCreateCommandBuilder
+                .apiKeyType(ApiKeyType.TEST)
+                .accountId(1L)
+                .expireDate(LocalDateTime.now())
+                .build();
         String secretKey = "123";
         String encryptedKey = "encrypted";
         when(encoder.encode(any())).thenReturn(encryptedKey);
@@ -40,5 +46,8 @@ class ApiKeyFactoryTest {
         ApiKey apiKey = sut.create(createCommand, secretKey);
 
         assertThat(apiKey.getSecretKey()).isEqualTo(encryptedKey);
+        assertThat(apiKey.getAccountId()).isEqualTo(createCommand.getAccountId());
+        assertThat(apiKey.getExpireDate()).isEqualTo(createCommand.getExpireDate());
+        assertThat(apiKey.getType()).isEqualTo(createCommand.getApiKeyType());
     }
 }

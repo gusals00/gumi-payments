@@ -14,10 +14,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class AcceptRequesterApplicationTest {
     @InjectMocks
-    AcceptRequesterApplication sut;
+    private AcceptRequesterApplication sut;
 
     @Mock
-    Sender sender;
+    private Sender sender;
 
     @Test
     @DisplayName("성공 : 가입 요청 인증 이메일 발송을 성공한다.")

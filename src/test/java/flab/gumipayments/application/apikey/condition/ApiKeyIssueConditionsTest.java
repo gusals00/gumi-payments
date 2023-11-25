@@ -28,7 +28,7 @@ class ApiKeyIssueConditionsTest {
     }
 
     @Test
-    @DisplayName("조건: 테스트 api키 조건을 만족한다.")
+    @DisplayName("조건: 테스트 API키 조건을 만족한다.")
     void testIssueCondition() {
         ApiKeyIssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(TEST)
                 .accountExist(true)
@@ -39,9 +39,8 @@ class ApiKeyIssueConditionsTest {
         assertThat(result).isTrue();
     }
 
-
     @Test
-    @DisplayName("조건: 실서비스용 api키 조건을 만족한다.")
+    @DisplayName("조건: 실서비스용 API키 조건을 만족한다.")
     void prodIssueCondition() {
         ApiKeyIssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(PRODUCTION)
                 .accountExist(true)
@@ -54,7 +53,7 @@ class ApiKeyIssueConditionsTest {
     }
 
     @Test
-    @DisplayName("조건: 실서비스용 또는 테스트용 api키 조건을 만족하지 않는다.")
+    @DisplayName("조건: 실서비스용과 테스트용 API키 조건을 모두 만족하지 않는다.")
     void IssueCondition() {
         ApiKeyIssueCommand issueCommand = apiKeyIssueCommandBuilder.build();
 
