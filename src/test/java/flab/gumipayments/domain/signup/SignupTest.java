@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
+import static flab.gumipayments.domain.signup.Signup.*;
 import static flab.gumipayments.domain.signup.SignupStatus.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -19,7 +20,7 @@ class SignupTest {
 
     private Signup sut;
     private MockedStatic<LocalDateTime> localDateMockedStatic;
-    private Signup.SignupBuilder sutBuilder;
+    private SignupBuilder sutBuilder;
 
     private
     @BeforeEach

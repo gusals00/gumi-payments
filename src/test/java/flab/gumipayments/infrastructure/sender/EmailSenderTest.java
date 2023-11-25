@@ -19,9 +19,9 @@ import static org.mockito.Mockito.*;
 class EmailSenderTest {
 
     @Mock
-    JavaMailSender javaMailSender;
+    private JavaMailSender javaMailSender;
     @InjectMocks
-    EmailSender sut;
+    private EmailSender sut;
 
     private String email;
     private String signupKey;

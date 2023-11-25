@@ -40,7 +40,7 @@ class SignupCreateApplicationTest {
     private SignupCreateCommandBuilder signupCreateCommandBuilder;
     private Signup signup;
 
-    private static final int EXPIRE_MINUTES=5;
+    static final int EXPIRE_MINUTES=5;
 
     @BeforeEach
     void setup() {

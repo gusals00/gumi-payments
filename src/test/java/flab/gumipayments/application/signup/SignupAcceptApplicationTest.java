@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static flab.gumipayments.application.signup.AcceptCommand.*;
 import static flab.gumipayments.domain.signup.Signup.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -25,11 +26,11 @@ import static org.mockito.Mockito.*;
 class SignupAcceptApplicationTest {
 
     @InjectMocks
-    SignupAcceptApplication sut;
+    private SignupAcceptApplication sut;
     @Mock
-    SignupRepository signupRepository;
+    private SignupRepository signupRepository;
 
-    private AcceptCommand.AcceptCommandBuilder acceptCommandBuilder;
+    private AcceptCommandBuilder acceptCommandBuilder;
     private SignupBuilder signupBuilder;
 
     private Signup signup;
@@ -38,7 +39,7 @@ class SignupAcceptApplicationTest {
     @BeforeEach
     void setup() {
         acceptCommandBuilder = AcceptCommand.builder();
-        signupBuilder = builder();
+        signupBuilder = Signup.builder();
         signup = signupBuilder
                 .signupKey("1234").expireDate(LocalDateTime.now().plusDays(1)).build();
 

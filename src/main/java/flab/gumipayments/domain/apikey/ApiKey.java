@@ -37,10 +37,10 @@ public class ApiKey {
         this.count = 0;
     }
 
-    public void extendExpireDate(LocalDateTime expireDate) {
-        if(!expireDate.isAfter(this.expireDate)){
+    public void extendExpireDate(LocalDateTime extendDate) {
+        if(extendDate.isBefore(this.expireDate) || extendDate.isEqual(this.expireDate)){
             throw new ApiKeyExpireException("올바른 기간 연장이 아닙니다.");
         }
-        this.expireDate = expireDate;
+        this.expireDate = extendDate;
     }
 }

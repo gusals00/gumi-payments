@@ -9,13 +9,15 @@ import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 
+import static flab.gumipayments.domain.signup.SignupCreateCommand.*;
 import static org.assertj.core.api.Assertions.*;
 
 class SignupFactoryTest {
 
-    private MockedStatic<LocalDateTime> localDateMockedStatic;
-    private SignupCreateCommand.SignupCreateCommandBuilder signupCreateCommandBuilder;
-    private SignupFactory signupFactory;
+    MockedStatic<LocalDateTime> localDateMockedStatic;
+    SignupCreateCommandBuilder signupCreateCommandBuilder;
+    SignupFactory signupFactory;
+
     @BeforeEach
     void setup() {
         freezeLocalDateTimeNow();

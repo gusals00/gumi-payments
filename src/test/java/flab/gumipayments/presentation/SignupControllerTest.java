@@ -29,7 +29,7 @@ class SignupControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
     private SignupCreateApplication signupCreateApplication;
@@ -142,6 +142,4 @@ class SignupControllerTest {
     private String emailRequestBody(String email) throws JsonProcessingException {
         return mapper.writeValueAsString(new SignupController.SignupRequest(email));
     }
-
-
 }

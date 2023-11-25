@@ -7,20 +7,21 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static flab.gumipayments.domain.apikey.ApiKey.*;
 import static org.assertj.core.api.Assertions.*;
 
 class ApiKeyTest {
 
-    private ApiKey.ApiKeyBuilder apiKeyBuilder;
+    private ApiKeyBuilder apiKeyBuilder;
     private ApiKey sut;
 
     @BeforeEach
-    private void setup() {
+    void setup() {
         apiKeyBuilder = ApiKey.builder();
     }
 
     @Test
-    @DisplayName("예외: (연장 기간과 == 만료 기간) 인 경우 API 키 만료 기간 연장이 실패한다.")
+    @DisplayName("예외: 연장하려는 날짜가 만료날짜와 같은 경우 API 키 기간 연장이 실패한다.")
     void extendKeyFail01() {
         LocalDateTime expireDate = LocalDateTime.of(2023,1,1,1,0);
         sut = apiKeyBuilder.expireDate(expireDate).build();
@@ -30,7 +31,7 @@ class ApiKeyTest {
     }
 
     @Test
-    @DisplayName("예외: (만료 기간 < 연장 기간) 인 경우 API 키 만료 기간 연장이 실패한다.")
+    @DisplayName("예외: 연장하려는 날짜가 만료날짜 이전인 경우 API 키 기간 연장이 실패한다.")
     void extendKeyFail02() {
         LocalDateTime expireDate = LocalDateTime.of(2023,1,1,1,0);
         LocalDateTime extendDate = expireDate.minusNanos(1);
@@ -42,7 +43,7 @@ class ApiKeyTest {
     }
 
     @Test
-    @DisplayName("성공: api 키 만료 기간 연장을 성공한다.")
+    @DisplayName("성공: API 키 기간 연장을 성공한다.")
     void extendKey() {
         LocalDateTime expireDate = LocalDateTime.of(2023,1,1,1,0);
         LocalDateTime extendDate = expireDate.plusNanos(1);
