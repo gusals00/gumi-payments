@@ -1,12 +1,12 @@
 package flab.gumipayments.domain.apikey.condition.issue;
 
-import flab.gumipayments.application.apikey.ApiKeyIssueCommand;
+import flab.gumipayments.domain.apikey.ApiKeyIssueCommand;
 import flab.gumipayments.support.specification.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static flab.gumipayments.application.apikey.ApiKeyIssueCommand.*;
+import static flab.gumipayments.domain.apikey.ApiKeyIssueCommand.*;
 import static flab.gumipayments.domain.apikey.condition.issue.ApiKeyIssueConditions.EXIST_API_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
 

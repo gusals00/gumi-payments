@@ -28,13 +28,13 @@ public class ApiKeyRenewRequesterApplication {
                 .orElseThrow(() -> new NoSuchElementException("api키가 존재하지 않습니다."));
 
         // 만료 기간 연장
-        apiKey.extendExpireDate(renewCommand.getExpireDate());
+        apiKey.extendExpireDate(renewCommand.getExtendDate());
 
         // 계정 조회
         Account account = accountRepository.findById(apiKey.getAccountId())
                 .orElseThrow(() -> new NoSuchElementException("account가 존재하지 않습니다."));
 
         // 만료 기간 연장 메일 전송
-        sender.sendApiKeyRenewRequest(account.getEmail(), renewCommand.getExpireDate());
+        sender.sendApiKeyRenewRequest(account.getEmail(), renewCommand.getExtendDate());
     }
 }

@@ -1,8 +1,7 @@
 package flab.gumipayments.domain.apikey.condition.reissue;
 
 
-import flab.gumipayments.application.apikey.ApiKeyIssueCommand;
-import flab.gumipayments.application.apikey.ApiKeyReIssueCommand;
+import flab.gumipayments.domain.apikey.ApiKeyReIssueCommand;
 import flab.gumipayments.support.specification.Condition;
 
 public class ExistApiKeyCondition implements Condition<ApiKeyReIssueCommand> {
