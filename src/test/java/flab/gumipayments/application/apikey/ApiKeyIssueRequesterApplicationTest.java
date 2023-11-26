@@ -1,10 +1,8 @@
 package flab.gumipayments.application.apikey;
 
-import flab.gumipayments.application.apikey.condition.specification.ApiKeyIssueCondition;
-import flab.gumipayments.application.apikey.condition.specification.FalseCondition;
-import flab.gumipayments.application.apikey.condition.specification.TrueCondition;
 import flab.gumipayments.domain.apikey.ApiKeyRepository;
 import flab.gumipayments.domain.apikey.ApiKeyResponse;
+import flab.gumipayments.support.specification.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,8 +29,8 @@ class ApiKeyIssueRequesterApplicationTest {
     @Mock
     private ApiKeyCreatorApplication apiKeyCreatorApplication;
 
-    private ApiKeyIssueCondition trueCondition = new TrueCondition();
-    private ApiKeyIssueCondition falseCondition = new FalseCondition();
+    private Condition<ApiKeyIssueCommand> trueCondition = command -> true;
+    private Condition<ApiKeyIssueCommand> falseCondition = command -> false;
 
     private ApiKeyResponseBuilder apiKeyResponseBuilder;
 

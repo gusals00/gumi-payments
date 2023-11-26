@@ -1,32 +1,26 @@
-package flab.gumipayments.application.apikey.condition.specification;
+package flab.gumipayments.support.specification;
 
-import flab.gumipayments.support.specification.Condition;
-import flab.gumipayments.support.specification.FalseCondition;
-import flab.gumipayments.support.specification.TrueCondition;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static flab.gumipayments.application.apikey.ApiKeyIssueCommand.*;
-import static flab.gumipayments.support.specification.CompositeCondition.*;
+import static flab.gumipayments.support.specification.Condition.and;
+import static flab.gumipayments.support.specification.Condition.or;
+import static flab.gumipayments.support.specification.Condition.not;
 import static org.assertj.core.api.Assertions.*;
 
 class ConditionTest {
 
-    private ApiKeyIssueCommandBuilder apiKeyIssueCommandBuilder;
-    private Condition sut = not(falseCondition);
-    private static Condition trueCondition;
-    private static Condition falseCondition;
+    private Condition<Object> sut;
+    private static Object conditionCommand;
+    private static Condition<Object> trueCondition;
+    private static Condition<Object> falseCondition;
 
     @BeforeAll
     static void setAll() {
-        trueCondition = new TrueCondition();
-        falseCondition = new FalseCondition();
-    }
-    @BeforeEach
-    void setup() {
-        apiKeyIssueCommandBuilder = builder();
+        trueCondition = (command) -> true;
+        falseCondition = (command) -> false;
+        conditionCommand = new Object();
     }
 
     @Test
@@ -34,7 +28,7 @@ class ConditionTest {
     void andTrue01() {
         sut = trueCondition.and(trueCondition);
 
-        boolean result = sut.isSatisfiedBy(apiKeyIssueCommandBuilder.build());
+        boolean result = sut.isSatisfiedBy(conditionCommand);
 
         assertThat(result).isTrue();
     }
@@ -44,7 +38,7 @@ class ConditionTest {
     void andTrue02() {
         sut = trueCondition.and(falseCondition);
 
-        boolean result = sut.isSatisfiedBy(apiKeyIssueCommandBuilder.build());
+        boolean result = sut.isSatisfiedBy(conditionCommand);
 
         assertThat(result).isFalse();
     }
@@ -54,7 +48,7 @@ class ConditionTest {
     void orTrue01() {
         sut = trueCondition.or(falseCondition);
 
-        boolean result = sut.isSatisfiedBy(apiKeyIssueCommandBuilder.build());
+        boolean result = sut.isSatisfiedBy(conditionCommand);
 
         assertThat(result).isTrue();
     }
@@ -64,7 +58,7 @@ class ConditionTest {
     void orTrue02() {
         sut = falseCondition.or(falseCondition);
 
-        boolean result = sut.isSatisfiedBy(apiKeyIssueCommandBuilder.build());
+        boolean result = sut.isSatisfiedBy(conditionCommand);
 
         assertThat(result).isFalse();
     }
@@ -74,7 +68,7 @@ class ConditionTest {
     void notTrue01() {
         sut = trueCondition.not();
 
-        boolean result = sut.isSatisfiedBy(apiKeyIssueCommandBuilder.build());
+        boolean result = sut.isSatisfiedBy(conditionCommand);
 
         assertThat(result).isFalse();
     }
@@ -84,7 +78,7 @@ class ConditionTest {
     void notTrue02() {
         sut = falseCondition.not();
 
-        boolean result = sut.isSatisfiedBy(apiKeyIssueCommandBuilder.build());
+        boolean result = sut.isSatisfiedBy(conditionCommand);
 
         assertThat(result).isTrue();
     }
@@ -93,8 +87,7 @@ class ConditionTest {
     @DisplayName("조건: 조건이 거짓일 때 not() 이라면 조건을 만족한다.")
     void notTrue03() {
         sut = not(falseCondition);
-
-        boolean result = sut.isSatisfiedBy(apiKeyIssueCommandBuilder.build());
+        boolean result = sut.isSatisfiedBy(conditionCommand);
 
         assertThat(result).isTrue();
     }
@@ -104,7 +97,7 @@ class ConditionTest {
     void andArgs01() {
         sut = and(trueCondition, trueCondition, trueCondition);
 
-        boolean result = sut.isSatisfiedBy(apiKeyIssueCommandBuilder.build());
+        boolean result = sut.isSatisfiedBy(conditionCommand);
 
         assertThat(result).isTrue();
     }
@@ -114,7 +107,7 @@ class ConditionTest {
     void andArgs02() {
         sut = and(trueCondition, falseCondition, trueCondition);
 
-        boolean result = sut.isSatisfiedBy(apiKeyIssueCommandBuilder.build());
+        boolean result = sut.isSatisfiedBy(conditionCommand);
 
         assertThat(result).isFalse();
     }
@@ -124,7 +117,7 @@ class ConditionTest {
     void orArgs01() {
         sut = or(falseCondition, falseCondition, trueCondition);
 
-        boolean result = sut.isSatisfiedBy(apiKeyIssueCommandBuilder.build());
+        boolean result = sut.isSatisfiedBy(conditionCommand);
 
         assertThat(result).isTrue();
     }
@@ -134,7 +127,7 @@ class ConditionTest {
     void orArgs02() {
         sut = or(falseCondition, falseCondition, falseCondition);
 
-        boolean result = sut.isSatisfiedBy(apiKeyIssueCommandBuilder.build());
+        boolean result = sut.isSatisfiedBy(conditionCommand);
 
         assertThat(result).isFalse();
     }
