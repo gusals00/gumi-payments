@@ -1,20 +1,19 @@
 package flab.gumipayments.application.apikey.condition;
 
 import flab.gumipayments.application.apikey.ApiKeyIssueCommand;
-import flab.gumipayments.application.apikey.condition.specification.ApiKeyIssueCondition;
+import flab.gumipayments.support.specification.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static flab.gumipayments.application.apikey.ApiKeyIssueCommand.*;
-import static flab.gumipayments.application.apikey.condition.ApiKeyIssueConditions.EXIST_ACCOUNT;
+import static flab.gumipayments.domain.apikey.condition.issue.ApiKeyIssueConditions.EXIST_ACCOUNT;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ExistAccountConditionTest {
 
     private ApiKeyIssueCommandBuilder apiKeyIssueCommandBuilder;
-    private ApiKeyIssueCondition sut;
+    private Condition<ApiKeyIssueCommand> sut;
     @BeforeEach
     void setup() {
         apiKeyIssueCommandBuilder = builder();

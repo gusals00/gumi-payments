@@ -1,11 +1,11 @@
-package flab.gumipayments.application.apikey.condition;
+package flab.gumipayments.domain.apikey.condition.issue;
 
 
 import flab.gumipayments.application.apikey.ApiKeyIssueCommand;
-import flab.gumipayments.application.apikey.condition.specification.CompositeApiKeyIssueCondition;
 import flab.gumipayments.domain.apikey.ApiKeyType;
+import flab.gumipayments.support.specification.Condition;
 
-public class ApiKeyTypeCondition extends CompositeApiKeyIssueCondition {
+public class ApiKeyTypeCondition implements Condition<ApiKeyIssueCommand> {
     private ApiKeyType apiKeyType;
 
     public ApiKeyTypeCondition(ApiKeyType apiKeyType) {

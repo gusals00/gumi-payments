@@ -1,21 +1,23 @@
 package flab.gumipayments.application.apikey.condition.specification;
 
-import org.jetbrains.annotations.NotNull;
+import flab.gumipayments.support.specification.Condition;
+import flab.gumipayments.support.specification.FalseCondition;
+import flab.gumipayments.support.specification.TrueCondition;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static flab.gumipayments.application.apikey.ApiKeyIssueCommand.*;
-import static flab.gumipayments.application.apikey.condition.specification.CompositeApiKeyIssueCondition.*;
+import static flab.gumipayments.support.specification.CompositeCondition.*;
 import static org.assertj.core.api.Assertions.*;
 
-class ApiKeyIssueConditionTest {
+class ConditionTest {
 
     private ApiKeyIssueCommandBuilder apiKeyIssueCommandBuilder;
-    private ApiKeyIssueCondition sut = not(falseCondition);
-    private static ApiKeyIssueCondition trueCondition;
-    private static ApiKeyIssueCondition falseCondition;
+    private Condition sut = not(falseCondition);
+    private static Condition trueCondition;
+    private static Condition falseCondition;
 
     @BeforeAll
     static void setAll() {

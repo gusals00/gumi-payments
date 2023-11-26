@@ -1,7 +1,9 @@
 package flab.gumipayments.application.apikey;
 
-import flab.gumipayments.application.apikey.condition.specification.ApiKeyIssueCondition;
 import flab.gumipayments.domain.apikey.*;
+import flab.gumipayments.domain.apikey.condition.issue.ApiKeyIssueConditions;
+import flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions;
+import flab.gumipayments.support.specification.Condition;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,8 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 
-import static flab.gumipayments.application.apikey.condition.ApiKeyIssueConditions.*;
-import static flab.gumipayments.application.apikey.condition.ContractCompleteCondition.*;
+
+import static flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions.IS_TEST_API_KEY;
+import static flab.gumipayments.support.specification.Condition.*;
 
 
 @Service
@@ -21,10 +24,17 @@ public class ApiKeyIssueRequesterApplication {
     private final ApiKeyCreatorApplication apiKeyCreatorApplication;
 
     @Setter
-    private ApiKeyIssueCondition apiKeyIssueCondition =
+    private Condition<ApiKeyIssueCommand> apiKeyIssueCondition =
             or(
-                    and(IS_TEST_API_KEY, EXIST_ACCOUNT, not(EXIST_API_KEY)),
-                    and(IS_PROD_API_KEY, EXIST_ACCOUNT, IS_CONTRACT_COMPLETE, not(EXIST_API_KEY))
+                    and(ApiKeyIssueConditions.IS_TEST_API_KEY, ApiKeyIssueConditions.EXIST_ACCOUNT, not(ApiKeyIssueConditions.EXIST_API_KEY)),
+                    and(ApiKeyIssueConditions.IS_PROD_API_KEY, ApiKeyIssueConditions.EXIST_ACCOUNT, ApiKeyIssueConditions.IS_CONTRACT_COMPLETE, not(ApiKeyIssueConditions.EXIST_API_KEY))
+            );
+
+    @Setter
+    private Condition<ApiKeyReIssueCommand> apiKeyReIssueCondition =
+            or(
+                    and(ApiKeyReIssueConditions.IS_TEST_API_KEY, ApiKeyReIssueConditions.EXIST_ACCOUNT, not(ApiKeyReIssueConditions.EXIST_API_KEY)),
+                    and(ApiKeyReIssueConditions.IS_PROD_API_KEY, ApiKeyReIssueConditions.EXIST_ACCOUNT, ApiKeyReIssueConditions.IS_CONTRACT_COMPLETE, ApiKeyReIssueConditions.EXIST_API_KEY)
             );
 
     // TODO issueCommand 안에 있는 exist들 찾는 코드 작성해야 함
@@ -32,7 +42,7 @@ public class ApiKeyIssueRequesterApplication {
     public ApiKeyPair issueApiKey(ApiKeyIssueCommand issueCommand) {
 
         // 발급 조건 확인
-        if(!apiKeyIssueCondition.isSatisfiedBy(issueCommand)){
+        if (!apiKeyIssueCondition.isSatisfiedBy(issueCommand)) {
             throw new ApiKeyIssueException("api 키 발급 조건이 올바르지 않습니다.");
         }
 
@@ -49,7 +59,9 @@ public class ApiKeyIssueRequesterApplication {
     //api 키 재발급
     public ApiKeyPair reIssueApiKey(ApiKeyReIssueCommand reIssueCommand) {
         // 재발급 조건
-        // TODO 재발급 조건 생성
+        if (!apiKeyReIssueCondition.isSatisfiedBy(reIssueCommand)) {
+            throw new ApiKeyIssueException("api 키 재발급 조건이 올바르지 않습니다.");
+        }
 
         // 기존 api 키 삭제
         deleteApiKey(reIssueCommand);
@@ -65,7 +77,7 @@ public class ApiKeyIssueRequesterApplication {
 
     private void deleteApiKey(ApiKeyReIssueCommand reIssueCommand) {
         // 기존 api 조회
-        ApiKey apiKey = apiKeyRepository.findByAccountIdAndType(reIssueCommand.getAccountId(), reIssueCommand.getKeyType())
+        ApiKey apiKey = apiKeyRepository.findByAccountIdAndType(reIssueCommand.getAccountId(), reIssueCommand.getApiKeyType())
                 .orElseThrow(() -> new NoSuchElementException("api키가 존재하지 않습니다."));
 
         //기존 api 키 삭제
@@ -82,7 +94,7 @@ public class ApiKeyIssueRequesterApplication {
 
     private ApiKeyCreateCommand convert(ApiKeyReIssueCommand issueCommand) {
         return ApiKeyCreateCommand.builder()
-                .apiKeyType(issueCommand.getKeyType())
+                .apiKeyType(issueCommand.getApiKeyType())
                 .expireDate(issueCommand.getExpireDate())
                 .accountId(issueCommand.getAccountId())
                 .build();
