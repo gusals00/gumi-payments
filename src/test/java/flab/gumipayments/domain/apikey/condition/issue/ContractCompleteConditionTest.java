@@ -1,21 +1,21 @@
-package flab.gumipayments.application.apikey.condition;
+package flab.gumipayments.domain.apikey.condition.issue;
 
 import flab.gumipayments.application.apikey.ApiKeyIssueCommand;
-import flab.gumipayments.application.apikey.condition.specification.ApiKeyIssueCondition;
+import flab.gumipayments.support.specification.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static flab.gumipayments.application.apikey.ApiKeyIssueCommand.*;
 import static flab.gumipayments.application.apikey.ApiKeyIssueCommand.builder;
-import static flab.gumipayments.application.apikey.condition.ApiKeyIssueConditions.IS_CONTRACT_COMPLETE;
+import static flab.gumipayments.domain.apikey.condition.issue.ApiKeyIssueConditions.IS_CONTRACT_COMPLETE;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ContractCompleteConditionTest {
 
     private ApiKeyIssueCommandBuilder apiKeyIssueCommandBuilder;
-    private ApiKeyIssueCondition sut;
+    private Condition<ApiKeyIssueCommand> sut;
 
     @BeforeEach
     void setup() {

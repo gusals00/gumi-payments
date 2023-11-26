@@ -1,9 +1,9 @@
-package flab.gumipayments.application.apikey.condition;
+package flab.gumipayments.domain.apikey.condition.issue;
 
 import flab.gumipayments.application.apikey.ApiKeyIssueCommand;
-import flab.gumipayments.application.apikey.condition.specification.CompositeApiKeyIssueCondition;
+import flab.gumipayments.support.specification.Condition;
 
-public class ContractCompleteCondition extends CompositeApiKeyIssueCondition {
+public class ContractCompleteCondition implements Condition<ApiKeyIssueCommand> {
 
     public static ContractCompleteCondition contractCompleteCondition(){
         return new ContractCompleteCondition();

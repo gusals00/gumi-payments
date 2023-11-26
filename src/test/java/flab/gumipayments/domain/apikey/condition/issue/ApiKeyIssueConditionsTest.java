@@ -1,20 +1,22 @@
-package flab.gumipayments.application.apikey.condition;
+package flab.gumipayments.domain.apikey.condition.issue;
 
 import flab.gumipayments.application.apikey.ApiKeyIssueCommand;
-import flab.gumipayments.application.apikey.condition.specification.ApiKeyIssueCondition;
+import flab.gumipayments.support.specification.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static flab.gumipayments.application.apikey.ApiKeyIssueCommand.*;
-import static flab.gumipayments.application.apikey.condition.ApiKeyIssueConditions.*;
-import static flab.gumipayments.application.apikey.condition.specification.CompositeApiKeyIssueCondition.*;
+import static flab.gumipayments.domain.apikey.condition.issue.ApiKeyIssueConditions.*;
 import static flab.gumipayments.domain.apikey.ApiKeyType.*;
+import static flab.gumipayments.support.specification.Condition.and;
+import static flab.gumipayments.support.specification.Condition.or;
+import static flab.gumipayments.support.specification.Condition.not;
 import static org.assertj.core.api.Assertions.*;
 
 class ApiKeyIssueConditionsTest {
 
-    private ApiKeyIssueCondition sut =
+    private Condition sut =
             or(
                     and(IS_TEST_API_KEY, EXIST_ACCOUNT, not(EXIST_API_KEY)),
                     and(IS_PROD_API_KEY, EXIST_ACCOUNT, IS_CONTRACT_COMPLETE, not(EXIST_API_KEY))
