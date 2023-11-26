@@ -1,4 +1,4 @@
-package flab.gumipayments.application.apikey;
+package flab.gumipayments.domain.apikey;
 
 import flab.gumipayments.domain.apikey.ApiKeyType;
 import lombok.AllArgsConstructor;

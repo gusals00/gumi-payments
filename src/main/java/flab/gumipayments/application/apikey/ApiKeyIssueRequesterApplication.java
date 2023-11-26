@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 
 
-import static flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions.IS_TEST_API_KEY;
 import static flab.gumipayments.support.specification.Condition.*;
 
 
