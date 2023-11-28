@@ -1,5 +1,7 @@
 package flab.gumipayments.presentation;
 
+import flab.gumipayments.apifirst.openapi.signup.domain.SignupRequest;
+import flab.gumipayments.apifirst.openapi.signup.rest.SignUpApi;
 import flab.gumipayments.application.signup.SignupCreateApplication;
 import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.SignupCreateCommand;
@@ -22,11 +24,12 @@ import static flab.gumipayments.application.signup.Expire.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/signup")
 @Slf4j
-public class SignupController {
+public class SignupController implements SignUpApi {
 
     private final SignupCreateApplication signupRequesterApplication;
 
     // 가입요청
+    @Override
     @PostMapping
     public ResponseEntity signup(@RequestBody @Valid SignupRequest request) {
         // 만료 기간
@@ -54,20 +57,5 @@ public class SignupController {
     @ExceptionHandler(value = SignupIllegalStatusException.class)
     public ResponseEntity<ExceptionResponse> noSuchElementExceptionHandler(SignupIllegalStatusException e){
         return ExceptionResponse.of(ErrorCode.INVALID_STATUS, HttpStatus.BAD_REQUEST, e.getMessage());
-    }
-
-
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Getter
-    static class SignupRequest {
-        @Pattern(regexp = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",message = "올바른 이메일 형식이 아닙니다.")
-        private String email;
-    }
-
-    @AllArgsConstructor
-    @Getter
-    static class Message{
-        private String message;
     }
 }

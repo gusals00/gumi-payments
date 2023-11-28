@@ -2,6 +2,7 @@ package flab.gumipayments.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import flab.gumipayments.apifirst.openapi.accept.domain.AcceptInfoRequest;
 import flab.gumipayments.application.signup.SignupAcceptApplication;
 import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.SignupAcceptTimeoutException;
@@ -65,7 +66,7 @@ class AcceptControllerTest {
     }
 
     private String acceptRequestBody(String signupKey) throws JsonProcessingException {
-        return mapper.writeValueAsString(new AcceptController.AcceptInfoRequest(signupKey));
+        return mapper.writeValueAsString(new AcceptInfoRequest(signupKey));
     }
 
     @Test

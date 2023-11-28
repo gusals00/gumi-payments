@@ -2,6 +2,7 @@ package flab.gumipayments.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import flab.gumipayments.apifirst.openapi.signup.domain.SignupRequest;
 import flab.gumipayments.application.DuplicateException;
 import flab.gumipayments.application.signup.SignupCreateApplication;
 import org.junit.jupiter.api.BeforeEach;
@@ -140,6 +141,6 @@ class SignupControllerTest {
     }
 
     private String emailRequestBody(String email) throws JsonProcessingException {
-        return mapper.writeValueAsString(new SignupController.SignupRequest(email));
+        return mapper.writeValueAsString(SignupRequest.builder().email(email).build());
     }
 }

@@ -1,0 +1,59 @@
+openapi: 3.0.0
+servers:
+  - url: 'http://signup.swagger.io/v3'
+info:
+  description: 인증 컨트롤러
+  version: 1.0.0
+  title: accept
+  license:
+    name: Apache-2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: accept
+    description: 인증
+paths: # 아래로 API Path를 명시한다
+  '/api/accept/signup': # /test API에 대한 명세
+    post: # HTTP get Method를 사용한다.
+      operationId: signupAccept
+      tags:
+        - accept
+      summary: 가입 요청 인증 수락 # 설명
+      security: # 인증정보를 표현한다.
+        - cookieAuth: [ ] # 쿠키를 이용한 인증정보 (위에서 정의한 인증정보)
+      requestBody:
+        description: 가입 요청 인증 수락 request body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptInfoRequest'
+
+      responses:
+        '200': # HTTP Status Code
+          description: 요청 성공
+          content: # 응답값
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptResponse'
+
+components:
+  schemas:
+    AcceptInfoRequest:
+      title: 'AcceptInfoRequest'
+      description: '가입 요청 인증 reuqest body'
+      properties: # 필드값
+        signupKey:
+          type: string
+          example: swefs@sdf112
+          minLength: 1
+          description: "가입요청 인증키"
+    AcceptResponse:
+      title: 'AcceptResponse'
+      description: '가입 요청 인증 response body'
+      properties: # 필드값
+        signupId:
+          type: integer
+          format: int64
+          example: swefs@sdf112
+          minLength: 1
+          description: "가입요청 id"

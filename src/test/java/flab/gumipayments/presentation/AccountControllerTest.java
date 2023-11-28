@@ -2,16 +2,15 @@ package flab.gumipayments.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import flab.gumipayments.apifirst.openapi.account.domain.AccountCreateRequest;
 import flab.gumipayments.application.account.AccountCreateManagerApplication;
 import flab.gumipayments.domain.account.Account;
 import flab.gumipayments.domain.signup.SignupIllegalStatusException;
-import flab.gumipayments.presentation.AccountController.AccountCreateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;

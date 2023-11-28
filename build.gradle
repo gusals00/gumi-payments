@@ -47,7 +47,10 @@ tasks.named('test') {
 
 // api first start
 def swaggerMap = [
-		"test": "test.yaml"
+		"signup": "signup.yaml",
+		"test": "test.yaml",
+		"account": "account.yaml",
+		"accept": "accept.yaml"
 ]
 
 swaggerMap.each{entry ->
@@ -67,6 +70,9 @@ swaggerMap.each{entry ->
 						serializableModel: "true",
 						sourceFolder: "/java",
 						implFolder: "/java",
+						useTags: "true", // tage 단위로 rest api 클래스 생성
+						useSpringBoot3: "true", // @Valid : javax.validation -> jakarta.validation
+						additionalModelTypeAnnotations: "@lombok.NoArgsConstructor @lombok.AllArgsConstructor @lombok.Builder"
 				]
 		)
 	})
