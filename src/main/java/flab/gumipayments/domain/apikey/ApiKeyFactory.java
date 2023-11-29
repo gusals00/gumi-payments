@@ -13,7 +13,7 @@ public class ApiKeyFactory {
         return ApiKey.builder()
                 .secretKey(encoder.encode(secretKey))
                 .accountId(createCommand.getAccountId())
-                .type(createCommand.getApiKeyType())
+                .type(createCommand.getKeyType())
                 .expireDate(createCommand.getExpireDate())
                 .build();
     }

@@ -1,6 +1,7 @@
 package flab.gumipayments.application.apikey;
 
 import flab.gumipayments.domain.apikey.*;
+import flab.gumipayments.domain.apikey.ApiKeyCreateCommand;
 import flab.gumipayments.domain.apikey.condition.issue.ApiKeyIssueConditions;
 import flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions;
 import flab.gumipayments.support.specification.Condition;
@@ -36,7 +37,6 @@ public class ApiKeyIssueRequesterApplication {
                     and(ApiKeyReIssueConditions.IS_PROD_API_KEY, ApiKeyReIssueConditions.EXIST_ACCOUNT, ApiKeyReIssueConditions.IS_CONTRACT_COMPLETE, ApiKeyReIssueConditions.EXIST_API_KEY)
             );
 
-    // TODO issueCommand 안에 있는 exist들 찾는 코드 작성해야 함
     @Transactional
     public ApiKeyPair issueApiKey(ApiKeyIssueCommand issueCommand) {
 
@@ -85,7 +85,7 @@ public class ApiKeyIssueRequesterApplication {
 
     private ApiKeyCreateCommand convert(ApiKeyIssueCommand issueCommand) {
         return ApiKeyCreateCommand.builder()
-                .apiKeyType(issueCommand.getApiKeyType())
+                .keyType(issueCommand.getApiKeyType())
                 .expireDate(issueCommand.getExpireDate())
                 .accountId(issueCommand.getAccountId())
                 .build();
@@ -93,7 +93,7 @@ public class ApiKeyIssueRequesterApplication {
 
     private ApiKeyCreateCommand convert(ApiKeyReIssueCommand issueCommand) {
         return ApiKeyCreateCommand.builder()
-                .apiKeyType(issueCommand.getApiKeyType())
+                .keyType(issueCommand.getApiKeyType())
                 .expireDate(issueCommand.getExpireDate())
                 .accountId(issueCommand.getAccountId())
                 .build();
