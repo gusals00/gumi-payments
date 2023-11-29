@@ -44,7 +44,7 @@ class ApiKeyIssueConditionsTest {
     @Test
     @DisplayName("조건: 실서비스용 API키 조건을 만족한다.")
     void prodIssueCondition() {
-        ApiKeyIssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(PRODUCTION)
+        ApiKeyIssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(PROD)
                 .accountExist(true)
                 .apiKeyExist(false)
                 .contractCompleteExist(true).build();
