@@ -34,7 +34,7 @@ class ApiKeyTypeConditionTest {
     @Test
     @DisplayName("조건: API 키 타입 = TEST 가 아니면 발급 조건을 만족하지 않는다.")
     void apiKeyTest02() {
-        ApiKeyIssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(PRODUCTION).build();
+        ApiKeyIssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(PROD).build();
         sut = IS_TEST_API_KEY;
 
         boolean result = sut.isSatisfiedBy(issueCommand);
@@ -45,7 +45,7 @@ class ApiKeyTypeConditionTest {
     @Test
     @DisplayName("조건: API 키 타입 = PROD 이면 발급 조건을 만족한다.")
     void apiKeyPROD01() {
-        ApiKeyIssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(PRODUCTION).build();
+        ApiKeyIssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(PROD).build();
         sut = IS_PROD_API_KEY;
 
         boolean result = sut.isSatisfiedBy(issueCommand);

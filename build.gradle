@@ -50,7 +50,8 @@ def swaggerMap = [
 		"signup": "signup.yaml",
 		"test": "test.yaml",
 		"account": "account.yaml",
-		"accept": "accept.yaml"
+		"accept": "accept.yaml",
+		"apikey": "apikey.yaml"
 ]
 
 swaggerMap.each{entry ->

@@ -1,13 +1,11 @@
 package flab.gumipayments.domain.apikey;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -28,14 +26,14 @@ class ApiKeyFactoryTest {
 
     @BeforeEach
     void setup() {
-        apiKeyCreateCommandBuilder = ApiKeyCreateCommand.builder();
+        apiKeyCreateCommandBuilder = builder();
     }
 
     @Test
     @DisplayName("성공: API 키 생성을 성공한다.")
     void create() {
         ApiKeyCreateCommand createCommand = apiKeyCreateCommandBuilder
-                .apiKeyType(ApiKeyType.TEST)
+                .keyType(ApiKeyType.TEST)
                 .accountId(1L)
                 .expireDate(LocalDateTime.now())
                 .build();
@@ -48,6 +46,6 @@ class ApiKeyFactoryTest {
         assertThat(apiKey.getSecretKey()).isEqualTo(encryptedKey);
         assertThat(apiKey.getAccountId()).isEqualTo(createCommand.getAccountId());
         assertThat(apiKey.getExpireDate()).isEqualTo(createCommand.getExpireDate());
-        assertThat(apiKey.getType()).isEqualTo(createCommand.getApiKeyType());
+        assertThat(apiKey.getType()).isEqualTo(createCommand.getKeyType());
     }
 }

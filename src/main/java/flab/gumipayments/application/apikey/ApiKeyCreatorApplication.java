@@ -1,6 +1,7 @@
 package flab.gumipayments.application.apikey;
 
 import flab.gumipayments.domain.apikey.*;
+import flab.gumipayments.domain.apikey.ApiKeyCreateCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ public class ApiKeyCreatorApplication {
     private final ApiKeyPairFactory apiKeyPairFactory;
     private final ApiKeyFactory apiKeyFactory;
 
+    // api 키 생성
     public ApiKeyResponse create(ApiKeyCreateCommand command) {
         // 시크릿, 클라이언트 키 생성
         ApiKeyPair apiKeyPair = apiKeyPairFactory.create();
