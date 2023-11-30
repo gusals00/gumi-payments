@@ -1,7 +1,7 @@
 package flab.gumipayments.domain.apikey.condition.issue;
 
 import flab.gumipayments.domain.apikey.ApiKeyIssueCommand;
-import flab.gumipayments.support.specification.Condition;
+import flab.gumipayments.domain.apikey.ApiKeyIssueCondition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ApiKeyTypeConditionTest {
     private ApiKeyIssueCommandBuilder apiKeyIssueCommandBuilder;
-    private Condition<ApiKeyIssueCommand> sut;
+    private ApiKeyIssueCondition sut;
 
     @BeforeEach
     void setup() {

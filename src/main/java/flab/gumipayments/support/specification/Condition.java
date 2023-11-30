@@ -12,24 +12,4 @@ public interface Condition<T> {
     default Condition<T> not(){
         return command -> !this.isSatisfiedBy(command);
     }
-
-    static<T> Condition<T> and(Condition<T>... condition) {
-        Condition<T> curCondition = command -> true;
-        for (Condition<T> apiKeyIssueCondition : condition) {
-            curCondition = curCondition.and(apiKeyIssueCondition);
-        }
-        return curCondition;
-    }
-
-    static<T> Condition<T> or(Condition<T>... condition) {
-        Condition<T> curCondition = command -> false;
-        for (Condition<T> apiKeyIssueCondition : condition) {
-            curCondition = curCondition.or(apiKeyIssueCondition);
-        }
-        return curCondition;
-    }
-
-    static<T> Condition<T> not(Condition<T> condition) {
-        return condition.not();
-    }
 }

@@ -1,9 +1,9 @@
 package flab.gumipayments.domain.apikey.condition.reissue;
 
 import flab.gumipayments.domain.apikey.ApiKeyReIssueCommand;
-import flab.gumipayments.support.specification.Condition;
+import flab.gumipayments.domain.apikey.ApiKeyReIssueCondition;
 
-public class ContractCompleteCondition implements Condition<ApiKeyReIssueCommand> {
+public class ContractCompleteCondition implements ApiKeyReIssueCondition {
 
     public static ContractCompleteCondition contractCompleteCondition(){
         return new ContractCompleteCondition();

@@ -1,5 +1,6 @@
 package flab.gumipayments.domain.apikey;
 
+import flab.gumipayments.application.apikey.ApiKeyRenewCommand;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static flab.gumipayments.application.apikey.ApiKeyRenewCommand.*;
 import static flab.gumipayments.domain.apikey.ApiKey.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -14,10 +16,12 @@ class ApiKeyTest {
 
     private ApiKeyBuilder apiKeyBuilder;
     private ApiKey sut;
+    private ApiKeyRenewCommandBuilder renewCommandBuilder;
 
     @BeforeEach
     void setup() {
         apiKeyBuilder = ApiKey.builder();
+        renewCommandBuilder = ApiKeyRenewCommand.builder();
     }
 
     @Test
@@ -26,7 +30,7 @@ class ApiKeyTest {
         LocalDateTime expireDate = LocalDateTime.of(2023,1,1,1,0);
         sut = apiKeyBuilder.expireDate(expireDate).build();
 
-        assertThatThrownBy(()->sut.extendExpireDate(expireDate))
+        assertThatThrownBy(()->sut.extendExpireDate(renewCommandBuilder.extendDate(expireDate).build()))
                 .isInstanceOf(ApiKeyExpireException.class);
     }
 
@@ -38,7 +42,7 @@ class ApiKeyTest {
 
         sut = apiKeyBuilder.expireDate(expireDate).build();
 
-        assertThatThrownBy(()->sut.extendExpireDate(extendDate))
+        assertThatThrownBy(()->sut.extendExpireDate(renewCommandBuilder.extendDate(extendDate).build()))
                 .isInstanceOf(ApiKeyExpireException.class);
     }
 
@@ -49,7 +53,7 @@ class ApiKeyTest {
         LocalDateTime extendDate = expireDate.plusNanos(1);
         sut = apiKeyBuilder.expireDate(expireDate).build();
 
-        sut.extendExpireDate(extendDate);
+        sut.extendExpireDate(renewCommandBuilder.extendDate(extendDate).build());
 
         assertThat(sut.getExpireDate().isEqual(extendDate)).isTrue();
     }

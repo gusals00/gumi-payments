@@ -30,6 +30,7 @@ import static org.springframework.http.HttpStatus.*;
 public class ApiKeyController implements ApiKeyApi {
 
     private final ApiKeyIssueRequesterApplication issueRequesterApplication;
+    private final ApiKeyReIssueRequesterApplication reIssueRequesterApplication;
     private final ApiKeyCommandCreateService commandCreateService;
 
     public static final int KEY_EXTEND_YEAR = 2;
@@ -55,7 +56,7 @@ public class ApiKeyController implements ApiKeyApi {
         ApiKeyReIssueCommand reIssueCommand = commandCreateService.getReIssueCommand(convert(reIssueRequest));
 
         // key 발급
-        ApiKeyPair apiKeyPair = issueRequesterApplication.reIssueApiKey(reIssueCommand);
+        ApiKeyPair apiKeyPair = reIssueRequesterApplication.reIssueApiKey(reIssueCommand);
 
         return ResponseEntity.ok(convertToReIssueResponse(apiKeyPair));
 
