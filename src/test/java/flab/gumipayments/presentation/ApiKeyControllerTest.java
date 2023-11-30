@@ -7,6 +7,7 @@ import flab.gumipayments.apifirst.openapi.apikey.domain.ApiKeyReIssueRequest;
 import flab.gumipayments.application.apikey.ApiKeyCommandCreateService;
 import flab.gumipayments.application.apikey.ApiKeyIssueException;
 import flab.gumipayments.application.apikey.ApiKeyIssueRequesterApplication;
+import flab.gumipayments.application.apikey.ApiKeyReIssueRequesterApplication;
 import flab.gumipayments.domain.apikey.ApiKeyIssueCommand;
 import flab.gumipayments.domain.apikey.ApiKeyPair;
 import flab.gumipayments.domain.apikey.ApiKeyReIssueCommand;
@@ -42,6 +43,8 @@ class ApiKeyControllerTest {
 
     @MockBean
     private ApiKeyIssueRequesterApplication issueRequesterApplication;
+    @MockBean
+    private ApiKeyReIssueRequesterApplication reIssueRequesterApplication;
     @MockBean
     private ApiKeyCommandCreateService commandCreateService;
 
@@ -103,7 +106,7 @@ class ApiKeyControllerTest {
     @DisplayName("예외: API 키 재발급 조건을 만족하지 못하면 API 키 재발급 요청은 실패한다.")
     void apiKeyReIssueFail01() throws Exception {
         when(commandCreateService.getReIssueCommand(any())).thenReturn(reIssueCommandBuilder.build());
-        when(issueRequesterApplication.reIssueApiKey(any())).thenThrow(new ApiKeyIssueException());
+        when(reIssueRequesterApplication.reIssueApiKey(any())).thenThrow(new ApiKeyIssueException());
 
         mockMvc.perform(post("/api/api-key/re")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
@@ -130,7 +133,7 @@ class ApiKeyControllerTest {
     @DisplayName("성공: API 키 재발급을 성공한다.")
     void apiKeyReIssue() throws Exception {
         when(commandCreateService.getReIssueCommand(any())).thenReturn(reIssueCommandBuilder.build());
-        when(issueRequesterApplication.reIssueApiKey(any())).thenReturn(apiKeyPairBuilder.build());
+        when(reIssueRequesterApplication.reIssueApiKey(any())).thenReturn(apiKeyPairBuilder.build());
 
         mockMvc.perform(post("/api/api-key/re")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
