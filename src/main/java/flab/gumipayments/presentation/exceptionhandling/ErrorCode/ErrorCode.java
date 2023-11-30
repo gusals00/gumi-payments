@@ -1,12 +1,7 @@
 package flab.gumipayments.presentation.exceptionhandling.ErrorCode;
 
-public enum ErrorCode {
+import org.springframework.http.HttpStatus;
 
-    NOT_FOUND,
-    DUPLICATED,
-    TRY_AGAIN,
-    INVALID_STATUS,
-    TIMEOUT,
-    BINDING
-
+public interface ErrorCode {
+    String name();
 }

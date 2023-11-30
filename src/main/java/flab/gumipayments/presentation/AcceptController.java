@@ -6,7 +6,7 @@ import flab.gumipayments.apifirst.openapi.accept.rest.AcceptApi;
 import flab.gumipayments.application.signup.AcceptCommand;
 import flab.gumipayments.application.signup.SignupAcceptApplication;
 import flab.gumipayments.domain.signup.SignupAcceptTimeoutException;
-import flab.gumipayments.presentation.exceptionhandling.ErrorCode.ErrorCode;
+import flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode;
 import flab.gumipayments.presentation.exceptionhandling.ExceptionResponse;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class AcceptController implements AcceptApi {
     }
 
     @ExceptionHandler(value = SignupAcceptTimeoutException.class)
-    public ResponseEntity<ExceptionResponse> noSuchElementExceptionHandler(SignupAcceptTimeoutException e) {
-        return ExceptionResponse.of(ErrorCode.TIMEOUT, HttpStatus.BAD_REQUEST, e.getMessage());
+    public ResponseEntity<ExceptionResponse> signupAcceptTimeoutExceptionHandler(SignupAcceptTimeoutException e) {
+        return ExceptionResponse.of(BusinessErrorCode.TIMEOUT, HttpStatus.BAD_REQUEST, e.getMessage());
     }
 }
