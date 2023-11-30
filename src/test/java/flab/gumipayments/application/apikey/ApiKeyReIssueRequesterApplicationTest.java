@@ -1,5 +1,6 @@
 package flab.gumipayments.application.apikey;
 
+import flab.gumipayments.application.NotFoundException;
 import flab.gumipayments.domain.account.AccountRepository;
 import flab.gumipayments.domain.apikey.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,7 +60,7 @@ class ApiKeyReIssueRequesterApplicationTest {
 
 
         assertThatThrownBy(() -> sut.reIssueApiKey(apiKeyReIssueCommandBuilder.build()))
-                .isInstanceOf(NoSuchElementException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("api키가 존재하지 않습니다.");
     }
 

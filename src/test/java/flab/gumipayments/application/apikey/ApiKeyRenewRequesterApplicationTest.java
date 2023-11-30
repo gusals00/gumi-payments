@@ -1,5 +1,6 @@
 package flab.gumipayments.application.apikey;
 
+import flab.gumipayments.application.NotFoundException;
 import flab.gumipayments.domain.account.Account;
 import flab.gumipayments.domain.account.AccountRepository;
 import flab.gumipayments.domain.apikey.ApiKey;
@@ -52,7 +53,7 @@ class ApiKeyRenewRequesterApplicationTest {
         when(apiKeyRepository.findById(any())).thenReturn(Optional.empty());
 
         assertThatThrownBy(()->sut.renew(renewCommandBuilder.build()))
-                .isInstanceOf(NoSuchElementException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("api키가 존재하지 않습니다.");
     }
 
@@ -65,7 +66,7 @@ class ApiKeyRenewRequesterApplicationTest {
         when(accountRepository.findById(any())).thenReturn(Optional.empty());
 
         assertThatThrownBy(()->sut.renew(renewCommandBuilder.extendDate(extendDate).build()))
-                .isInstanceOf(NoSuchElementException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("account가 존재하지 않습니다.");
     }
 

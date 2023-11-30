@@ -3,9 +3,11 @@ package flab.gumipayments.presentation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import flab.gumipayments.apifirst.openapi.accept.domain.AcceptInfoRequest;
+import flab.gumipayments.application.NotFoundException;
 import flab.gumipayments.application.signup.SignupAcceptApplication;
 import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.SignupAcceptTimeoutException;
+import flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.NoSuchElementException;
 
+import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -89,15 +92,15 @@ class AcceptControllerTest {
     @WithMockUser
     @DisplayName("예외: 인증할 가입 요청이 존재하지 않으면 인증에 실패한다.")
     void notExistSignup() throws Exception {
-        when(signupAcceptApplication.accept(any())).thenThrow(new NoSuchElementException());
+        when(signupAcceptApplication.accept(any())).thenThrow(new NotFoundException(NOT_FOUND));
 
         mockMvc.perform(post("/api/accept/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(acceptRequestBody("1234"))
                         .with(SecurityMockMvcRequestPostProcessors.csrf()))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andExpect(result ->
-                        assertThat(result.getResolvedException().getClass()).isEqualTo(NoSuchElementException.class)
+                        assertThat(result.getResolvedException().getClass()).isEqualTo(NotFoundException.class)
                 );
     }
 }

@@ -1,5 +1,6 @@
 package flab.gumipayments.application.account;
 
+import flab.gumipayments.application.NotFoundException;
 import flab.gumipayments.application.account.AccountCreateManagerApplication;
 import flab.gumipayments.domain.account.AccountCreateCommand;
 import flab.gumipayments.domain.account.AccountFactory;
@@ -52,7 +53,7 @@ class AccountCreateManagerApplicationTest {
         when(signupRepository.findById(signupId)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> sut.create(accountCreateCommandBuilder.build(), signupId))
-                .isInstanceOf(NoSuchElementException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("signup이 존재하지 않습니다.");
     }
 

@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import flab.gumipayments.apifirst.openapi.signup.domain.SignupRequest;
 import flab.gumipayments.application.DuplicateException;
 import flab.gumipayments.application.signup.SignupCreateApplication;
+import flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -18,7 +18,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 
 
-import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.ErrorCode.*;
+import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode.*;
+import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode.DUPLICATED;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -59,13 +60,13 @@ class SignupControllerTest {
     @WithMockUser
     @DisplayName("예외: 이미 생성한 계정이 존재하면 가입 요청은 실패한다.")
     void alreadyExistAccount() throws Exception {
-        doThrow(new DuplicateException()).when(signupCreateApplication).signup(any());
+        doThrow(new DuplicateException(DUPLICATED, "message")).when(signupCreateApplication).signup(any());
 
         mockMvc.perform(post("/api/signup")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
-                .andExpect(status().isConflict())
+                .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.code").value(DUPLICATED.name()));
     }
 

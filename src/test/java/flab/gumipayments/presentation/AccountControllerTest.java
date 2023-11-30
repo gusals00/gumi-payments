@@ -3,9 +3,11 @@ package flab.gumipayments.presentation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import flab.gumipayments.apifirst.openapi.account.domain.AccountCreateRequest;
+import flab.gumipayments.application.NotFoundException;
 import flab.gumipayments.application.account.AccountCreateManagerApplication;
 import flab.gumipayments.domain.account.Account;
 import flab.gumipayments.domain.signup.SignupIllegalStatusException;
+import flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import java.util.NoSuchElementException;
 
 import static flab.gumipayments.domain.account.Account.*;
+import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -72,15 +75,15 @@ class AccountControllerTest {
     @WithMockUser
     @DisplayName("예외: 가입 요청이 존재하지 않으면 계정 생성이 실패한다.")
     void notExistSignup() throws Exception {
-        when(accountCreateManagerApplication.create(any(), any())).thenThrow(new NoSuchElementException());
+        when(accountCreateManagerApplication.create(any(), any())).thenThrow(new NotFoundException(NOT_FOUND));
 
         mockMvc.perform(post("/api/account/{signupId}", signupId)
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andExpect(result ->
-                        assertThat(result.getResolvedException().getClass()).isEqualTo(NoSuchElementException.class)
+                        assertThat(result.getResolvedException().getClass()).isEqualTo(NotFoundException.class)
                 );
     }
 

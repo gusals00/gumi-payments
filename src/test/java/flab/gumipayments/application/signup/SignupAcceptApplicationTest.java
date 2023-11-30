@@ -1,5 +1,6 @@
 package flab.gumipayments.application.signup;
 
+import flab.gumipayments.application.NotFoundException;
 import flab.gumipayments.application.signup.AcceptCommand;
 import flab.gumipayments.application.signup.SignupAcceptApplication;
 import flab.gumipayments.domain.signup.Signup;
@@ -54,7 +55,7 @@ class SignupAcceptApplicationTest {
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(()-> sut.accept(acceptCommand))
-                .isInstanceOf(NoSuchElementException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("signup이 존재하지 않습니다.");
     }
 
