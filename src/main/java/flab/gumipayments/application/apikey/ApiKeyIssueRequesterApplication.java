@@ -2,18 +2,16 @@ package flab.gumipayments.application.apikey;
 
 import flab.gumipayments.domain.apikey.*;
 import flab.gumipayments.domain.apikey.ApiKeyCreateCommand;
+import flab.gumipayments.domain.apikey.ApiKeyIssueCondition;
 import flab.gumipayments.domain.apikey.condition.issue.ApiKeyIssueConditions;
-import flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions;
-import flab.gumipayments.support.specification.Condition;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
 
-
-import static flab.gumipayments.support.specification.Condition.*;
+import static flab.gumipayments.domain.apikey.ApiKeyIssueCondition.*;
+import static flab.gumipayments.domain.apikey.condition.issue.ApiKeyIssueConditions.*;
 
 
 @Service
@@ -24,17 +22,10 @@ public class ApiKeyIssueRequesterApplication {
     private final ApiKeyCreatorApplication apiKeyCreatorApplication;
 
     @Setter
-    private Condition<ApiKeyIssueCommand> apiKeyIssueCondition =
+    private ApiKeyIssueCondition apiKeyIssueCondition =
             or(
-                    and(ApiKeyIssueConditions.IS_TEST_API_KEY, ApiKeyIssueConditions.EXIST_ACCOUNT, not(ApiKeyIssueConditions.EXIST_API_KEY)),
-                    and(ApiKeyIssueConditions.IS_PROD_API_KEY, ApiKeyIssueConditions.EXIST_ACCOUNT, ApiKeyIssueConditions.IS_CONTRACT_COMPLETE, not(ApiKeyIssueConditions.EXIST_API_KEY))
-            );
-
-    @Setter
-    private Condition<ApiKeyReIssueCommand> apiKeyReIssueCondition =
-            or(
-                    and(ApiKeyReIssueConditions.IS_TEST_API_KEY, ApiKeyReIssueConditions.EXIST_ACCOUNT, not(ApiKeyReIssueConditions.EXIST_API_KEY)),
-                    and(ApiKeyReIssueConditions.IS_PROD_API_KEY, ApiKeyReIssueConditions.EXIST_ACCOUNT, ApiKeyReIssueConditions.IS_CONTRACT_COMPLETE, ApiKeyReIssueConditions.EXIST_API_KEY)
+                    and(IS_TEST_API_KEY, EXIST_ACCOUNT, not(EXIST_API_KEY)),
+                    and(IS_PROD_API_KEY, EXIST_ACCOUNT, IS_CONTRACT_COMPLETE, not(EXIST_API_KEY))
             );
 
     @Transactional
@@ -54,44 +45,7 @@ public class ApiKeyIssueRequesterApplication {
         return apiKeyResponse.getApiKeyPair();
     }
 
-    @Transactional
-    //api 키 재발급
-    public ApiKeyPair reIssueApiKey(ApiKeyReIssueCommand reIssueCommand) {
-        // 재발급 조건
-        if (!apiKeyReIssueCondition.isSatisfiedBy(reIssueCommand)) {
-            throw new ApiKeyIssueException("api 키 재발급 조건이 올바르지 않습니다.");
-        }
-
-        // 기존 api 키 삭제
-        deleteApiKey(reIssueCommand);
-
-        // api 키 생성
-        ApiKeyResponse apiKeyResponse = apiKeyCreatorApplication.create(convert(reIssueCommand));
-
-        //api 키 저장
-        apiKeyRepository.save(apiKeyResponse.getApiKey());
-
-        return apiKeyResponse.getApiKeyPair();
-    }
-
-    private void deleteApiKey(ApiKeyReIssueCommand reIssueCommand) {
-        // 기존 api 조회
-        ApiKey apiKey = apiKeyRepository.findByAccountIdAndType(reIssueCommand.getAccountId(), reIssueCommand.getApiKeyType())
-                .orElseThrow(() -> new NoSuchElementException("api키가 존재하지 않습니다."));
-
-        //기존 api 키 삭제
-        apiKeyRepository.delete(apiKey);
-    }
-
     private ApiKeyCreateCommand convert(ApiKeyIssueCommand issueCommand) {
-        return ApiKeyCreateCommand.builder()
-                .keyType(issueCommand.getApiKeyType())
-                .expireDate(issueCommand.getExpireDate())
-                .accountId(issueCommand.getAccountId())
-                .build();
-    }
-
-    private ApiKeyCreateCommand convert(ApiKeyReIssueCommand issueCommand) {
         return ApiKeyCreateCommand.builder()
                 .keyType(issueCommand.getApiKeyType())
                 .expireDate(issueCommand.getExpireDate())

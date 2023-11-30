@@ -1,5 +1,6 @@
 package flab.gumipayments.domain.apikey;
 
+import flab.gumipayments.application.apikey.ApiKeyRenewCommand;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,10 +38,10 @@ public class ApiKey {
         this.count = 0;
     }
 
-    public void extendExpireDate(LocalDateTime extendDate) {
-        if(extendDate.isBefore(this.expireDate) || extendDate.isEqual(this.expireDate)){
+    public void extendExpireDate(ApiKeyRenewCommand renewCommand) {
+        if(renewCommand.getExtendDate().isBefore(this.expireDate) || renewCommand.getExtendDate().isEqual(this.expireDate)){
             throw new ApiKeyExpireException("올바른 기간 연장이 아닙니다.");
         }
-        this.expireDate = extendDate;
+        this.expireDate = renewCommand.getExtendDate();
     }
 }

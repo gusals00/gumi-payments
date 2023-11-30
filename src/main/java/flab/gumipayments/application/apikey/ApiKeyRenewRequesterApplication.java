@@ -19,8 +19,8 @@ public class ApiKeyRenewRequesterApplication {
     private final AccountRepository accountRepository;
     private final Sender sender;
 
-    @Transactional
     //api 키 갱신
+    @Transactional
     public void renew(ApiKeyRenewCommand renewCommand){
 
         //api 키 조회
@@ -28,7 +28,7 @@ public class ApiKeyRenewRequesterApplication {
                 .orElseThrow(() -> new NoSuchElementException("api키가 존재하지 않습니다."));
 
         // 만료 기간 연장
-        apiKey.extendExpireDate(renewCommand.getExtendDate());
+        apiKey.extendExpireDate(renewCommand);
 
         // 계정 조회
         Account account = accountRepository.findById(apiKey.getAccountId())
