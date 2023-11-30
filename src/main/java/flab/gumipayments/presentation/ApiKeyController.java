@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 
-import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.ErrorCode.*;
+import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode.*;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController

@@ -8,14 +8,14 @@ import org.springframework.http.ResponseEntity;
 @Builder
 @Getter
 public class ExceptionResponse {
-    private ErrorCode code;
+    private String code;
     private String message;
 
     public static ResponseEntity<ExceptionResponse> of(ErrorCode errorCode, HttpStatus status, String message) {
         return ResponseEntity
                 .status(status)
                 .body(ExceptionResponse.builder()
-                        .code(errorCode)
+                        .code(errorCode.name())
                         .message(message)
                         .build());
     }

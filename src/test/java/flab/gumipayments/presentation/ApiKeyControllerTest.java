@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static flab.gumipayments.domain.apikey.ApiKeyIssueCommand.*;
 import static flab.gumipayments.domain.apikey.ApiKeyPair.*;
 import static flab.gumipayments.domain.apikey.ApiKeyReIssueCommand.*;
-import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.ErrorCode.*;
+import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

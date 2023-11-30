@@ -6,10 +6,9 @@ import flab.gumipayments.application.signup.SignupCreateApplication;
 import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.SignupCreateCommand;
 import flab.gumipayments.domain.signup.SignupIllegalStatusException;
-import flab.gumipayments.presentation.exceptionhandling.ErrorCode.ErrorCode;
+import flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode;
 import flab.gumipayments.presentation.exceptionhandling.ExceptionResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -56,6 +55,6 @@ public class SignupController implements SignUpApi {
 
     @ExceptionHandler(value = SignupIllegalStatusException.class)
     public ResponseEntity<ExceptionResponse> noSuchElementExceptionHandler(SignupIllegalStatusException e){
-        return ExceptionResponse.of(ErrorCode.INVALID_STATUS, HttpStatus.BAD_REQUEST, e.getMessage());
+        return ExceptionResponse.of(BusinessErrorCode.INVALID_STATUS, HttpStatus.BAD_REQUEST, e.getMessage());
     }
 }
