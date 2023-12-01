@@ -23,6 +23,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 
 import static flab.gumipayments.domain.apikey.ApiKeyPair.*;
+import static flab.gumipayments.domain.apikey.IssueCommand.*;
+import static flab.gumipayments.domain.apikey.ReIssueCommand.*;
 import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -47,8 +49,8 @@ class ApiKeyControllerTest {
     private ApiKeyCommandCreateService commandCreateService;
 
     private ApiKeyPairBuilder apiKeyPairBuilder;
-    private ApiKeyIssueCommandBuilder issueCommandBuilder;
-    private ApiKeyReIssueCommandBuilder reIssueCommandBuilder;
+    private IssueCommandBuilder issueCommandBuilder;
+    private ReIssueCommandBuilder reIssueCommandBuilder;
 
 
     @BeforeEach

@@ -20,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static flab.gumipayments.domain.KeyFactory.*;
 import static flab.gumipayments.domain.signup.SignupCreateCommand.*;
 import static org.mockito.Mockito.*;
 
@@ -47,13 +46,11 @@ class SignupCreateApplicationTest {
         LocalDateTime expireDate = LocalDateTime.now()
                 .plusMinutes(EXPIRE_MINUTES);
 
-        signupCreateCommand = new SignupCreateCommand("email@naver.com", expireDate, generateSignupKey());
+        signupCreateCommand = new SignupCreateCommand("email@naver.com", expireDate);
         signupCreateCommandBuilder = builder()
-                .expireDate(expireDate)
-                .signupKey(signupCreateCommand.getSignupKey());
+                .expireDate(expireDate);
 
         signup = Signup.builder()
-                .signupKey(signupCreateCommand.getSignupKey())
                 .expireDate(signupCreateCommand.getExpireDate())
                 .email(signupCreateCommand.getEmail())
                 .build();

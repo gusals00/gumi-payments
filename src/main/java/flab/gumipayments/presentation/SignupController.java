@@ -3,7 +3,6 @@ package flab.gumipayments.presentation;
 import flab.gumipayments.apifirst.openapi.signup.domain.SignupRequest;
 import flab.gumipayments.apifirst.openapi.signup.rest.SignUpApi;
 import flab.gumipayments.application.signup.SignupCreateApplication;
-import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.SignupCreateCommand;
 import flab.gumipayments.domain.signup.SignupIllegalStatusException;
 import flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode;
@@ -34,19 +33,18 @@ public class SignupController implements SignUpApi {
         // 만료 기간
         LocalDateTime expireDate = createExpireDate(SIGNUP_KEY_EXPIRE_DAYS, SIGNUP_KEY_EXPIRE_HOURS, SIGNUP_KEY_EXPIRE_MINUTES);
         // 인증키 생성
-        String signupKey = KeyFactory.generateSignupKey();
-        SignupCreateCommand signupCreateCommand = convertToSignupCommand(request,expireDate,signupKey);
+        SignupCreateCommand signupCreateCommand = convertToSignupCommand(request, expireDate);
 
         signupRequesterApplication.signup(signupCreateCommand);
 
         return ResponseEntity.ok().build();
     }
 
-    private SignupCreateCommand convertToSignupCommand(SignupRequest request,LocalDateTime expireDate, String signupKey) {
-        return new SignupCreateCommand(request.getEmail(),expireDate,signupKey);
+    private SignupCreateCommand convertToSignupCommand(SignupRequest request, LocalDateTime expireDate) {
+        return new SignupCreateCommand(request.getEmail(), expireDate);
     }
 
-    private LocalDateTime createExpireDate(int days,int hours,int minutes){
+    private LocalDateTime createExpireDate(int days, int hours, int minutes) {
         return LocalDateTime.now()
                 .plusDays(days)
                 .plusHours(hours)
@@ -54,7 +52,7 @@ public class SignupController implements SignUpApi {
     }
 
     @ExceptionHandler(value = SignupIllegalStatusException.class)
-    public ResponseEntity<ExceptionResponse> noSuchElementExceptionHandler(SignupIllegalStatusException e){
+    public ResponseEntity<ExceptionResponse> noSuchElementExceptionHandler(SignupIllegalStatusException e) {
         return ExceptionResponse.of(BusinessErrorCode.INVALID_STATUS, HttpStatus.BAD_REQUEST, e.getMessage());
     }
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static flab.gumipayments.domain.apikey.IssueCommand.*;
 import static flab.gumipayments.domain.apikey.condition.issue.ApiKeyIssueConditions.*;
 import static flab.gumipayments.domain.apikey.ApiKeyType.*;
 
@@ -20,17 +21,17 @@ class ApiKeyIssueConditionsTest {
                     and(IS_PROD_API_KEY, EXIST_ACCOUNT, IS_CONTRACT_COMPLETE, not(EXIST_API_KEY))
             );
 
-    private ApiKeyIssueCommandBuilder apiKeyIssueCommandBuilder;
+    private IssueCommandBuilder issueCommandBuilder;
 
     @BeforeEach
     void setup() {
-        apiKeyIssueCommandBuilder = IssueCommand.builder();
+        issueCommandBuilder = IssueCommand.builder();
     }
 
     @Test
     @DisplayName("조건: 테스트 API키 발급 조건을 만족한다.")
     void testIssueCondition() {
-        IssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(TEST)
+        IssueCommand issueCommand = issueCommandBuilder.apiKeyType(TEST)
                 .accountExist(true)
                 .apiKeyExist(false).build();
 
@@ -42,7 +43,7 @@ class ApiKeyIssueConditionsTest {
     @Test
     @DisplayName("조건: 실서비스용 API키 발급 조건을 만족한다.")
     void prodIssueCondition() {
-        IssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(PROD)
+        IssueCommand issueCommand = issueCommandBuilder.apiKeyType(PROD)
                 .accountExist(true)
                 .apiKeyExist(false)
                 .contractCompleteExist(true).build();
@@ -55,7 +56,7 @@ class ApiKeyIssueConditionsTest {
     @Test
     @DisplayName("조건: 실서비스용과 테스트용 API키 발급 조건을 모두 만족하지 않는다.")
     void IssueCondition() {
-        IssueCommand issueCommand = apiKeyIssueCommandBuilder.build();
+        IssueCommand issueCommand = issueCommandBuilder.build();
 
         boolean result = sut.isSatisfiedBy(issueCommand);
 

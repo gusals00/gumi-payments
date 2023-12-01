@@ -12,5 +12,4 @@ import java.time.LocalDateTime;
 public class SignupCreateCommand {
     private String email;
     private LocalDateTime expireDate;
-    private String signupKey;
 }

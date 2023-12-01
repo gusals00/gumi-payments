@@ -12,18 +12,18 @@ import static flab.gumipayments.domain.apikey.ApiKeyType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ApiKeyTypeConditionTest {
-    private ApiKeyIssueCommandBuilder apiKeyIssueCommandBuilder;
+    private IssueCommandBuilder issueCommandBuilder;
     private ApiKeyIssueCondition sut;
 
     @BeforeEach
     void setup() {
-        apiKeyIssueCommandBuilder = builder();
+        issueCommandBuilder = builder();
     }
 
     @Test
     @DisplayName("조건: API 키 타입 = TEST 이면 발급 조건을 만족한다.")
     void apiKeyTest01() {
-        IssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(TEST).build();
+        IssueCommand issueCommand = issueCommandBuilder.apiKeyType(TEST).build();
         sut = IS_TEST_API_KEY;
 
         boolean result = sut.isSatisfiedBy(issueCommand);
@@ -34,7 +34,7 @@ class ApiKeyTypeConditionTest {
     @Test
     @DisplayName("조건: API 키 타입 = TEST 가 아니면 발급 조건을 만족하지 않는다.")
     void apiKeyTest02() {
-        IssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(PROD).build();
+        IssueCommand issueCommand = issueCommandBuilder.apiKeyType(PROD).build();
         sut = IS_TEST_API_KEY;
 
         boolean result = sut.isSatisfiedBy(issueCommand);
@@ -45,7 +45,7 @@ class ApiKeyTypeConditionTest {
     @Test
     @DisplayName("조건: API 키 타입 = PROD 이면 발급 조건을 만족한다.")
     void apiKeyPROD01() {
-        IssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(PROD).build();
+        IssueCommand issueCommand = issueCommandBuilder.apiKeyType(PROD).build();
         sut = IS_PROD_API_KEY;
 
         boolean result = sut.isSatisfiedBy(issueCommand);
@@ -56,7 +56,7 @@ class ApiKeyTypeConditionTest {
     @Test
     @DisplayName("조건: API 키 타입 = PROD 가 아니면 발급 조건을 만족하지 않는다.")
     void apiKeyPROD02() {
-        IssueCommand issueCommand = apiKeyIssueCommandBuilder.apiKeyType(TEST).build();
+        IssueCommand issueCommand = issueCommandBuilder.apiKeyType(TEST).build();
         sut = IS_PROD_API_KEY;
 
         boolean result = sut.isSatisfiedBy(issueCommand);

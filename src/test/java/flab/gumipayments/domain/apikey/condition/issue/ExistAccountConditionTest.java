@@ -12,17 +12,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ExistAccountConditionTest {
 
-    private ApiKeyIssueCommandBuilder apiKeyIssueCommandBuilder;
+    private IssueCommandBuilder issueCommandBuilder;
     private ApiKeyIssueCondition sut;
     @BeforeEach
     void setup() {
-        apiKeyIssueCommandBuilder = builder();
+        issueCommandBuilder = builder();
     }
 
     @Test
     @DisplayName("조건: 계정이 존재하면 발급 조건을 만족한다.")
     void accountExist01() {
-        IssueCommand issueCommand = apiKeyIssueCommandBuilder.accountExist(true).build();
+        IssueCommand issueCommand = issueCommandBuilder.accountExist(true).build();
         sut = EXIST_ACCOUNT;
 
         boolean result = sut.isSatisfiedBy(issueCommand);
@@ -33,7 +33,7 @@ class ExistAccountConditionTest {
     @Test
     @DisplayName("조건: 계정이 존재하지 않으면 발급 조건을 만족하지 않는다.")
     void accountExist02() {
-        IssueCommand issueCommand = apiKeyIssueCommandBuilder.accountExist(false).build();
+        IssueCommand issueCommand = issueCommandBuilder.accountExist(false).build();
         sut = EXIST_ACCOUNT;
 
         boolean result = sut.isSatisfiedBy(issueCommand);

@@ -6,11 +6,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static flab.gumipayments.domain.apikey.ReIssueCommand.*;
 import static flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions.EXIST_API_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ExistApiKeyConditionTest {
-    private ReIssueCommand.ApiKeyReIssueCommandBuilder apiKeyReIssueCommandBuilder;
+    private ReIssueCommandBuilder apiKeyReIssueCommandBuilder;
     private ApiKeyReIssueCondition sut;
 
     @BeforeEach

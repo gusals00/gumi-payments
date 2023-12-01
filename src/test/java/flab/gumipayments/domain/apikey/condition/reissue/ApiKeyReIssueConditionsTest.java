@@ -10,6 +10,7 @@ import static flab.gumipayments.domain.apikey.ApiKeyReIssueCondition.and;
 import static flab.gumipayments.domain.apikey.ApiKeyReIssueCondition.or;
 import static flab.gumipayments.domain.apikey.ApiKeyType.PROD;
 import static flab.gumipayments.domain.apikey.ApiKeyType.TEST;
+import static flab.gumipayments.domain.apikey.ReIssueCommand.*;
 import static flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions.EXIST_ACCOUNT;
 import static flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions.EXIST_API_KEY;
 import static flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions.IS_CONTRACT_COMPLETE;
@@ -24,17 +25,17 @@ class ApiKeyReIssueConditionsTest {
                     and(IS_PROD_API_KEY, EXIST_ACCOUNT, IS_CONTRACT_COMPLETE, EXIST_API_KEY)
             );
 
-    private ApiKeyReIssueCommandBuilder apiKeyReIssueCommandBuilder;
+    private ReIssueCommandBuilder reIssueCommandBuilder;
 
     @BeforeEach
     void setup() {
-        apiKeyReIssueCommandBuilder = ReIssueCommand.builder();
+        reIssueCommandBuilder = ReIssueCommand.builder();
     }
 
     @Test
     @DisplayName("조건: 테스트 API키 재발급 조건을 만족한다.")
     void testIssueCondition() {
-        ReIssueCommand reIssueCommand = apiKeyReIssueCommandBuilder
+        ReIssueCommand reIssueCommand = reIssueCommandBuilder
                 .apiKeyType(TEST)
                 .accountExist(true)
                 .apiKeyExist(true).build();
@@ -47,7 +48,7 @@ class ApiKeyReIssueConditionsTest {
     @Test
     @DisplayName("조건: 실서비스용 API키 재발급 조건을 만족한다.")
     void prodIssueCondition() {
-        ReIssueCommand reIssueCommand = apiKeyReIssueCommandBuilder
+        ReIssueCommand reIssueCommand = reIssueCommandBuilder
                 .apiKeyType(PROD)
                 .accountExist(true)
                 .apiKeyExist(true)
@@ -61,7 +62,7 @@ class ApiKeyReIssueConditionsTest {
     @Test
     @DisplayName("조건: 실서비스용과 테스트용 API키 재발급 조건을 모두 만족하지 않는다.")
     void IssueCondition() {
-        ReIssueCommand reIssueCommand = apiKeyReIssueCommandBuilder
+        ReIssueCommand reIssueCommand = reIssueCommandBuilder
                 .build();
 
         boolean result = sut.isSatisfiedBy(reIssueCommand);
