@@ -3,18 +3,18 @@ package flab.gumipayments.domain.apikey;
 import flab.gumipayments.support.specification.Condition;
 
 @FunctionalInterface
-public interface ApiKeyIssueCondition extends Condition<ApiKeyIssueCommand> {
+public interface ApiKeyIssueCondition extends Condition<IssueCommand> {
 
     @Override
-    boolean isSatisfiedBy(ApiKeyIssueCommand command);
+    boolean isSatisfiedBy(IssueCommand command);
 
     @Override
-    default ApiKeyIssueCondition and(Condition<ApiKeyIssueCommand> other) {
+    default ApiKeyIssueCondition and(Condition<IssueCommand> other) {
         return (ApiKeyIssueCondition) command -> this.isSatisfiedBy(command) && other.isSatisfiedBy(command);
     }
 
     @Override
-    default ApiKeyIssueCondition or(Condition<ApiKeyIssueCommand> other) {
+    default ApiKeyIssueCondition or(Condition<IssueCommand> other) {
         return (ApiKeyIssueCondition) command -> this.isSatisfiedBy(command) || other.isSatisfiedBy(command);
     }
 

@@ -2,12 +2,9 @@ package flab.gumipayments.application.apikey;
 
 import flab.gumipayments.domain.account.AccountRepository;
 import flab.gumipayments.domain.apikey.*;
-import flab.gumipayments.domain.apikey.ApiKeyCreateCommand;
 import flab.gumipayments.domain.contract.ContractRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 import static flab.gumipayments.domain.contract.ContractStatus.*;
 
@@ -20,11 +17,11 @@ public class ApiKeyCommandCreateService {
     private final ApiKeyRepository apiKeyRepository;
 
     // issueCommand 생성
-    public ApiKeyIssueCommand getIssueCommand(ApiKeyIssueCreateCommand issueCreateCommand) {
+    public IssueCommand getIssueCommand(ApiKeyIssueCreateCommand issueCreateCommand) {
         ApiKeyType keyType = ApiKeyType.valueOf(issueCreateCommand.getType());
         Long accountId = issueCreateCommand.getAccountId();
 
-        return ApiKeyIssueCommand.builder()
+        return IssueCommand.builder()
                 .accountId(accountId)
                 .expireDate(issueCreateCommand.getExpireDate())
                 .apiKeyType(keyType)
@@ -33,11 +30,11 @@ public class ApiKeyCommandCreateService {
                 .contractCompleteExist(contractRepository.existsByAccountIdAndStatus(accountId, CONTRACT_COMPLETE)).build();
     }
 
-    public ApiKeyReIssueCommand getReIssueCommand(ApiKeyReIssueCreateCommand reIssueCreateCommand) {
+    public ReIssueCommand getReIssueCommand(ApiKeyReIssueCreateCommand reIssueCreateCommand) {
         ApiKeyType keyType = ApiKeyType.valueOf(reIssueCreateCommand.getType());
         Long accountId = reIssueCreateCommand.getAccountId();
 
-        return ApiKeyReIssueCommand.builder()
+        return ReIssueCommand.builder()
                 .accountId(accountId)
                 .expireDate(reIssueCreateCommand.getExpireDate())
                 .apiKeyType(keyType)

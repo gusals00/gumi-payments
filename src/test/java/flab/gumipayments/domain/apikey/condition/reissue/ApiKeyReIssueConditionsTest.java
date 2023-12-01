@@ -1,13 +1,11 @@
 package flab.gumipayments.domain.apikey.condition.reissue;
 
-import flab.gumipayments.domain.apikey.ApiKeyIssueCommand;
-import flab.gumipayments.domain.apikey.ApiKeyReIssueCommand;
+import flab.gumipayments.domain.apikey.ReIssueCommand;
 import flab.gumipayments.domain.apikey.ApiKeyReIssueCondition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static flab.gumipayments.domain.apikey.ApiKeyReIssueCommand.*;
 import static flab.gumipayments.domain.apikey.ApiKeyReIssueCondition.and;
 import static flab.gumipayments.domain.apikey.ApiKeyReIssueCondition.or;
 import static flab.gumipayments.domain.apikey.ApiKeyType.PROD;
@@ -30,13 +28,13 @@ class ApiKeyReIssueConditionsTest {
 
     @BeforeEach
     void setup() {
-        apiKeyReIssueCommandBuilder = ApiKeyReIssueCommand.builder();
+        apiKeyReIssueCommandBuilder = ReIssueCommand.builder();
     }
 
     @Test
     @DisplayName("조건: 테스트 API키 재발급 조건을 만족한다.")
     void testIssueCondition() {
-        ApiKeyReIssueCommand reIssueCommand = apiKeyReIssueCommandBuilder
+        ReIssueCommand reIssueCommand = apiKeyReIssueCommandBuilder
                 .apiKeyType(TEST)
                 .accountExist(true)
                 .apiKeyExist(true).build();
@@ -49,7 +47,7 @@ class ApiKeyReIssueConditionsTest {
     @Test
     @DisplayName("조건: 실서비스용 API키 재발급 조건을 만족한다.")
     void prodIssueCondition() {
-        ApiKeyReIssueCommand reIssueCommand = apiKeyReIssueCommandBuilder
+        ReIssueCommand reIssueCommand = apiKeyReIssueCommandBuilder
                 .apiKeyType(PROD)
                 .accountExist(true)
                 .apiKeyExist(true)
@@ -63,7 +61,7 @@ class ApiKeyReIssueConditionsTest {
     @Test
     @DisplayName("조건: 실서비스용과 테스트용 API키 재발급 조건을 모두 만족하지 않는다.")
     void IssueCondition() {
-        ApiKeyReIssueCommand reIssueCommand = apiKeyReIssueCommandBuilder
+        ReIssueCommand reIssueCommand = apiKeyReIssueCommandBuilder
                 .build();
 
         boolean result = sut.isSatisfiedBy(reIssueCommand);

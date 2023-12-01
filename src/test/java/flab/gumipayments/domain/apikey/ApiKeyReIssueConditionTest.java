@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ApiKeyReIssueConditionTest {
     private ApiKeyReIssueCondition trueCondition = command -> true;
     private ApiKeyReIssueCondition falseCondition = command -> false;
-    private ApiKeyReIssueCommand reIssueComand = ApiKeyReIssueCommand.builder().build();
+    private ReIssueCommand reIssueComand = ReIssueCommand.builder().build();
 
     private ApiKeyReIssueCondition sut;
 
