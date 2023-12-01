@@ -8,9 +8,9 @@ import flab.gumipayments.application.apikey.ApiKeyCommandCreateService;
 import flab.gumipayments.application.apikey.ApiKeyIssueException;
 import flab.gumipayments.application.apikey.ApiKeyIssueRequesterApplication;
 import flab.gumipayments.application.apikey.ApiKeyReIssueRequesterApplication;
-import flab.gumipayments.domain.apikey.ApiKeyIssueCommand;
+import flab.gumipayments.domain.apikey.IssueCommand;
 import flab.gumipayments.domain.apikey.ApiKeyPair;
-import flab.gumipayments.domain.apikey.ApiKeyReIssueCommand;
+import flab.gumipayments.domain.apikey.ReIssueCommand;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,9 +22,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static flab.gumipayments.domain.apikey.ApiKeyIssueCommand.*;
 import static flab.gumipayments.domain.apikey.ApiKeyPair.*;
-import static flab.gumipayments.domain.apikey.ApiKeyReIssueCommand.*;
 import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -56,8 +54,8 @@ class ApiKeyControllerTest {
     @BeforeEach
     void setup() throws JsonProcessingException {
         apiKeyPairBuilder = ApiKeyPair.builder();
-        issueCommandBuilder = ApiKeyIssueCommand.builder();
-        reIssueCommandBuilder = ApiKeyReIssueCommand.builder();
+        issueCommandBuilder = IssueCommand.builder();
+        reIssueCommandBuilder = ReIssueCommand.builder();
     }
 
     @Test

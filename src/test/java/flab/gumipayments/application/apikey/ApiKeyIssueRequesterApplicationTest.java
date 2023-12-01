@@ -1,6 +1,6 @@
 package flab.gumipayments.application.apikey;
 
-import flab.gumipayments.domain.apikey.ApiKeyIssueCommand;
+import flab.gumipayments.domain.apikey.IssueCommand;
 import flab.gumipayments.domain.apikey.ApiKeyRepository;
 import flab.gumipayments.domain.apikey.ApiKeyResponse;
 import flab.gumipayments.domain.apikey.ApiKeyIssueCondition;
@@ -12,7 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static flab.gumipayments.domain.apikey.ApiKeyIssueCommand.*;
+import static flab.gumipayments.domain.apikey.ApiKeyResponse.*;
+import static flab.gumipayments.domain.apikey.IssueCommand.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -32,22 +33,22 @@ class ApiKeyIssueRequesterApplicationTest {
     private ApiKeyIssueCondition trueIssueCondition = command -> true;
     private ApiKeyIssueCondition falseIssueCondition = command -> false;
 
-    private ApiKeyResponse.ApiKeyResponseBuilder apiKeyResponseBuilder;
+    private ApiKeyResponseBuilder apiKeyResponseBuilder;
 
-    private ApiKeyIssueCommandBuilder apiKeyIssueCommandBuilder;
+    private IssueCommandBuilder issueCommandBuilder;
 
     @BeforeEach
     void setup() {
         apiKeyResponseBuilder = ApiKeyResponse.builder();
-        apiKeyIssueCommandBuilder = ApiKeyIssueCommand.builder();
+        issueCommandBuilder = IssueCommand.builder();
     }
 
     @Test
     @DisplayName("예외: 발급 조건을 만족하지 못하면 API 키 발급에 실패한다.")
     void issueApiKeyFailByCondition() {
-        sut.setApiKeyIssueCondition(falseIssueCondition);
+        sut.setIssueCondition(falseIssueCondition);
 
-        assertThatThrownBy(() -> sut.issueApiKey(apiKeyIssueCommandBuilder.build()))
+        assertThatThrownBy(() -> sut.issueApiKey(issueCommandBuilder.build()))
                 .isInstanceOf(ApiKeyIssueException.class)
                 .hasMessage("api 키 발급 조건이 올바르지 않습니다.");
     }
@@ -56,9 +57,9 @@ class ApiKeyIssueRequesterApplicationTest {
     @DisplayName("성공: API 키 발급을 성공한다.")
     void issueApiKey() {
         when(apiKeyCreatorApplication.create(any())).thenReturn(apiKeyResponseBuilder.build());
-        sut.setApiKeyIssueCondition(trueIssueCondition);
+        sut.setIssueCondition(trueIssueCondition);
 
-        sut.issueApiKey(apiKeyIssueCommandBuilder.build());
+        sut.issueApiKey(issueCommandBuilder.build());
 
         verify(apiKeyRepository).save(any());
     }

@@ -9,11 +9,8 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
-
 import static flab.gumipayments.domain.apikey.ApiKeyReIssueCondition.*;
 import static flab.gumipayments.domain.apikey.ApiKeyReIssueCondition.and;
-import static flab.gumipayments.domain.apikey.ApiKeyReIssueCondition.not;
 import static flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions.*;
 
 
@@ -25,7 +22,7 @@ public class ApiKeyReIssueRequesterApplication {
     private final ApiKeyCreatorApplication apiKeyCreatorApplication;
 
     @Setter
-    private ApiKeyReIssueCondition apiKeyReIssueCondition =
+    private ApiKeyReIssueCondition reIssueCondition =
             or(
                     and(IS_TEST_API_KEY, EXIST_ACCOUNT, EXIST_API_KEY),
                     and(IS_PROD_API_KEY, EXIST_ACCOUNT, IS_CONTRACT_COMPLETE, EXIST_API_KEY)
@@ -33,9 +30,9 @@ public class ApiKeyReIssueRequesterApplication {
 
     @Transactional
     //api 키 재발급
-    public ApiKeyPair reIssueApiKey(ApiKeyReIssueCommand reIssueCommand) {
+    public ApiKeyPair reIssueApiKey(ReIssueCommand reIssueCommand) {
         // 재발급 조건
-        if (!apiKeyReIssueCondition.isSatisfiedBy(reIssueCommand)) {
+        if (!reIssueCondition.isSatisfiedBy(reIssueCommand)) {
             throw new ApiKeyIssueException("api 키 재발급 조건이 올바르지 않습니다.");
         }
 
@@ -52,7 +49,7 @@ public class ApiKeyReIssueRequesterApplication {
     }
 
 
-    private ApiKeyCreateCommand convert(ApiKeyReIssueCommand issueCommand) {
+    private ApiKeyCreateCommand convert(ReIssueCommand issueCommand) {
         return ApiKeyCreateCommand.builder()
                 .keyType(issueCommand.getApiKeyType())
                 .expireDate(issueCommand.getExpireDate())
@@ -60,7 +57,7 @@ public class ApiKeyReIssueRequesterApplication {
                 .build();
     }
 
-    private void deleteApiKey(ApiKeyReIssueCommand reIssueCommand) {
+    private void deleteApiKey(ReIssueCommand reIssueCommand) {
         // 기존 api 조회
         ApiKey apiKey = apiKeyRepository.findByAccountIdAndType(reIssueCommand.getAccountId(), reIssueCommand.getApiKeyType())
                 .orElseThrow(() -> new NotFoundException(SystemErrorCode.NOT_FOUND,"api키가 존재하지 않습니다."));

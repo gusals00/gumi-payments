@@ -6,9 +6,9 @@ import flab.gumipayments.apifirst.openapi.apikey.domain.ApiKeyReIssueRequest;
 import flab.gumipayments.apifirst.openapi.apikey.domain.ApiKeyReIssueResponse;
 import flab.gumipayments.apifirst.openapi.apikey.rest.ApiKeyApi;
 import flab.gumipayments.application.apikey.*;
-import flab.gumipayments.domain.apikey.ApiKeyIssueCommand;
+import flab.gumipayments.domain.apikey.IssueCommand;
 import flab.gumipayments.domain.apikey.ApiKeyPair;
-import flab.gumipayments.domain.apikey.ApiKeyReIssueCommand;
+import flab.gumipayments.domain.apikey.ReIssueCommand;
 import flab.gumipayments.presentation.exceptionhandling.ExceptionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class ApiKeyController implements ApiKeyApi {
     @Override
     public ResponseEntity<ApiKeyIssueResponse> issueApiKey(ApiKeyIssueRequest issueRequest) {
         // 발급 command 생성
-        ApiKeyIssueCommand issueCommand = commandCreateService.getIssueCommand(convert(issueRequest));
+        IssueCommand issueCommand = commandCreateService.getIssueCommand(convert(issueRequest));
 
         // key 발급
         ApiKeyPair apiKeyPair = issueRequesterApplication.issueApiKey(issueCommand);
@@ -53,7 +53,7 @@ public class ApiKeyController implements ApiKeyApi {
     @Override
     public ResponseEntity<ApiKeyReIssueResponse> reIssueApiKey(ApiKeyReIssueRequest reIssueRequest) {
         //재발급 command 생성
-        ApiKeyReIssueCommand reIssueCommand = commandCreateService.getReIssueCommand(convert(reIssueRequest));
+        ReIssueCommand reIssueCommand = commandCreateService.getReIssueCommand(convert(reIssueRequest));
 
         // key 발급
         ApiKeyPair apiKeyPair = reIssueRequesterApplication.reIssueApiKey(reIssueCommand);

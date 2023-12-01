@@ -1,9 +1,8 @@
 package flab.gumipayments.application.apikey;
 
 import flab.gumipayments.domain.account.AccountRepository;
-import flab.gumipayments.domain.apikey.ApiKeyCreateCommand;
-import flab.gumipayments.domain.apikey.ApiKeyIssueCommand;
-import flab.gumipayments.domain.apikey.ApiKeyReIssueCommand;
+import flab.gumipayments.domain.apikey.IssueCommand;
+import flab.gumipayments.domain.apikey.ReIssueCommand;
 import flab.gumipayments.domain.apikey.ApiKeyRepository;
 import flab.gumipayments.domain.contract.ContractRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,7 +62,7 @@ class ApiKeyCommandCreateServiceTest {
         when(apiKeyRepository.existsByAccountIdAndType(any(), any())).thenReturn(true);
         when(contractRepository.existsByAccountIdAndStatus(any(), any())).thenReturn(true);
 
-        ApiKeyIssueCommand issueCommand = commandCreateService.getIssueCommand(createCommand);
+        IssueCommand issueCommand = commandCreateService.getIssueCommand(createCommand);
 
         issueCommandCheck(issueCommand, createCommand);
     }
@@ -90,12 +89,12 @@ class ApiKeyCommandCreateServiceTest {
         when(apiKeyRepository.existsByAccountIdAndType(any(), any())).thenReturn(true);
         when(contractRepository.existsByAccountIdAndStatus(any(), any())).thenReturn(true);
 
-        ApiKeyReIssueCommand issueCommand = commandCreateService.getReIssueCommand(createCommand);
+        ReIssueCommand issueCommand = commandCreateService.getReIssueCommand(createCommand);
 
         reIssueCommandCheck(issueCommand, createCommand);
     }
 
-    private void issueCommandCheck(ApiKeyIssueCommand issueCommand, ApiKeyIssueCreateCommand createCommand) {
+    private void issueCommandCheck(IssueCommand issueCommand, ApiKeyIssueCreateCommand createCommand) {
         assertThat(issueCommand.getApiKeyType().name()).isEqualTo(createCommand.getType());
         assertThat(issueCommand.getExpireDate()).isEqualTo(createCommand.getExpireDate());
         assertThat(issueCommand.isApiKeyExist()).isTrue();
@@ -104,7 +103,7 @@ class ApiKeyCommandCreateServiceTest {
     }
 
 
-    private void reIssueCommandCheck(ApiKeyReIssueCommand reIssueCommand, ApiKeyReIssueCreateCommand createCommand) {
+    private void reIssueCommandCheck(ReIssueCommand reIssueCommand, ApiKeyReIssueCreateCommand createCommand) {
         assertThat(reIssueCommand.getApiKeyType().name()).isEqualTo(createCommand.getType());
         assertThat(reIssueCommand.getExpireDate()).isEqualTo(createCommand.getExpireDate());
         assertThat(reIssueCommand.isApiKeyExist()).isTrue();

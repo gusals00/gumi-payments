@@ -5,13 +5,12 @@ import org.junit.jupiter.api.Test;
 
 import static flab.gumipayments.domain.apikey.ApiKeyIssueCondition.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ApikeyIssueConditionTest {
 
     private ApiKeyIssueCondition trueCondition = command -> true;
     private ApiKeyIssueCondition falseCondition = command -> false;
-    private ApiKeyIssueCommand issueComand = ApiKeyIssueCommand.builder().build();
+    private IssueCommand issueComand = IssueCommand.builder().build();
 
     private ApiKeyIssueCondition sut;
 
