@@ -3,6 +3,8 @@ package flab.gumipayments.domain.signup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 public class SignupFactory {
@@ -11,7 +13,12 @@ public class SignupFactory {
         return Signup.builder()
                 .expireDate(signupCommand.getExpireDate())
                 .email(signupCommand.getEmail())
-                .signupKey(signupCommand.getSignupKey())
+                .signupKey(generateSignupKey())
                 .build();
     }
+
+    public static String generateSignupKey() {
+        return UUID.randomUUID().toString();
+    }
+
 }

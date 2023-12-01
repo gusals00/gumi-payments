@@ -40,18 +40,15 @@ class SignupFactoryTest {
     void create() {
         String email = "love@naver.com";
         LocalDateTime expireDate  = LocalDateTime.now().plusDays(1);
-        String signupKey = "1234";
 
-        Signup signup = signupFactory.create(signupCreateCommand(signupKey,expireDate, email));
+        Signup signup = signupFactory.create(signupCreateCommand(expireDate, email));
 
         assertThat(signup.getEmail()).isEqualTo(email);
-        assertThat(signup.getSignupKey()).isEqualTo(signupKey);
         assertThat(signup.getExpireDate()).isEqualTo(expireDate);
     }
 
-    private SignupCreateCommand signupCreateCommand(String signupKey, LocalDateTime expireDate, String email){
+    private SignupCreateCommand signupCreateCommand(LocalDateTime expireDate, String email){
         return signupCreateCommandBuilder
-                .signupKey(signupKey)
                 .expireDate(expireDate)
                 .email(email)
                 .build();

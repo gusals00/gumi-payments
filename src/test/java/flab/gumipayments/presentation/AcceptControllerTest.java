@@ -5,24 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import flab.gumipayments.apifirst.openapi.accept.domain.AcceptInfoRequest;
 import flab.gumipayments.application.NotFoundException;
 import flab.gumipayments.application.signup.SignupAcceptApplication;
-import flab.gumipayments.domain.KeyFactory;
 import flab.gumipayments.domain.signup.SignupAcceptTimeoutException;
-import flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-
-import java.util.NoSuchElementException;
 
 import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode.*;
 import static org.assertj.core.api.Assertions.*;
@@ -43,14 +35,6 @@ class AcceptControllerTest {
 
     @MockBean
     private SignupAcceptApplication signupAcceptApplication;
-
-    private MultiValueMap<String, String> request;
-
-    @BeforeEach
-    void setUp() {
-        request = new LinkedMultiValueMap<>();
-        request.add("signupKey", KeyFactory.generateSignupKey());
-    }
 
     @Test
     @WithMockUser

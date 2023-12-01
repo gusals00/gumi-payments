@@ -32,7 +32,7 @@ class ApiKeyReIssueRequesterApplicationTest {
     private ApiKeyReIssueCondition falseReIssueCondition = command -> false;
 
     private ApiKeyResponse.ApiKeyResponseBuilder apiKeyResponseBuilder;
-    private ReIssueCommand.ApiKeyReIssueCommandBuilder apiKeyReIssueCommandBuilder;
+    private ReIssueCommand.ReIssueCommandBuilder apiKeyReIssueCommandBuilder;
 
     @BeforeEach
     void setup() {
