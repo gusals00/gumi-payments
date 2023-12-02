@@ -1,7 +1,6 @@
 package flab.gumipayments.application.signup;
 
-import flab.gumipayments.application.DuplicateException;
-import flab.gumipayments.application.signup.AcceptRequesterApplication;
+import flab.gumipayments.application.DuplicateSystemException;
 import flab.gumipayments.domain.signup.*;
 import flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +48,7 @@ public class SignupCreateApplication {
         signupRepository.findByEmail(signupCommand.getEmail())
                 .ifPresent(signup -> {
                     if (signup.getStatus() == ACCOUNT_CREATED) {
-                        throw new DuplicateException(SystemErrorCode.DUPLICATED,"해당 이메일로 생성한 계정이 이미 존재합니다.");
+                        throw new DuplicateSystemException(SystemErrorCode.DUPLICATED,"해당 이메일로 생성한 계정이 이미 존재합니다.");
                     }
                 });
     }

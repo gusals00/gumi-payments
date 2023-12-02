@@ -3,14 +3,13 @@ package flab.gumipayments.application;
 import flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode;
 import flab.gumipayments.support.SystemException;
 
-public class DuplicateException extends SystemException {
+public class NotFoundSystemException extends SystemException {
 
-
-    public DuplicateException(SystemErrorCode errorCode, String message) {
+    public NotFoundSystemException(SystemErrorCode errorCode, String message) {
         super(errorCode, message);
     }
 
-    public DuplicateException(SystemErrorCode errorCode){
+    public NotFoundSystemException(SystemErrorCode errorCode) {
         super(errorCode,"no message");
     }
 }

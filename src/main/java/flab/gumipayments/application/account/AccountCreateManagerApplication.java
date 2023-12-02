@@ -1,6 +1,6 @@
 package flab.gumipayments.application.account;
 
-import flab.gumipayments.application.NotFoundException;
+import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.domain.account.Account;
 import flab.gumipayments.domain.account.AccountCreateCommand;
 import flab.gumipayments.domain.account.AccountFactory;
@@ -26,7 +26,7 @@ public class AccountCreateManagerApplication {
     public Account create(AccountCreateCommand accountCreateCommand, Long signupId) {
         // 가입 찾기
         Signup signup = signupRepository.findById(signupId)
-                .orElseThrow(() -> new NotFoundException(SystemErrorCode.NOT_FOUND,"signup이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundSystemException(SystemErrorCode.NOT_FOUND,"signup이 존재하지 않습니다."));
 
         // 계정 생성 상태로 변경
         signup.accountCreated();

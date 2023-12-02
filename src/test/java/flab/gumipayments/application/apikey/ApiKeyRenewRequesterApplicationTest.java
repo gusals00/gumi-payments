@@ -1,6 +1,6 @@
 package flab.gumipayments.application.apikey;
 
-import flab.gumipayments.application.NotFoundException;
+import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.domain.account.Account;
 import flab.gumipayments.domain.account.AccountRepository;
 import flab.gumipayments.domain.apikey.ApiKey;
@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static flab.gumipayments.application.apikey.ApiKeyRenewCommand.*;
@@ -53,7 +52,7 @@ class ApiKeyRenewRequesterApplicationTest {
         when(apiKeyRepository.findById(any())).thenReturn(Optional.empty());
 
         assertThatThrownBy(()->sut.renew(renewCommandBuilder.build()))
-                .isInstanceOf(NotFoundException.class)
+                .isInstanceOf(NotFoundSystemException.class)
                 .hasMessage("api키가 존재하지 않습니다.");
     }
 
@@ -66,7 +65,7 @@ class ApiKeyRenewRequesterApplicationTest {
         when(accountRepository.findById(any())).thenReturn(Optional.empty());
 
         assertThatThrownBy(()->sut.renew(renewCommandBuilder.extendDate(extendDate).build()))
-                .isInstanceOf(NotFoundException.class)
+                .isInstanceOf(NotFoundSystemException.class)
                 .hasMessage("account가 존재하지 않습니다.");
     }
 

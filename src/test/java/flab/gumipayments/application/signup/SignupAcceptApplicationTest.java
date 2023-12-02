@@ -1,8 +1,6 @@
 package flab.gumipayments.application.signup;
 
-import flab.gumipayments.application.NotFoundException;
-import flab.gumipayments.application.signup.AcceptCommand;
-import flab.gumipayments.application.signup.SignupAcceptApplication;
+import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.domain.signup.Signup;
 import flab.gumipayments.domain.signup.SignupRepository;
 import flab.gumipayments.domain.signup.SignupStatus;
@@ -15,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static flab.gumipayments.application.signup.AcceptCommand.*;
@@ -55,7 +52,7 @@ class SignupAcceptApplicationTest {
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(()-> sut.accept(acceptCommand))
-                .isInstanceOf(NotFoundException.class)
+                .isInstanceOf(NotFoundSystemException.class)
                 .hasMessage("signup이 존재하지 않습니다.");
     }
 
