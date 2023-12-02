@@ -1,7 +1,6 @@
 package flab.gumipayments.presentation.exceptionhandling;
 
 
-import flab.gumipayments.application.DuplicateException;
 import flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode;
 import flab.gumipayments.support.SystemException;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 @Slf4j

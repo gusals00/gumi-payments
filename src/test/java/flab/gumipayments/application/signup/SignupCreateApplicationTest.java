@@ -1,8 +1,6 @@
 package flab.gumipayments.application.signup;
 
-import flab.gumipayments.application.DuplicateException;
-import flab.gumipayments.application.signup.AcceptRequesterApplication;
-import flab.gumipayments.application.signup.SignupCreateApplication;
+import flab.gumipayments.application.DuplicateSystemException;
 import flab.gumipayments.domain.signup.Signup;
 import flab.gumipayments.domain.signup.SignupCreateCommand;
 import flab.gumipayments.domain.signup.SignupCreateCommand.SignupCreateCommandBuilder;
@@ -76,7 +74,7 @@ class SignupCreateApplicationTest {
         SignupCreateCommand createCommand = signupCreateCommandBuilder.email(signup.getEmail()).build();
 
         Assertions.assertThatThrownBy(()-> sut.signup(createCommand))
-                .isInstanceOf(DuplicateException.class)
+                .isInstanceOf(DuplicateSystemException.class)
                 .hasMessage("해당 이메일로 생성한 계정이 이미 존재합니다.");
     }
 

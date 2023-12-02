@@ -3,15 +3,13 @@ package flab.gumipayments.presentation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import flab.gumipayments.apifirst.openapi.account.domain.AccountCreateRequest;
-import flab.gumipayments.application.NotFoundException;
+import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.application.account.AccountCreateManagerApplication;
 import flab.gumipayments.domain.account.Account;
 import flab.gumipayments.domain.signup.SignupIllegalStatusException;
-import flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,8 +18,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import java.util.NoSuchElementException;
 
 import static flab.gumipayments.domain.account.Account.*;
 import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode.*;
@@ -75,7 +71,7 @@ class AccountControllerTest {
     @WithMockUser
     @DisplayName("예외: 가입 요청이 존재하지 않으면 계정 생성이 실패한다.")
     void notExistSignup() throws Exception {
-        when(accountCreateManagerApplication.create(any(), any())).thenThrow(new NotFoundException(NOT_FOUND));
+        when(accountCreateManagerApplication.create(any(), any())).thenThrow(new NotFoundSystemException(NOT_FOUND));
 
         mockMvc.perform(post("/api/account/{signupId}", signupId)
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
@@ -83,7 +79,7 @@ class AccountControllerTest {
                         .content(body))
                 .andExpect(status().isInternalServerError())
                 .andExpect(result ->
-                        assertThat(result.getResolvedException().getClass()).isEqualTo(NotFoundException.class)
+                        assertThat(result.getResolvedException().getClass()).isEqualTo(NotFoundSystemException.class)
                 );
     }
 

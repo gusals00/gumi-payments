@@ -1,6 +1,6 @@
 package flab.gumipayments.application.apikey;
 
-import flab.gumipayments.application.NotFoundException;
+import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.domain.apikey.*;
 import flab.gumipayments.domain.apikey.ApiKeyReIssueCondition;
 import flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode;
@@ -60,7 +60,7 @@ public class ApiKeyReIssueRequesterApplication {
     private void deleteApiKey(ReIssueCommand reIssueCommand) {
         // 기존 api 조회
         ApiKey apiKey = apiKeyRepository.findByAccountIdAndType(reIssueCommand.getAccountId(), reIssueCommand.getApiKeyType())
-                .orElseThrow(() -> new NotFoundException(SystemErrorCode.NOT_FOUND,"api키가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundSystemException(SystemErrorCode.NOT_FOUND,"api키가 존재하지 않습니다."));
 
         //기존 api 키 삭제
         apiKeyRepository.delete(apiKey);

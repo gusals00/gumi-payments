@@ -1,7 +1,6 @@
 package flab.gumipayments.application.account;
 
-import flab.gumipayments.application.NotFoundException;
-import flab.gumipayments.application.account.AccountCreateManagerApplication;
+import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.domain.account.AccountCreateCommand;
 import flab.gumipayments.domain.account.AccountFactory;
 import flab.gumipayments.domain.account.AccountRepository;
@@ -16,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static flab.gumipayments.domain.account.AccountCreateCommand.*;
@@ -53,7 +51,7 @@ class AccountCreateManagerApplicationTest {
         when(signupRepository.findById(signupId)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> sut.create(accountCreateCommandBuilder.build(), signupId))
-                .isInstanceOf(NotFoundException.class)
+                .isInstanceOf(NotFoundSystemException.class)
                 .hasMessage("signup이 존재하지 않습니다.");
     }
 
