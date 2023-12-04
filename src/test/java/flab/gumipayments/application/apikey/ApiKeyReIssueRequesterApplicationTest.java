@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static flab.gumipayments.domain.apikey.ReIssueFactor.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -32,12 +33,12 @@ class ApiKeyReIssueRequesterApplicationTest {
     private ApiKeyReIssueCondition falseReIssueCondition = command -> false;
 
     private ApiKeyResponse.ApiKeyResponseBuilder apiKeyResponseBuilder;
-    private ReIssueCommand.ReIssueCommandBuilder apiKeyReIssueCommandBuilder;
+    private ReIssueFactorBuilder apiKeyReIssueCommandBuilder;
 
     @BeforeEach
     void setup() {
         apiKeyResponseBuilder = ApiKeyResponse.builder();
-        apiKeyReIssueCommandBuilder = ReIssueCommand.builder();
+        apiKeyReIssueCommandBuilder = ReIssueFactor.builder();
     }
 
     @Test
