@@ -8,9 +8,9 @@ import flab.gumipayments.application.apikey.ApiKeyCommandCreateService;
 import flab.gumipayments.application.apikey.ApiKeyIssueException;
 import flab.gumipayments.application.apikey.ApiKeyIssueRequesterApplication;
 import flab.gumipayments.application.apikey.ApiKeyReIssueRequesterApplication;
-import flab.gumipayments.domain.apikey.IssueCommand;
+import flab.gumipayments.domain.apikey.IssueFactor;
 import flab.gumipayments.domain.apikey.ApiKeyPair;
-import flab.gumipayments.domain.apikey.ReIssueCommand;
+import flab.gumipayments.domain.apikey.ReIssueFactor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,8 +23,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 
 import static flab.gumipayments.domain.apikey.ApiKeyPair.*;
-import static flab.gumipayments.domain.apikey.IssueCommand.*;
-import static flab.gumipayments.domain.apikey.ReIssueCommand.*;
+import static flab.gumipayments.domain.apikey.IssueFactor.*;
+import static flab.gumipayments.domain.apikey.ReIssueFactor.*;
 import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -49,15 +49,15 @@ class ApiKeyControllerTest {
     private ApiKeyCommandCreateService commandCreateService;
 
     private ApiKeyPairBuilder apiKeyPairBuilder;
-    private IssueCommandBuilder issueCommandBuilder;
-    private ReIssueCommandBuilder reIssueCommandBuilder;
+    private IssueFactorBuilder issueCommandBuilder;
+    private ReIssueFactorBuilder reIssueCommandBuilder;
 
 
     @BeforeEach
     void setup() throws JsonProcessingException {
         apiKeyPairBuilder = ApiKeyPair.builder();
-        issueCommandBuilder = IssueCommand.builder();
-        reIssueCommandBuilder = ReIssueCommand.builder();
+        issueCommandBuilder = IssueFactor.builder();
+        reIssueCommandBuilder = ReIssueFactor.builder();
     }
 
     @Test

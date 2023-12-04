@@ -1,8 +1,8 @@
 package flab.gumipayments.application.apikey;
 
 import flab.gumipayments.domain.account.AccountRepository;
-import flab.gumipayments.domain.apikey.IssueCommand;
-import flab.gumipayments.domain.apikey.ReIssueCommand;
+import flab.gumipayments.domain.apikey.IssueFactor;
+import flab.gumipayments.domain.apikey.ReIssueFactor;
 import flab.gumipayments.domain.apikey.ApiKeyRepository;
 import flab.gumipayments.domain.contract.ContractRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,9 +62,9 @@ class ApiKeyCommandCreateServiceTest {
         when(apiKeyRepository.existsByAccountIdAndType(any(), any())).thenReturn(true);
         when(contractRepository.existsByAccountIdAndStatus(any(), any())).thenReturn(true);
 
-        IssueCommand issueCommand = commandCreateService.getIssueCommand(createCommand);
+        IssueFactor issueFactor = commandCreateService.getIssueCommand(createCommand);
 
-        issueCommandCheck(issueCommand, createCommand);
+        issueCommandCheck(issueFactor, createCommand);
     }
 
 
@@ -89,25 +89,25 @@ class ApiKeyCommandCreateServiceTest {
         when(apiKeyRepository.existsByAccountIdAndType(any(), any())).thenReturn(true);
         when(contractRepository.existsByAccountIdAndStatus(any(), any())).thenReturn(true);
 
-        ReIssueCommand issueCommand = commandCreateService.getReIssueCommand(createCommand);
+        ReIssueFactor issueCommand = commandCreateService.getReIssueCommand(createCommand);
 
         reIssueCommandCheck(issueCommand, createCommand);
     }
 
-    private void issueCommandCheck(IssueCommand issueCommand, ApiKeyIssueCreateCommand createCommand) {
-        assertThat(issueCommand.getApiKeyType().name()).isEqualTo(createCommand.getType());
-        assertThat(issueCommand.getExpireDate()).isEqualTo(createCommand.getExpireDate());
-        assertThat(issueCommand.isApiKeyExist()).isTrue();
-        assertThat(issueCommand.isAccountExist()).isTrue();
-        assertThat(issueCommand.isContractCompleteExist()).isTrue();
+    private void issueCommandCheck(IssueFactor issueFactor, ApiKeyIssueCreateCommand createCommand) {
+        assertThat(issueFactor.getApiKeyType().name()).isEqualTo(createCommand.getType());
+        assertThat(issueFactor.getExpireDate()).isEqualTo(createCommand.getExpireDate());
+        assertThat(issueFactor.isApiKeyExist()).isTrue();
+        assertThat(issueFactor.isAccountExist()).isTrue();
+        assertThat(issueFactor.isContractCompleteExist()).isTrue();
     }
 
 
-    private void reIssueCommandCheck(ReIssueCommand reIssueCommand, ApiKeyReIssueCreateCommand createCommand) {
-        assertThat(reIssueCommand.getApiKeyType().name()).isEqualTo(createCommand.getType());
-        assertThat(reIssueCommand.getExpireDate()).isEqualTo(createCommand.getExpireDate());
-        assertThat(reIssueCommand.isApiKeyExist()).isTrue();
-        assertThat(reIssueCommand.isAccountExist()).isTrue();
-        assertThat(reIssueCommand.isContractCompleteExist()).isTrue();
+    private void reIssueCommandCheck(ReIssueFactor reIssueFactor, ApiKeyReIssueCreateCommand createCommand) {
+        assertThat(reIssueFactor.getApiKeyType().name()).isEqualTo(createCommand.getType());
+        assertThat(reIssueFactor.getExpireDate()).isEqualTo(createCommand.getExpireDate());
+        assertThat(reIssueFactor.isApiKeyExist()).isTrue();
+        assertThat(reIssueFactor.isAccountExist()).isTrue();
+        assertThat(reIssueFactor.isContractCompleteExist()).isTrue();
     }
 }

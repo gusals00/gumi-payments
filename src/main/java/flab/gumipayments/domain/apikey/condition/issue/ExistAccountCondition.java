@@ -1,11 +1,11 @@
 package flab.gumipayments.domain.apikey.condition.issue;
 
-import flab.gumipayments.domain.apikey.IssueCommand;
+import flab.gumipayments.domain.apikey.IssueFactor;
 import flab.gumipayments.domain.apikey.ApiKeyIssueCondition;
 
 public class ExistAccountCondition implements ApiKeyIssueCondition {
     @Override
-    public boolean isSatisfiedBy(IssueCommand command) {
+    public boolean isSatisfiedBy(IssueFactor command) {
         return command.isAccountExist();
     }
 }

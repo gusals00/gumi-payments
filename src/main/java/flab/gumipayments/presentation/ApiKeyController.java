@@ -6,9 +6,9 @@ import flab.gumipayments.apifirst.openapi.apikey.domain.ApiKeyReIssueRequest;
 import flab.gumipayments.apifirst.openapi.apikey.domain.ApiKeyReIssueResponse;
 import flab.gumipayments.apifirst.openapi.apikey.rest.ApiKeyApi;
 import flab.gumipayments.application.apikey.*;
-import flab.gumipayments.domain.apikey.IssueCommand;
+import flab.gumipayments.domain.apikey.IssueFactor;
 import flab.gumipayments.domain.apikey.ApiKeyPair;
-import flab.gumipayments.domain.apikey.ReIssueCommand;
+import flab.gumipayments.domain.apikey.ReIssueFactor;
 import flab.gumipayments.presentation.exceptionhandling.ExceptionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,10 +40,10 @@ public class ApiKeyController implements ApiKeyApi {
     @Override
     public ResponseEntity<ApiKeyIssueResponse> issueApiKey(ApiKeyIssueRequest issueRequest) {
         // 발급 command 생성
-        IssueCommand issueCommand = commandCreateService.getIssueCommand(convert(issueRequest));
+        IssueFactor issueFactor = commandCreateService.getIssueCommand(convert(issueRequest));
 
         // key 발급
-        ApiKeyPair apiKeyPair = issueRequesterApplication.issueApiKey(issueCommand);
+        ApiKeyPair apiKeyPair = issueRequesterApplication.issueApiKey(issueFactor);
 
         return ResponseEntity.ok(convertToIssueResponse(apiKeyPair));
     }
@@ -53,10 +53,10 @@ public class ApiKeyController implements ApiKeyApi {
     @Override
     public ResponseEntity<ApiKeyReIssueResponse> reIssueApiKey(ApiKeyReIssueRequest reIssueRequest) {
         //재발급 command 생성
-        ReIssueCommand reIssueCommand = commandCreateService.getReIssueCommand(convert(reIssueRequest));
+        ReIssueFactor reIssueFactor = commandCreateService.getReIssueCommand(convert(reIssueRequest));
 
         // key 발급
-        ApiKeyPair apiKeyPair = reIssueRequesterApplication.reIssueApiKey(reIssueCommand);
+        ApiKeyPair apiKeyPair = reIssueRequesterApplication.reIssueApiKey(reIssueFactor);
 
         return ResponseEntity.ok(convertToReIssueResponse(apiKeyPair));
 

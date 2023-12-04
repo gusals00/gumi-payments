@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 
-import static flab.gumipayments.domain.apikey.ApiKeyIssueCondition.*;
 import static flab.gumipayments.domain.apikey.condition.issue.ApiKeyIssueConditions.*;
+import static flab.gumipayments.support.specification.ConditionUtils.*;
 
 
 @Service
@@ -28,15 +28,15 @@ public class ApiKeyIssueRequesterApplication {
             );
 
     @Transactional
-    public ApiKeyPair issueApiKey(IssueCommand issueCommand) {
+    public ApiKeyPair issueApiKey(IssueFactor issueFactor) {
 
         // 발급 조건 확인
-        if (!issueCondition.isSatisfiedBy(issueCommand)) {
+        if (!issueCondition.isSatisfiedBy(issueFactor)) {
             throw new ApiKeyIssueException("api 키 발급 조건이 올바르지 않습니다.");
         }
 
         // api 키 생성
-        ApiKeyResponse apiKeyResponse = apiKeyCreatorApplication.create(convert(issueCommand));
+        ApiKeyResponse apiKeyResponse = apiKeyCreatorApplication.create(convert(issueFactor));
 
         //api 키 저장
         apiKeyRepository.save(apiKeyResponse.getApiKey());
@@ -44,11 +44,11 @@ public class ApiKeyIssueRequesterApplication {
         return apiKeyResponse.getApiKeyPair();
     }
 
-    private ApiKeyCreateCommand convert(IssueCommand issueCommand) {
+    private ApiKeyCreateCommand convert(IssueFactor issueFactor) {
         return ApiKeyCreateCommand.builder()
-                .keyType(issueCommand.getApiKeyType())
-                .expireDate(issueCommand.getExpireDate())
-                .accountId(issueCommand.getAccountId())
+                .keyType(issueFactor.getApiKeyType())
+                .expireDate(issueFactor.getExpireDate())
+                .accountId(issueFactor.getAccountId())
                 .build();
     }
 }

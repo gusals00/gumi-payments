@@ -1,6 +1,6 @@
 package flab.gumipayments.application.apikey;
 
-import flab.gumipayments.domain.apikey.IssueCommand;
+import flab.gumipayments.domain.apikey.IssueFactor;
 import flab.gumipayments.domain.apikey.ApiKeyRepository;
 import flab.gumipayments.domain.apikey.ApiKeyResponse;
 import flab.gumipayments.domain.apikey.ApiKeyIssueCondition;
@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static flab.gumipayments.domain.apikey.ApiKeyResponse.*;
-import static flab.gumipayments.domain.apikey.IssueCommand.*;
+import static flab.gumipayments.domain.apikey.IssueFactor.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -35,12 +35,12 @@ class ApiKeyIssueRequesterApplicationTest {
 
     private ApiKeyResponseBuilder apiKeyResponseBuilder;
 
-    private IssueCommandBuilder issueCommandBuilder;
+    private IssueFactorBuilder issueCommandBuilder;
 
     @BeforeEach
     void setup() {
         apiKeyResponseBuilder = ApiKeyResponse.builder();
-        issueCommandBuilder = IssueCommand.builder();
+        issueCommandBuilder = IssueFactor.builder();
     }
 
     @Test
