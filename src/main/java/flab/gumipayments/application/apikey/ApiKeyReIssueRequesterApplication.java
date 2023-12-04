@@ -9,9 +9,9 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static flab.gumipayments.domain.apikey.ApiKeyReIssueCondition.*;
-import static flab.gumipayments.domain.apikey.ApiKeyReIssueCondition.and;
 import static flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions.*;
+import static flab.gumipayments.support.specification.ConditionUtils.and;
+import static flab.gumipayments.support.specification.ConditionUtils.or;
 
 
 @Service
@@ -30,17 +30,17 @@ public class ApiKeyReIssueRequesterApplication {
 
     @Transactional
     //api 키 재발급
-    public ApiKeyPair reIssueApiKey(ReIssueCommand reIssueCommand) {
+    public ApiKeyPair reIssueApiKey(ReIssueFactor reIssueFactor) {
         // 재발급 조건
-        if (!reIssueCondition.isSatisfiedBy(reIssueCommand)) {
+        if (!reIssueCondition.isSatisfiedBy(reIssueFactor)) {
             throw new ApiKeyIssueException("api 키 재발급 조건이 올바르지 않습니다.");
         }
 
         // 기존 api 키 삭제
-        deleteApiKey(reIssueCommand);
+        deleteApiKey(reIssueFactor);
 
         // api 키 생성
-        ApiKeyResponse apiKeyResponse = apiKeyCreatorApplication.create(convert(reIssueCommand));
+        ApiKeyResponse apiKeyResponse = apiKeyCreatorApplication.create(convert(reIssueFactor));
 
         //api 키 저장
         apiKeyRepository.save(apiKeyResponse.getApiKey());
@@ -49,7 +49,7 @@ public class ApiKeyReIssueRequesterApplication {
     }
 
 
-    private ApiKeyCreateCommand convert(ReIssueCommand issueCommand) {
+    private ApiKeyCreateCommand convert(ReIssueFactor issueCommand) {
         return ApiKeyCreateCommand.builder()
                 .keyType(issueCommand.getApiKeyType())
                 .expireDate(issueCommand.getExpireDate())
@@ -57,9 +57,9 @@ public class ApiKeyReIssueRequesterApplication {
                 .build();
     }
 
-    private void deleteApiKey(ReIssueCommand reIssueCommand) {
+    private void deleteApiKey(ReIssueFactor reIssueFactor) {
         // 기존 api 조회
-        ApiKey apiKey = apiKeyRepository.findByAccountIdAndType(reIssueCommand.getAccountId(), reIssueCommand.getApiKeyType())
+        ApiKey apiKey = apiKeyRepository.findByAccountIdAndType(reIssueFactor.getAccountId(), reIssueFactor.getApiKeyType())
                 .orElseThrow(() -> new NotFoundSystemException(SystemErrorCode.NOT_FOUND,"api키가 존재하지 않습니다."));
 
         //기존 api 키 삭제

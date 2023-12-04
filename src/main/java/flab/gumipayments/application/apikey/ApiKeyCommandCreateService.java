@@ -17,11 +17,11 @@ public class ApiKeyCommandCreateService {
     private final ApiKeyRepository apiKeyRepository;
 
     // issueCommand 생성
-    public IssueCommand getIssueCommand(ApiKeyIssueCreateCommand issueCreateCommand) {
+    public IssueFactor getIssueCommand(ApiKeyIssueCreateCommand issueCreateCommand) {
         ApiKeyType keyType = ApiKeyType.valueOf(issueCreateCommand.getType());
         Long accountId = issueCreateCommand.getAccountId();
 
-        return IssueCommand.builder()
+        return IssueFactor.builder()
                 .accountId(accountId)
                 .expireDate(issueCreateCommand.getExpireDate())
                 .apiKeyType(keyType)
@@ -30,11 +30,11 @@ public class ApiKeyCommandCreateService {
                 .contractCompleteExist(contractRepository.existsByAccountIdAndStatus(accountId, CONTRACT_COMPLETE)).build();
     }
 
-    public ReIssueCommand getReIssueCommand(ApiKeyReIssueCreateCommand reIssueCreateCommand) {
+    public ReIssueFactor getReIssueCommand(ApiKeyReIssueCreateCommand reIssueCreateCommand) {
         ApiKeyType keyType = ApiKeyType.valueOf(reIssueCreateCommand.getType());
         Long accountId = reIssueCreateCommand.getAccountId();
 
-        return ReIssueCommand.builder()
+        return ReIssueFactor.builder()
                 .accountId(accountId)
                 .expireDate(reIssueCreateCommand.getExpireDate())
                 .apiKeyType(keyType)

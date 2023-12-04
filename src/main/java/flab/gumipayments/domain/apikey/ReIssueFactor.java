@@ -9,13 +9,14 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @Builder
-public class IssueCommand {
+public class ReIssueFactor {
 
     private Long accountId;
     private LocalDateTime expireDate;
-
     private ApiKeyType apiKeyType;
+
     private boolean accountExist;
     private boolean apiKeyExist;
     private boolean contractCompleteExist;
 }
+

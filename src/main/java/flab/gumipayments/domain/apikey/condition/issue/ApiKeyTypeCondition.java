@@ -1,7 +1,7 @@
 package flab.gumipayments.domain.apikey.condition.issue;
 
 
-import flab.gumipayments.domain.apikey.IssueCommand;
+import flab.gumipayments.domain.apikey.IssueFactor;
 import flab.gumipayments.domain.apikey.ApiKeyType;
 import flab.gumipayments.domain.apikey.ApiKeyIssueCondition;
 
@@ -13,7 +13,7 @@ public class ApiKeyTypeCondition implements ApiKeyIssueCondition {
     }
 
     @Override
-    public boolean isSatisfiedBy(IssueCommand command) {
+    public boolean isSatisfiedBy(IssueFactor command) {
         return command.getApiKeyType() == apiKeyType;
     }
 
