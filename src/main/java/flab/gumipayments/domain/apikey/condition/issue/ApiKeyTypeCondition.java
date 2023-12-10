@@ -3,9 +3,9 @@ package flab.gumipayments.domain.apikey.condition.issue;
 
 import flab.gumipayments.domain.apikey.IssueFactor;
 import flab.gumipayments.domain.apikey.ApiKeyType;
-import flab.gumipayments.domain.apikey.ApiKeyIssueCondition;
+import flab.gumipayments.support.specification.Condition;
 
-public class ApiKeyTypeCondition implements ApiKeyIssueCondition {
+public class ApiKeyTypeCondition implements Condition<IssueFactor> {
     private ApiKeyType apiKeyType;
 
     public ApiKeyTypeCondition(ApiKeyType apiKeyType) {
