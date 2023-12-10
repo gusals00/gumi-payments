@@ -15,10 +15,10 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class ApiKeyCreatorApplicationTest {
+class ApiKeyCreatorRequesterApplicationTest {
 
     @InjectMocks
-    private ApiKeyCreatorApplication sut;
+    private ApiKeyCreatorRequesterApplication sut;
     @Mock
     private ApiKeyPairFactory apiKeyPairFactory;
     @Mock

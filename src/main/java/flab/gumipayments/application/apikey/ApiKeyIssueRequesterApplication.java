@@ -17,7 +17,7 @@ import static flab.gumipayments.support.specification.Condition.*;
 public class ApiKeyIssueRequesterApplication {
 
     private final ApiKeyRepository apiKeyRepository;
-    private final ApiKeyCreatorApplication apiKeyCreatorApplication;
+    private final ApiKeyCreatorRequesterApplication apiKeyCreatorRequesterApplication;
 
     @Setter
     private ApiKeyIssuePolicy issuePolicy = of(
@@ -36,7 +36,7 @@ public class ApiKeyIssueRequesterApplication {
         }
 
         // api 키 생성
-        ApiKeyResponse apiKeyResponse = apiKeyCreatorApplication.create(convert(issueFactor));
+        ApiKeyResponse apiKeyResponse = apiKeyCreatorRequesterApplication.create(convert(issueFactor));
 
         //api 키 저장
         apiKeyRepository.save(apiKeyResponse.getApiKey());

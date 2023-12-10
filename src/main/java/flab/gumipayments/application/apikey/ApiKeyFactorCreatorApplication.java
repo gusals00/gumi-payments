@@ -10,14 +10,14 @@ import static flab.gumipayments.domain.contract.ContractStatus.*;
 
 @Service
 @RequiredArgsConstructor
-public class ApiKeyCommandCreateService {
+public class ApiKeyFactorCreatorApplication {
 
     private final AccountRepository accountRepository;
     private final ContractRepository contractRepository;
     private final ApiKeyRepository apiKeyRepository;
 
-    // issueCommand 생성
-    public IssueFactor getIssueCommand(ApiKeyIssueCreateCommand issueCreateCommand) {
+    // issueFactor 생성
+    public IssueFactor getIssueFactor(ApiKeyIssueCreateCommand issueCreateCommand) {
         ApiKeyType keyType = ApiKeyType.valueOf(issueCreateCommand.getType());
         Long accountId = issueCreateCommand.getAccountId();
 
@@ -30,7 +30,8 @@ public class ApiKeyCommandCreateService {
                 .contractCompleteExist(contractRepository.existsByAccountIdAndStatus(accountId, CONTRACT_COMPLETE)).build();
     }
 
-    public ReIssueFactor getReIssueCommand(ApiKeyReIssueCreateCommand reIssueCreateCommand) {
+    //reIssueFactor 생성
+    public ReIssueFactor getReIssueFactor(ApiKeyReIssueCreateCommand reIssueCreateCommand) {
         ApiKeyType keyType = ApiKeyType.valueOf(reIssueCreateCommand.getType());
         Long accountId = reIssueCreateCommand.getAccountId();
 

@@ -25,7 +25,7 @@ class ApiKeyIssueRequesterApplicationTest {
     private ApiKeyRepository apiKeyRepository;
 
     @Mock
-    private ApiKeyCreatorApplication apiKeyCreatorApplication;
+    private ApiKeyCreatorRequesterApplication apiKeyCreatorRequesterApplication;
 
     private ApiKeyIssuePolicy alwaysTrue = ApiKeyIssuePolicy.of(command -> true);
     private ApiKeyIssuePolicy alwaysFalse = ApiKeyIssuePolicy.of(command -> false);
@@ -53,7 +53,7 @@ class ApiKeyIssueRequesterApplicationTest {
     @Test
     @DisplayName("성공: API 키 발급을 성공한다.")
     void issueApiKey() {
-        when(apiKeyCreatorApplication.create(any())).thenReturn(apiKeyResponseBuilder.build());
+        when(apiKeyCreatorRequesterApplication.create(any())).thenReturn(apiKeyResponseBuilder.build());
         sut.setIssuePolicy(alwaysTrue);
 
         sut.issueApiKey(issueFactorBuilder.build());

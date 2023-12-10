@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import flab.gumipayments.apifirst.openapi.apikey.domain.ApiKeyIssueRequest;
 import flab.gumipayments.apifirst.openapi.apikey.domain.ApiKeyReIssueRequest;
-import flab.gumipayments.application.apikey.ApiKeyCommandCreateService;
+import flab.gumipayments.application.apikey.ApiKeyFactorCreatorApplication;
 import flab.gumipayments.application.apikey.ApiKeyIssueException;
 import flab.gumipayments.application.apikey.ApiKeyIssueRequesterApplication;
 import flab.gumipayments.application.apikey.ApiKeyReIssueRequesterApplication;
@@ -46,7 +46,7 @@ class ApiKeyControllerTest {
     @MockBean
     private ApiKeyReIssueRequesterApplication reIssueRequesterApplication;
     @MockBean
-    private ApiKeyCommandCreateService commandCreateService;
+    private ApiKeyFactorCreatorApplication commandCreateService;
 
     private ApiKeyPairBuilder apiKeyPairBuilder;
     private IssueFactorBuilder issueCommandBuilder;
@@ -64,7 +64,7 @@ class ApiKeyControllerTest {
     @WithMockUser
     @DisplayName("예외: API 키 발급 조건을 만족하지 못하면 API 키 발급 요청은 실패한다.")
     void apiKeyIssueFail01() throws Exception {
-        when(commandCreateService.getIssueCommand(any())).thenReturn(issueCommandBuilder.build());
+        when(commandCreateService.getIssueFactor(any())).thenReturn(issueCommandBuilder.build());
         when(issueRequesterApplication.issueApiKey(any())).thenThrow(new ApiKeyIssueException());
 
         mockMvc.perform(post("/api/api-key")
@@ -91,7 +91,7 @@ class ApiKeyControllerTest {
     @WithMockUser
     @DisplayName("성공: API 키 발급을 성공한다.")
     void apiKeyIssue() throws Exception {
-        when(commandCreateService.getIssueCommand(any())).thenReturn(issueCommandBuilder.build());
+        when(commandCreateService.getIssueFactor(any())).thenReturn(issueCommandBuilder.build());
         when(issueRequesterApplication.issueApiKey(any())).thenReturn(apiKeyPairBuilder.build());
 
         mockMvc.perform(post("/api/api-key")
@@ -105,7 +105,7 @@ class ApiKeyControllerTest {
     @WithMockUser
     @DisplayName("예외: API 키 재발급 조건을 만족하지 못하면 API 키 재발급 요청은 실패한다.")
     void apiKeyReIssueFail01() throws Exception {
-        when(commandCreateService.getReIssueCommand(any())).thenReturn(reIssueCommandBuilder.build());
+        when(commandCreateService.getReIssueFactor(any())).thenReturn(reIssueCommandBuilder.build());
         when(reIssueRequesterApplication.reIssueApiKey(any())).thenThrow(new ApiKeyIssueException());
 
         mockMvc.perform(post("/api/api-key/re")
@@ -132,7 +132,7 @@ class ApiKeyControllerTest {
     @WithMockUser
     @DisplayName("성공: API 키 재발급을 성공한다.")
     void apiKeyReIssue() throws Exception {
-        when(commandCreateService.getReIssueCommand(any())).thenReturn(reIssueCommandBuilder.build());
+        when(commandCreateService.getReIssueFactor(any())).thenReturn(reIssueCommandBuilder.build());
         when(reIssueRequesterApplication.reIssueApiKey(any())).thenReturn(apiKeyPairBuilder.build());
 
         mockMvc.perform(post("/api/api-key/re")
