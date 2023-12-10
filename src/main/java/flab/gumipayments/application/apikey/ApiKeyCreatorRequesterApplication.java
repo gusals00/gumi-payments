@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ApiKeyCreatorApplication {
+public class ApiKeyCreatorRequesterApplication {
 
     private final ApiKeyPairFactory apiKeyPairFactory;
     private final ApiKeyFactory apiKeyFactory;

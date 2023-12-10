@@ -31,7 +31,7 @@ public class ApiKeyController implements ApiKeyApi {
 
     private final ApiKeyIssueRequesterApplication issueRequesterApplication;
     private final ApiKeyReIssueRequesterApplication reIssueRequesterApplication;
-    private final ApiKeyCommandCreateService commandCreateService;
+    private final ApiKeyFactorCreatorApplication factorCreateService;
 
     public static final int KEY_EXTEND_YEAR = 2;
 
@@ -39,8 +39,9 @@ public class ApiKeyController implements ApiKeyApi {
     @PostMapping
     @Override
     public ResponseEntity<ApiKeyIssueResponse> issueApiKey(ApiKeyIssueRequest issueRequest) {
-        // 발급 command 생성
-        IssueFactor issueFactor = commandCreateService.getIssueCommand(convert(issueRequest));
+
+        // 발급 factor 생성
+        IssueFactor issueFactor = factorCreateService.getIssueFactor(convert(issueRequest));
 
         // key 발급
         ApiKeyPair apiKeyPair = issueRequesterApplication.issueApiKey(issueFactor);
@@ -52,18 +53,18 @@ public class ApiKeyController implements ApiKeyApi {
     @PostMapping("/re")
     @Override
     public ResponseEntity<ApiKeyReIssueResponse> reIssueApiKey(ApiKeyReIssueRequest reIssueRequest) {
-        //재발급 command 생성
-        ReIssueFactor reIssueFactor = commandCreateService.getReIssueCommand(convert(reIssueRequest));
 
-        // key 발급
+        //재발급 factor 생성
+        ReIssueFactor reIssueFactor = factorCreateService.getReIssueFactor(convert(reIssueRequest));
+
+        // key 재발급
         ApiKeyPair apiKeyPair = reIssueRequesterApplication.reIssueApiKey(reIssueFactor);
 
         return ResponseEntity.ok(convertToReIssueResponse(apiKeyPair));
-
     }
 
     @ExceptionHandler(value = ApiKeyIssueException.class)
-    public ResponseEntity<ExceptionResponse> apiKeyIssueExceptionHandler(ApiKeyIssueException e){
+    public ResponseEntity<ExceptionResponse> apiKeyIssueExceptionHandler(ApiKeyIssueException e) {
         return ExceptionResponse.of(INVALID_STATUS, BAD_REQUEST, e.getMessage());
     }
 

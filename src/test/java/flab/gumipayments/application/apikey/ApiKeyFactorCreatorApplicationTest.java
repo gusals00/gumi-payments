@@ -22,10 +22,10 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class ApiKeyCommandCreateServiceTest {
+class ApiKeyFactorCreatorApplicationTest {
 
     @InjectMocks
-    private ApiKeyCommandCreateService commandCreateService;
+    private ApiKeyFactorCreatorApplication factorCreateService;
     @Mock
     private AccountRepository accountRepository;
     @Mock
@@ -47,7 +47,7 @@ class ApiKeyCommandCreateServiceTest {
     void invalidApiKeyType() {
         ApiKeyIssueCreateCommand createCommand = createIssueCommandBuilder.type("TEST1").build();
 
-        assertThatThrownBy(() -> commandCreateService.getIssueCommand(createCommand))
+        assertThatThrownBy(() -> factorCreateService.getIssueFactor(createCommand))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -62,7 +62,7 @@ class ApiKeyCommandCreateServiceTest {
         when(apiKeyRepository.existsByAccountIdAndType(any(), any())).thenReturn(true);
         when(contractRepository.existsByAccountIdAndStatus(any(), any())).thenReturn(true);
 
-        IssueFactor issueFactor = commandCreateService.getIssueCommand(createCommand);
+        IssueFactor issueFactor = factorCreateService.getIssueFactor(createCommand);
 
         issueCommandCheck(issueFactor, createCommand);
     }
@@ -74,7 +74,7 @@ class ApiKeyCommandCreateServiceTest {
         ApiKeyReIssueCreateCommand createCommand = createReIssueCommandBuilder.
                 type("PROD1").build();
 
-        assertThatThrownBy(() -> commandCreateService.getReIssueCommand(createCommand))
+        assertThatThrownBy(() -> factorCreateService.getReIssueFactor(createCommand))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -89,9 +89,9 @@ class ApiKeyCommandCreateServiceTest {
         when(apiKeyRepository.existsByAccountIdAndType(any(), any())).thenReturn(true);
         when(contractRepository.existsByAccountIdAndStatus(any(), any())).thenReturn(true);
 
-        ReIssueFactor issueCommand = commandCreateService.getReIssueCommand(createCommand);
+        ReIssueFactor reIssueFactor = factorCreateService.getReIssueFactor(createCommand);
 
-        reIssueCommandCheck(issueCommand, createCommand);
+        reIssueCommandCheck(reIssueFactor, createCommand);
     }
 
     private void issueCommandCheck(IssueFactor issueFactor, ApiKeyIssueCreateCommand createCommand) {

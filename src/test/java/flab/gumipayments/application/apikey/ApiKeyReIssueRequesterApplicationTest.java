@@ -2,7 +2,6 @@ package flab.gumipayments.application.apikey;
 
 import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.domain.apikey.*;
-import flab.gumipayments.support.specification.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,7 @@ class ApiKeyReIssueRequesterApplicationTest {
     private ApiKeyRepository apiKeyRepository;
 
     @Mock
-    private ApiKeyCreatorApplication apiKeyCreatorApplication;
+    private ApiKeyCreatorRequesterApplication apiKeyCreatorRequesterApplication;
 
     private static ApiKeyReIssuePolicy alwaysTrue = ApiKeyReIssuePolicy.of(command -> true);
     private static ApiKeyReIssuePolicy alwaysFalse = ApiKeyReIssuePolicy.of(command -> false);
@@ -67,7 +66,7 @@ class ApiKeyReIssueRequesterApplicationTest {
     @Test
     @DisplayName("성공: API 키 재발급을 성공한다.")
     void issueApiKey() {
-        when(apiKeyCreatorApplication.create(any())).thenReturn(apiKeyResponseBuilder.build());
+        when(apiKeyCreatorRequesterApplication.create(any())).thenReturn(apiKeyResponseBuilder.build());
         when(apiKeyRepository.findByAccountIdAndType(any(),any())).thenReturn(Optional.ofNullable(ApiKey.builder().build()));
         doNothing().when(apiKeyRepository).delete(any());
         sut.setReIssuePolicy(alwaysTrue);
