@@ -2,15 +2,14 @@ package flab.gumipayments.application.apikey;
 
 import flab.gumipayments.domain.apikey.*;
 import flab.gumipayments.domain.apikey.ApiKeyCreateCommand;
-import flab.gumipayments.domain.apikey.ApiKeyIssueCondition;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
-
+import static flab.gumipayments.domain.apikey.ApiKeyIssuePolicy.*;
 import static flab.gumipayments.domain.apikey.condition.issue.ApiKeyIssueConditions.*;
-import static flab.gumipayments.support.specification.ConditionUtils.*;
+import static flab.gumipayments.support.specification.Condition.*;
 
 
 @Service
@@ -21,17 +20,18 @@ public class ApiKeyIssueRequesterApplication {
     private final ApiKeyCreatorApplication apiKeyCreatorApplication;
 
     @Setter
-    private ApiKeyIssueCondition issueCondition =
+    private ApiKeyIssuePolicy issuePolicy = of(
             or(
                     and(IS_TEST_API_KEY, EXIST_ACCOUNT, not(EXIST_API_KEY)),
                     and(IS_PROD_API_KEY, EXIST_ACCOUNT, IS_CONTRACT_COMPLETE, not(EXIST_API_KEY))
-            );
+            )
+    );
 
     @Transactional
     public ApiKeyPair issueApiKey(IssueFactor issueFactor) {
 
         // 발급 조건 확인
-        if (!issueCondition.isSatisfiedBy(issueFactor)) {
+        if (!issuePolicy.check(issueFactor)) {
             throw new ApiKeyIssueException("api 키 발급 조건이 올바르지 않습니다.");
         }
 

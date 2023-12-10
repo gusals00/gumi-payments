@@ -2,6 +2,7 @@ package flab.gumipayments.application.apikey;
 
 import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.domain.apikey.*;
+import flab.gumipayments.support.specification.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,8 +30,8 @@ class ApiKeyReIssueRequesterApplicationTest {
     @Mock
     private ApiKeyCreatorApplication apiKeyCreatorApplication;
 
-    private ApiKeyReIssueCondition trueReIssueCondition = command -> true;
-    private ApiKeyReIssueCondition falseReIssueCondition = command -> false;
+    private static ApiKeyReIssuePolicy alwaysTrue = ApiKeyReIssuePolicy.of(command -> true);
+    private static ApiKeyReIssuePolicy alwaysFalse = ApiKeyReIssuePolicy.of(command -> false);
 
     private ApiKeyResponse.ApiKeyResponseBuilder apiKeyResponseBuilder;
     private ReIssueFactorBuilder apiKeyReIssueCommandBuilder;
@@ -44,7 +45,7 @@ class ApiKeyReIssueRequesterApplicationTest {
     @Test
     @DisplayName("예외: 재발급 조건을 만족하지 못하면 API 키 재발급에 실패한다.")
     void reIssueApiKeyFailByCondition() {
-        sut.setReIssueCondition(falseReIssueCondition);
+        sut.setReIssuePolicy(alwaysFalse);
 
         assertThatThrownBy(() -> sut.reIssueApiKey(apiKeyReIssueCommandBuilder.build()))
                 .isInstanceOf(ApiKeyIssueException.class)
@@ -55,7 +56,7 @@ class ApiKeyReIssueRequesterApplicationTest {
     @DisplayName("예외: 이전에 발급받은 API키가 존재하지 않으면 API 키 재발급에 실패한다.")
     void reIssueApiKeyFail02ByApiKeyExist() {
         when(apiKeyRepository.findByAccountIdAndType(any(),any())).thenReturn(Optional.empty());
-        sut.setReIssueCondition(trueReIssueCondition);
+        sut.setReIssuePolicy(alwaysTrue);
 
 
         assertThatThrownBy(() -> sut.reIssueApiKey(apiKeyReIssueCommandBuilder.build()))
@@ -69,7 +70,7 @@ class ApiKeyReIssueRequesterApplicationTest {
         when(apiKeyCreatorApplication.create(any())).thenReturn(apiKeyResponseBuilder.build());
         when(apiKeyRepository.findByAccountIdAndType(any(),any())).thenReturn(Optional.ofNullable(ApiKey.builder().build()));
         doNothing().when(apiKeyRepository).delete(any());
-        sut.setReIssueCondition(trueReIssueCondition);
+        sut.setReIssuePolicy(alwaysTrue);
 
         sut.reIssueApiKey(apiKeyReIssueCommandBuilder.build());
 
