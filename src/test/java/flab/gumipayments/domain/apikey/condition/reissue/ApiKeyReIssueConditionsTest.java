@@ -1,7 +1,7 @@
 package flab.gumipayments.domain.apikey.condition.reissue;
 
 import flab.gumipayments.domain.apikey.ReIssueFactor;
-import flab.gumipayments.domain.apikey.ApiKeyReIssueCondition;
+import flab.gumipayments.support.specification.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,12 +14,12 @@ import static flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueCon
 import static flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions.IS_CONTRACT_COMPLETE;
 import static flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions.IS_PROD_API_KEY;
 import static flab.gumipayments.domain.apikey.condition.reissue.ApiKeyReIssueConditions.IS_TEST_API_KEY;
-import static flab.gumipayments.support.specification.ConditionUtils.and;
-import static flab.gumipayments.support.specification.ConditionUtils.or;
+import static flab.gumipayments.support.specification.Condition.and;
+import static flab.gumipayments.support.specification.Condition.or;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ApiKeyReIssueConditionsTest {
-    private ApiKeyReIssueCondition sut =
+    private Condition<ReIssueFactor> sut =
             or(
                     and(IS_TEST_API_KEY, EXIST_ACCOUNT, EXIST_API_KEY),
                     and(IS_PROD_API_KEY, EXIST_ACCOUNT, IS_CONTRACT_COMPLETE, EXIST_API_KEY)

@@ -1,7 +1,7 @@
 package flab.gumipayments.domain.apikey.condition.reissue;
 
 import flab.gumipayments.domain.apikey.ReIssueFactor;
-import flab.gumipayments.domain.apikey.ApiKeyReIssueCondition;
+import flab.gumipayments.support.specification.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ExistApiKeyConditionTest {
     private ReIssueFactorBuilder reIssueFactorBuilder;
-    private ApiKeyReIssueCondition sut;
+    private Condition<ReIssueFactor> sut;
 
     @BeforeEach
     void setup() {

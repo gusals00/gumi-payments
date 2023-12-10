@@ -1,7 +1,7 @@
 package flab.gumipayments.domain.apikey.condition.issue;
 
 import flab.gumipayments.domain.apikey.IssueFactor;
-import flab.gumipayments.domain.apikey.ApiKeyIssueCondition;
+import flab.gumipayments.support.specification.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ContractCompleteConditionTest {
 
     private IssueFactorBuilder issueFactorBuilder;
-    private ApiKeyIssueCondition sut;
+    private Condition<IssueFactor> sut;
 
     @BeforeEach
     void setup() {

@@ -1,9 +1,6 @@
 package flab.gumipayments.application.apikey;
 
-import flab.gumipayments.domain.apikey.IssueFactor;
-import flab.gumipayments.domain.apikey.ApiKeyRepository;
-import flab.gumipayments.domain.apikey.ApiKeyResponse;
-import flab.gumipayments.domain.apikey.ApiKeyIssueCondition;
+import flab.gumipayments.domain.apikey.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,25 +27,25 @@ class ApiKeyIssueRequesterApplicationTest {
     @Mock
     private ApiKeyCreatorApplication apiKeyCreatorApplication;
 
-    private ApiKeyIssueCondition trueIssueCondition = command -> true;
-    private ApiKeyIssueCondition falseIssueCondition = command -> false;
+    private ApiKeyIssuePolicy alwaysTrue = ApiKeyIssuePolicy.of(command -> true);
+    private ApiKeyIssuePolicy alwaysFalse = ApiKeyIssuePolicy.of(command -> false);
 
     private ApiKeyResponseBuilder apiKeyResponseBuilder;
 
-    private IssueFactorBuilder issueCommandBuilder;
+    private IssueFactorBuilder issueFactorBuilder;
 
     @BeforeEach
     void setup() {
         apiKeyResponseBuilder = ApiKeyResponse.builder();
-        issueCommandBuilder = IssueFactor.builder();
+        issueFactorBuilder = IssueFactor.builder();
     }
 
     @Test
     @DisplayName("예외: 발급 조건을 만족하지 못하면 API 키 발급에 실패한다.")
     void issueApiKeyFailByCondition() {
-        sut.setIssueCondition(falseIssueCondition);
+        sut.setIssuePolicy(alwaysFalse);
 
-        assertThatThrownBy(() -> sut.issueApiKey(issueCommandBuilder.build()))
+        assertThatThrownBy(() -> sut.issueApiKey(issueFactorBuilder.build()))
                 .isInstanceOf(ApiKeyIssueException.class)
                 .hasMessage("api 키 발급 조건이 올바르지 않습니다.");
     }
@@ -57,9 +54,9 @@ class ApiKeyIssueRequesterApplicationTest {
     @DisplayName("성공: API 키 발급을 성공한다.")
     void issueApiKey() {
         when(apiKeyCreatorApplication.create(any())).thenReturn(apiKeyResponseBuilder.build());
-        sut.setIssueCondition(trueIssueCondition);
+        sut.setIssuePolicy(alwaysTrue);
 
-        sut.issueApiKey(issueCommandBuilder.build());
+        sut.issueApiKey(issueFactorBuilder.build());
 
         verify(apiKeyRepository).save(any());
     }
