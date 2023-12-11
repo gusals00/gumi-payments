@@ -6,11 +6,15 @@ import flab.gumipayments.apifirst.openapi.accept.domain.AcceptInfoRequest;
 import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.application.signup.SignupAcceptApplication;
 import flab.gumipayments.domain.signup.SignupAcceptTimeoutException;
+import flab.gumipayments.infrastructure.WebMvcConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -24,7 +28,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AcceptController.class)
+@WebMvcTest(value = {AcceptController.class},
+        excludeFilters =
+                {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebMvcConfig.class})}
+)
 class AcceptControllerTest {
 
     @Autowired

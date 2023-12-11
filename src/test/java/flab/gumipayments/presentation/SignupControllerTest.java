@@ -5,12 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import flab.gumipayments.apifirst.openapi.signup.domain.SignupRequest;
 import flab.gumipayments.application.DuplicateSystemException;
 import flab.gumipayments.application.signup.SignupCreateApplication;
+import flab.gumipayments.infrastructure.WebMvcConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -23,7 +26,10 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(SignupController.class)
+@WebMvcTest(value = {SignupController.class},
+        excludeFilters =
+                {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebMvcConfig.class})}
+)
 class SignupControllerTest {
 
     @Autowired
