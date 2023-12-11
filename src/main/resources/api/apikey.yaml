@@ -1,0 +1,130 @@
+openapi: 3.0.0
+servers:
+  - url: 'http://signup.swagger.io/v3'
+info:
+  description: api key 발급,재발급 컨트롤러
+  version: 1.0.0
+  title: api key issue, reissue
+  license:
+    name: Apache-2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: apiKey
+    description: api-key 발급, 재발급
+
+paths:
+  '/api/api-key': # /test API에 대한 명세
+    post:
+      operationId: issueApiKey
+      tags:
+        - apiKey
+      summary: api 키 발급 # 설명
+      security:
+        - cookieAuth: [ ]
+      requestBody:
+        description: api 키 발급 request body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeyIssueRequest'
+
+      responses:
+        '200':
+          description: 요청 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyIssueResponse'
+
+  '/api/api-key/re':
+    post:
+      operationId: reIssueApiKey
+      tags:
+        - apiKey
+      summary: api 키 재발급
+      security:
+        - cookieAuth: [ ]
+      requestBody:
+        description: api 키 재발급 request body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeyReIssueRequest'
+
+      responses:
+        '200':
+          description: 요청 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyReIssueResponse'
+
+components:
+  schemas:
+    ApiKeyIssueRequest:
+      title: 'ApiKeyIssueRequest'
+      description: 'api key 발급 reuqest body'
+      properties:
+        accountId:
+          type: integer
+          format: int64
+          example: 10
+          minLength: 1
+          description: "계정 id"
+        keyType:
+          type: string
+          minLength: 4
+          example: TEST
+          description: "발급할 키 타입"
+
+    ApiKeyIssueResponse:
+      title: 'ApiKeyIssueResponse'
+      description: 'api key 발급 response body'
+      properties:
+        secretKey:
+          type: string
+          example: sk_dsfw@s2
+          minLength: 36
+          maxLength: 36
+          description: "api 시크릿 키"
+        clientKey:
+          type: string
+          example: ck_dsfw@s2
+          minLength: 36
+          maxLength: 36
+          description: "api 클라이언트 키"
+
+    ApiKeyReIssueRequest:
+      title: 'ApiKeyReIssueRequest'
+      description: 'api key 재발급 reuqest body'
+      properties:
+        accountId:
+          type: integer
+          format: int64
+          example: 10
+          minLength: 1
+          description: "계정 id"
+        keyType:
+          type: string
+          minLength: 4
+          example: TEST
+          description: "재발급할 키 타입"
+
+    ApiKeyReIssueResponse:
+      title: 'ApiKeyReIssueResponse'
+      description: 'api key 재발급 response body'
+      properties:
+        secretKey:
+          type: string
+          example: sk_dsfw@s2
+          minLength: 36
+          maxLength: 36
+          description: "재발급한 api 시크릿 키"
+        clientKey:
+          type: string
+          example: ck_dsfw@s2
+          minLength: 36
+          maxLength: 36
+          description: "재발급한 api 클라이언트 키"

@@ -1,0 +1,53 @@
+= 1. 회원가입
+
+== 회원 가입 요청
+
+`*_1. Success_*`
+
+**request-fields**
+
+include::{snippets}/signup/signup/request-fields.adoc[]
+
+**Example request**
+include::{snippets}/signup/signup/http-request.adoc[]
+
+**Example response**
+
+include::{snippets}/signup/signup/http-response.adoc[]
+
+== 회원 가입 요청 인증
+
+`*_1. Success_*`
+
+**request-fields**
+
+include::{snippets}/accept/signup_accept/request-fields.adoc[]
+
+**Example request**
+include::{snippets}/accept/signup_accept/http-request.adoc[]
+
+**Example response**
+
+include::{snippets}/accept/signup_accept/http-response.adoc[]
+
+== 계정 생성
+
+`*_1. Success_*`
+
+**path variable**
+
+include::{snippets}/account/create_account/path-parameters.adoc[]
+
+**request-fields**
+
+include::{snippets}/account/create_account/request-fields.adoc[]
+
+**Example request**
+include::{snippets}/account/create_account/http-request.adoc[]
+
+**Example response**
+
+include::{snippets}/account/create_account/http-response.adoc[]
+---
+
+
