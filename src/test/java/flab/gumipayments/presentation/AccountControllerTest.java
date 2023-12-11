@@ -7,12 +7,15 @@ import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.application.account.AccountCreateManagerApplication;
 import flab.gumipayments.domain.account.Account;
 import flab.gumipayments.domain.signup.SignupIllegalStatusException;
+import flab.gumipayments.infrastructure.WebMvcConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -27,7 +30,10 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AccountController.class)
+@WebMvcTest(value = {AccountController.class},
+        excludeFilters =
+                {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebMvcConfig.class})}
+)
 class AccountControllerTest {
 
     @Autowired
