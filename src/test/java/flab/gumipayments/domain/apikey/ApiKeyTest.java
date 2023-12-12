@@ -1,7 +1,6 @@
 package flab.gumipayments.domain.apikey;
 
 import flab.gumipayments.application.apikey.ApiKeyRenewCommand;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +30,7 @@ class ApiKeyTest {
         sut = apiKeyBuilder.expireDate(expireDate).build();
 
         assertThatThrownBy(()->sut.extendExpireDate(renewCommandBuilder.extendDate(expireDate).build()))
-                .isInstanceOf(ApiKeyExpireException.class);
+                .isInstanceOf(ApiKeyExtendException.class);
     }
 
     @Test
@@ -43,7 +42,7 @@ class ApiKeyTest {
         sut = apiKeyBuilder.expireDate(expireDate).build();
 
         assertThatThrownBy(()->sut.extendExpireDate(renewCommandBuilder.extendDate(extendDate).build()))
-                .isInstanceOf(ApiKeyExpireException.class);
+                .isInstanceOf(ApiKeyExtendException.class);
     }
 
     @Test

@@ -7,7 +7,7 @@ import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.application.account.AccountCreateManagerApplication;
 import flab.gumipayments.domain.account.Account;
 import flab.gumipayments.domain.signup.SignupIllegalStatusException;
-import flab.gumipayments.infrastructure.WebMvcConfig;
+import flab.gumipayments.infrastructure.config.WebMvcConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

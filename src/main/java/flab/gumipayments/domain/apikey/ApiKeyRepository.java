@@ -11,4 +11,6 @@ public interface ApiKeyRepository extends JpaRepository<ApiKey, Long> {
     Optional<ApiKey> findByAccountIdAndType(Long accountId,ApiKeyType keyType);
 
     boolean existsBySecretKey(String secretKey);
+
+    Optional<ApiKey> findBySecretKey(String secretKey);
 }
