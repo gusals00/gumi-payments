@@ -6,6 +6,7 @@ public enum BusinessErrorCode implements ErrorCode{
     TRY_AGAIN,
     INVALID_STATUS,
     TIMEOUT,
-    BINDING
-
+    BINDING,
+    EXPIRED,
+    INVALID_EXTEND
 }

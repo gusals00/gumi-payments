@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import flab.gumipayments.apifirst.openapi.signup.domain.SignupRequest;
 import flab.gumipayments.application.DuplicateSystemException;
 import flab.gumipayments.application.signup.SignupCreateApplication;
-import flab.gumipayments.infrastructure.WebMvcConfig;
+import flab.gumipayments.infrastructure.config.WebMvcConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

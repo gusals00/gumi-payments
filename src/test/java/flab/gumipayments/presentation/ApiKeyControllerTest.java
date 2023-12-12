@@ -11,7 +11,7 @@ import flab.gumipayments.application.apikey.ApiKeyReIssueRequesterApplication;
 import flab.gumipayments.domain.apikey.IssueFactor;
 import flab.gumipayments.domain.apikey.ApiKeyPair;
 import flab.gumipayments.domain.apikey.ReIssueFactor;
-import flab.gumipayments.infrastructure.WebMvcConfig;
+import flab.gumipayments.infrastructure.config.WebMvcConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

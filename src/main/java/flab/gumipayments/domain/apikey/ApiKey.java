@@ -40,7 +40,7 @@ public class ApiKey {
 
     public void extendExpireDate(ApiKeyRenewCommand renewCommand) {
         if(renewCommand.getExtendDate().isBefore(this.expireDate) || renewCommand.getExtendDate().isEqual(this.expireDate)){
-            throw new ApiKeyExpireException("올바른 기간 연장이 아닙니다.");
+            throw new ApiKeyExtendException("올바른 기간 연장이 아닙니다.");
         }
         this.expireDate = renewCommand.getExtendDate();
     }

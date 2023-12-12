@@ -1,4 +1,4 @@
-package flab.gumipayments.infrastructure;
+package flab.gumipayments.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

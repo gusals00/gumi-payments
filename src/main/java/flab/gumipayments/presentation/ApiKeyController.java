@@ -6,6 +6,7 @@ import flab.gumipayments.apifirst.openapi.apikey.domain.ApiKeyReIssueRequest;
 import flab.gumipayments.apifirst.openapi.apikey.domain.ApiKeyReIssueResponse;
 import flab.gumipayments.apifirst.openapi.apikey.rest.ApiKeyApi;
 import flab.gumipayments.application.apikey.*;
+import flab.gumipayments.domain.apikey.ApiKeyExtendException;
 import flab.gumipayments.domain.apikey.IssueFactor;
 import flab.gumipayments.domain.apikey.ApiKeyPair;
 import flab.gumipayments.domain.apikey.ReIssueFactor;
@@ -66,6 +67,11 @@ public class ApiKeyController implements ApiKeyApi {
     @ExceptionHandler(value = ApiKeyIssueException.class)
     public ResponseEntity<ExceptionResponse> apiKeyIssueExceptionHandler(ApiKeyIssueException e) {
         return ExceptionResponse.of(INVALID_STATUS, BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(value = ApiKeyExtendException.class)
+    public ResponseEntity<ExceptionResponse> apiKeyExtendExceptionHandler(ApiKeyExtendException e) {
+        return ExceptionResponse.of(INVALID_EXTEND, BAD_REQUEST, e.getMessage());
     }
 
     private ApiKeyIssueResponse convertToIssueResponse(ApiKeyPair apiKeyPair) {
