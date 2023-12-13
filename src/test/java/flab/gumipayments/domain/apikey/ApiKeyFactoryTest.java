@@ -1,5 +1,6 @@
 package flab.gumipayments.domain.apikey;
 
+import flab.gumipayments.infrastructure.encrypt.KeyEncrypt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +21,7 @@ class ApiKeyFactoryTest {
     @InjectMocks
     private ApiKeyFactory sut;
     @Mock
-    private PasswordEncoder encoder;
+    private KeyEncrypt keyEncrypt;
     private ApiKeyCreateCommandBuilder apiKeyCreateCommandBuilder;
 
     @BeforeEach
@@ -39,7 +39,7 @@ class ApiKeyFactoryTest {
                 .build();
         String secretKey = "123";
         String encryptedKey = "encrypted";
-        when(encoder.encode(any())).thenReturn(encryptedKey);
+        when(keyEncrypt.encrypt(any())).thenReturn(encryptedKey);
 
         ApiKey apiKey = sut.create(createCommand, secretKey);
 

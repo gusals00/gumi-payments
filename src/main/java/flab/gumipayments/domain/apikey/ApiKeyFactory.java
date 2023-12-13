@@ -1,17 +1,17 @@
 package flab.gumipayments.domain.apikey;
 
+import flab.gumipayments.infrastructure.encrypt.KeyEncrypt;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class ApiKeyFactory {
-    private final PasswordEncoder encoder;
+    private final KeyEncrypt keyEncrypt;
 
     public ApiKey create(ApiKeyCreateCommand createCommand, String secretKey) {
         return ApiKey.builder()
-                .secretKey(encoder.encode(secretKey))
+                .secretKey(keyEncrypt.encrypt(secretKey))
                 .accountId(createCommand.getAccountId())
                 .type(createCommand.getKeyType())
                 .expireDate(createCommand.getExpireDate())

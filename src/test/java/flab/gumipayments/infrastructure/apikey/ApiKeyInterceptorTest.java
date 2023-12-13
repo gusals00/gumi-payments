@@ -2,6 +2,7 @@ package flab.gumipayments.infrastructure.apikey;
 
 import flab.gumipayments.domain.apikey.ApiKey;
 import flab.gumipayments.domain.apikey.ApiKeyRepository;
+import flab.gumipayments.infrastructure.encrypt.KeyEncrypt;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +31,7 @@ class ApiKeyInterceptorTest {
     private ApiKeyRepository apiKeyRepository;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private KeyEncrypt keyEncrypt;
 
     @Mock
     private ApiKeyDecoder apiKeyDecoder;
