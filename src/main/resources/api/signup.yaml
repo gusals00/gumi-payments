@@ -1,6 +1,6 @@
 openapi: 3.0.0
 servers:
-  - url: 'http://signup.swagger.io/v3'
+  - url: 'http://localhost:8080'
 info:
   description: 회원가입 컨트롤러
   version: 1.0.0
