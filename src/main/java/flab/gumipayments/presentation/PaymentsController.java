@@ -1,5 +1,7 @@
 package flab.gumipayments.presentation;
 
+import flab.gumipayments.apifirst.openapi.payments.domain.ApiKeyUseResponse;
+import flab.gumipayments.apifirst.openapi.payments.rest.PaymentsApi;
 import flab.gumipayments.infrastructure.apikey.ApiKeyExpiredException;
 import flab.gumipayments.infrastructure.apikey.ApiKeyInfo;
 import flab.gumipayments.infrastructure.apikey.ApiKeyNotFoundException;
@@ -16,12 +18,14 @@ import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.Busines
 
 @RestController
 @RequestMapping("/api/payments")
-public class PaymentsController {
+public class PaymentsController implements PaymentsApi {
 
-    @GetMapping
-    public String test(@AuthenticatedApiKey ApiKeyInfo apiKeyInfo) {
-        return apiKeyInfo.getApiKeyId() + " " + apiKeyInfo.getType().toString();
+    @Override
+    @GetMapping("/key-test")
+    public ResponseEntity<ApiKeyUseResponse> paymentsApiKeyTest(ApiKeyInfo apiKeyInfo) {
+        return ResponseEntity.ok(convert(apiKeyInfo));
     }
+
 
     @ExceptionHandler(value = ApiKeyNotFoundException.class)
     public ResponseEntity<ExceptionResponse> notFoundExceptionHandler(ApiKeyNotFoundException e) {
@@ -31,5 +35,12 @@ public class PaymentsController {
     @ExceptionHandler(value = ApiKeyExpiredException.class)
     public ResponseEntity<ExceptionResponse> expiredExceptionHandler(ApiKeyExpiredException e) {
         return ExceptionResponse.of(EXPIRED, HttpStatus.UNAUTHORIZED, e.getMessage());
+    }
+
+    private ApiKeyUseResponse convert(ApiKeyInfo apiKeyInfo) {
+        return ApiKeyUseResponse.builder()
+                .apiKeyType(apiKeyInfo.getType().name())
+                .id(apiKeyInfo.getApiKeyId())
+                .build();
     }
 }

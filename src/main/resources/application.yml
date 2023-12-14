@@ -36,6 +36,3 @@ spring:
   profiles:
     include:
       - secretfile
-
-schedules:
-  cron:

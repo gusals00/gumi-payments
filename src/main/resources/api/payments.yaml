@@ -1,0 +1,74 @@
+openapi: 3.0.0
+servers:
+  - url: 'http://signup.swagger.io/v3'
+info:
+  description: payments 컨트롤러
+  version: 1.0.0
+  title: payments
+  license:
+    name: Apache-2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: payments
+    description: 결제
+paths: # 아래로 API Path를 명시한다
+  '/api/payments/key-test': # /test API에 대한 명세
+    get: # HTTP get Method를 사용한다.
+      operationId: paymentsApiKeyTest
+      tags:
+        - payments
+      summary: API 키 사용 예시 # 설명
+      # api key basic 인증
+      security:
+        - basicAuth: []
+
+      # api 키 확인 어노테이션
+      x-api-key-check-annotation: "@flab.gumipayments.infrastructure.apikey.AuthenticatedApiKey"
+      responses:
+        '200': # HTTP Status Code
+          description: 요청 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyUseResponse'
+        '401':
+          description: "API 키 인증 실패"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyErrorResponse'
+components:
+  securitySchemes:
+    basicAuth:
+      description: "Basic base64({SECRET_API_KEY}:) 형식으로 넣어주세요."
+      type: http
+      scheme: basic
+
+  schemas:
+    ApiKeyUseResponse:
+      type: object
+      title: 'ApiKeyUseResponse'
+      description: 'API 키 사용 예시'
+      properties: # 필드값
+        id:
+          type: integer
+          format: int64
+          example: 1
+          description: "api key id"
+        apiKeyType:
+          type: string
+          example: "PROD"
+          description: "api key 타입(PROD/TEST)"
+    ApiKeyErrorResponse:
+      type: object
+      title: 'ApiKeyUseResponse'
+      description: 'API 키 사용 예시'
+      properties: # 필드값
+        code:
+          type: string
+          example: "NOT_FOUND"
+          description: "에러 코드"
+        message:
+          type: string
+          example: "api key가 존재하지 않습니다."
+          description: "예외 메시지"
