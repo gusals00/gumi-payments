@@ -31,8 +31,10 @@ spring:
         ssl:
           enable: true
           trust: smtp.naver.com
-
-
   profiles:
     include:
       - secretfile
+
+encrypt:
+  secret_key: secretKey
+  aes_alg: algorithm
