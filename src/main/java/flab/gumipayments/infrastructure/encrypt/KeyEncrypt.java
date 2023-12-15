@@ -1,5 +1,6 @@
 package flab.gumipayments.infrastructure.encrypt;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.hc.client5.http.utils.Hex;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
