@@ -30,7 +30,7 @@ public class ApiKeyDecoder {
         if(StringUtils.hasText(authorization) && authorization.startsWith(BASIC_PREFIX)) {
             return authorization.substring(BASIC_PREFIX.length()).trim();
         } else {
-            throw new ApiKeyNotFoundException("ApiKey 형식이 올바르지 않습니다.");
+            throw new ApiKeyFormatException("ApiKey 형식이 올바르지 않습니다.");
         }
     }
 }
