@@ -3,7 +3,6 @@ package flab.gumipayments.application.signup;
 import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.domain.signup.Signup;
 import flab.gumipayments.domain.signup.SignupRepository;
-import flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class SignupAcceptApplication {
     public Long accept(AcceptCommand acceptCommand) {
         // findBy인증키
         Signup signup = signupRepository.findBySignupKey(acceptCommand.getSignupKey())
-                .orElseThrow(() -> new NotFoundSystemException(SystemErrorCode.NOT_FOUND, "signup이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundSystemException("signup이 존재하지 않습니다."));
 
         // accept
         signup.accept();

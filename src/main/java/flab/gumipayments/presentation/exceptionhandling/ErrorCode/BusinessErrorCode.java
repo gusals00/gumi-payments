@@ -8,5 +8,10 @@ public enum BusinessErrorCode implements ErrorCode{
     TIMEOUT,
     BINDING,
     EXPIRED,
-    INVALID_EXTEND
+    INVALID_EXTEND;
+
+    @Override
+    public String toString() {
+        return "BUSINESS_" + super.toString();
+    }
 }

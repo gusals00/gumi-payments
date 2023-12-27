@@ -15,7 +15,7 @@ public class ExceptionResponse {
         return ResponseEntity
                 .status(status)
                 .body(ExceptionResponse.builder()
-                        .code(errorCode.name())
+                        .code(errorCode.toString())
                         .message(message)
                         .build());
     }

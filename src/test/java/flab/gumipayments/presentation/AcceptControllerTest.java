@@ -82,7 +82,7 @@ class AcceptControllerTest {
     @WithMockUser
     @DisplayName("예외: 인증할 가입 요청이 존재하지 않으면 인증에 실패한다.")
     void notExistSignup() throws Exception {
-        when(signupAcceptApplication.accept(any())).thenThrow(new NotFoundSystemException(NOT_FOUND));
+        when(signupAcceptApplication.accept(any())).thenThrow(new NotFoundSystemException());
 
         mockMvc.perform(post("/api/accept/signup")
                         .contentType(MediaType.APPLICATION_JSON)

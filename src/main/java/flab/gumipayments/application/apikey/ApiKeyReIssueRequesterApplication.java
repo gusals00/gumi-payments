@@ -2,7 +2,6 @@ package flab.gumipayments.application.apikey;
 
 import flab.gumipayments.application.NotFoundSystemException;
 import flab.gumipayments.domain.apikey.*;
-import flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
@@ -61,7 +60,7 @@ public class ApiKeyReIssueRequesterApplication {
     private void deleteApiKey(ReIssueFactor reIssueFactor) {
         // 기존 api 조회
         ApiKey apiKey = apiKeyRepository.findByAccountIdAndType(reIssueFactor.getAccountId(), reIssueFactor.getApiKeyType())
-                .orElseThrow(() -> new NotFoundSystemException(SystemErrorCode.NOT_FOUND, "api키가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundSystemException("api키가 존재하지 않습니다."));
 
         //기존 api 키 삭제
         apiKeyRepository.delete(apiKey);
