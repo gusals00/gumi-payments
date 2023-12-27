@@ -65,14 +65,14 @@ class SignupControllerTest {
     @WithMockUser
     @DisplayName("예외: 이미 생성한 계정이 존재하면 가입 요청은 실패한다.")
     void alreadyExistAccount() throws Exception {
-        doThrow(new DuplicateSystemException(DUPLICATED, "message")).when(signupCreateApplication).signup(any());
+        doThrow(new DuplicateSystemException()).when(signupCreateApplication).signup(any());
 
         mockMvc.perform(post("/api/signup")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.code").value(DUPLICATED.name()));
+                .andExpect(jsonPath("$.code").value(DUPLICATED.toString()));
     }
 
 
@@ -87,7 +87,7 @@ class SignupControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(BINDING.name()));
+                .andExpect(jsonPath("$.code").value(BINDING.toString()));
     }
 
     @Test
@@ -101,7 +101,7 @@ class SignupControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(BINDING.name()));
+                .andExpect(jsonPath("$.code").value(BINDING.toString()));
     }
 
     @Test
@@ -115,7 +115,7 @@ class SignupControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(BINDING.name()));
+                .andExpect(jsonPath("$.code").value(BINDING.toString()));
     }
 
     @Test
@@ -129,7 +129,7 @@ class SignupControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(BINDING.name()));
+                .andExpect(jsonPath("$.code").value(BINDING.toString()));
     }
 
     @Test
@@ -143,7 +143,7 @@ class SignupControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(BINDING.name()));
+                .andExpect(jsonPath("$.code").value(BINDING.toString()));
     }
 
     private String emailRequestBody(String email) throws JsonProcessingException {

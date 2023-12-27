@@ -1,15 +1,22 @@
 package flab.gumipayments.application;
 
-import flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode;
 import flab.gumipayments.support.SystemException;
 
-public class NotFoundSystemException extends SystemException {
+public class NotFoundSystemException extends RuntimeException implements SystemException {
 
-    public NotFoundSystemException(SystemErrorCode errorCode, String message) {
-        super(errorCode, message);
+    public NotFoundSystemException() {
+        super();
     }
 
-    public NotFoundSystemException(SystemErrorCode errorCode) {
-        super(errorCode,"no message");
+    public NotFoundSystemException(String message) {
+        super(message);
+    }
+
+    public NotFoundSystemException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public NotFoundSystemException(Throwable cause) {
+        super(cause);
     }
 }

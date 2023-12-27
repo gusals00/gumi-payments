@@ -77,7 +77,7 @@ class AccountControllerTest {
     @WithMockUser
     @DisplayName("예외: 가입 요청이 존재하지 않으면 계정 생성이 실패한다.")
     void notExistSignup() throws Exception {
-        when(accountCreateManagerApplication.create(any(), any())).thenThrow(new NotFoundSystemException(NOT_FOUND));
+        when(accountCreateManagerApplication.create(any(), any())).thenThrow(new NotFoundSystemException());
 
         mockMvc.perform(post("/api/account/{signupId}", signupId)
                         .with(SecurityMockMvcRequestPostProcessors.csrf())

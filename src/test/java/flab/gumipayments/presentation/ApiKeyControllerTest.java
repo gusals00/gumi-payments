@@ -78,7 +78,7 @@ class ApiKeyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(issueRequestBody("TEST", 1L)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(INVALID_STATUS.name()));
+                .andExpect(jsonPath("$.code").value(INVALID_STATUS.toString()));
     }
 
     @Test
@@ -90,7 +90,7 @@ class ApiKeyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(issueRequestBody("", 1L)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(BINDING.name()));
+                .andExpect(jsonPath("$.code").value(BINDING.toString()));
     }
 
     @Test
@@ -119,7 +119,7 @@ class ApiKeyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(reIssueRequestBody("TEST", 1L)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(INVALID_STATUS.name()));
+                .andExpect(jsonPath("$.code").value(INVALID_STATUS.toString()));
     }
 
     @Test
@@ -131,7 +131,7 @@ class ApiKeyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(reIssueRequestBody("", 1L)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(BINDING.name()));
+                .andExpect(jsonPath("$.code").value(BINDING.toString()));
     }
 
     @Test
