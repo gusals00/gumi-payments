@@ -58,4 +58,8 @@ public class EmailSender implements Sender {
             throw new RuntimeException("mime message를 확인해주세요.");
         }
     }
+
+    interface MessageCallBack {
+        void setMimeMessage(MimeMessage message) throws MessagingException;
+    }
 }
