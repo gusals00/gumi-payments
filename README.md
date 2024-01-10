@@ -6,7 +6,7 @@
 # 프로젝트 구성
 - 기간 : 23.10 ~ (진행중)
 - 주요 스택 : spring, jpa, mysql
-- erd : wiki 문서
+- erd : [wiki 문서](https://github.com/gusals00/gumi-payments/wiki/erd) 참고
 
 # branch 전략
 ## 트렁크 기반 개발
