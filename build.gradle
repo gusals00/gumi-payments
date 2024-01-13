@@ -78,6 +78,15 @@ swaggerMap.each{entry ->
 						additionalModelTypeAnnotations: "@lombok.NoArgsConstructor @lombok.AllArgsConstructor @lombok.Builder",
 				]
 		)
+
+		// 날짜 OffsetDateTime -> LocalDateTime로 컨버팅
+		typeMappings = [
+				OffsetDateTime: "LocalDateTime"
+		]
+		importMappings = [
+				"java.time.OffsetDateTime": "java.time.LocalDateTime"
+		]
+		// 끝
 		templateDir.set("$rootDir/template") // code generator template 추가
 	})
 }
