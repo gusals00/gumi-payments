@@ -72,7 +72,7 @@ paths: # 아래로 API Path를 명시한다
       summary: 결제 요청 # 설명
 
       requestBody:
-        description: 결제 요청 requestBody
+        description: '결제 요청 requestBody'
         required: true
         content:
           application/json:
@@ -81,7 +81,7 @@ paths: # 아래로 API Path를 명시한다
 
       responses:
         '200': # HTTP Status Code
-          description: "결제 위젯 초기화 응답"
+          description: '결제 요청 responseBody'
           content:
             application/json:
               schema:
@@ -99,35 +99,53 @@ paths: # 아래로 API Path를 명시한다
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  '/api/payments/verification':
+  '/api/payments/verification/success':
     post: # HTTP get Method를 사용한다.
-      operationId: verifyPayment
+      operationId: verifySuccessPayment
       tags:
         - payments
-      summary: 결제 수단 인증 # 설명
+      summary: 결제 수단 인증 성공 결과 # 설명
 
       requestBody:
-        description: '결제 수단 인증 requestBody'
+        description: '결제 수단 인증 성공 requestBody'
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VerificationRequest'
+              $ref: '#/components/schemas/VerificationSuccessRequest'
 
 
       responses:
         '200': # HTTP Status Code
-          description: "결제 위젯 초기화 응답"
+          description: "결제 수단 인증 성공 responseBody"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VerificationResponse'
-        '400':
-          description: "인증 실패"
+                $ref: '#/components/schemas/VerificationSuccessResponse'
+
+  '/api/payments/verification/fail':
+    post: # HTTP get Method를 사용한다.
+      operationId: verifyFailPayment
+      tags:
+        - payments
+      summary: 결제 수단 인증 실패 결과 # 설명
+
+      requestBody:
+        description: '결제 수단 인증 실패 requestBody'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerificationFailRequest'
+
+
+      responses:
+        '200': # HTTP Status Code
+          description: "결제 수단 인증 실패 responseBody"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VerificationErrorResponse'
+                $ref: '#/components/schemas/VerificationFailResponse'
 
   '/api/payments/confirm':
     post: # HTTP get Method를 사용한다.
@@ -220,10 +238,10 @@ components:
           type: string
           example: "CARD"
           description: "결제 수단"
-    VerificationRequest:
+    VerificationSuccessRequest:
       type: object
-      title: 'VerificationRequest'
-      description: "결제 수단 인증 requestBody"
+      title: 'VerificationSuccessRequest'
+      description: "결제 수단 인증 성공 requestBody"
       properties:
         paymentKey:
           type: string
@@ -233,10 +251,6 @@ components:
           type: string
           example: '23452345'
           description: '카드 번호'
-        installmentPlanMonths:
-          type: integer
-          example: 1
-          description: '할부 개월 수'
         issuerCode :
           type: integer
           example: 011
@@ -249,6 +263,16 @@ components:
           type: string
           example: 'check_card'
           description: '카드 종류(체크, 신용 ...)'
+    VerificationFailRequest:
+      type: object
+      title: 'VerificationFailRequest'
+      description: "결제 수단 인증 실패 requestBody"
+      properties:
+        paymentKey:
+          type: string
+          example: 'sdfsef232@112'
+          description: 'payment 키'
+
     paymentConfirmRequest:
       type: object
       title: 'paymentConfirmRequest'
@@ -302,10 +326,10 @@ components:
           type: string
           example: 'sdfsef232@112'
           description: 'payment 키'
-    VerificationResponse:
+    VerificationSuccessResponse:
       type: object
-      title: 'VerificationResponse'
-      description: "결제 수단 인증 responseBody"
+      title: 'VerificationSuccessResponse'
+      description: "결제 수단 인증 성공 responseBody"
       properties:
         amount:
           type: integer
@@ -320,9 +344,9 @@ components:
           type: string
           example: "we@#@sqqq11"
           description: "주문 ID"
-    VerificationErrorResponse:
+    VerificationFailResponse:
       type: object
-      title: 'VerificationErrorResponse'
+      title: 'VerificationFailResponse'
       description: "결제 수단 인증 실패 responseBody"
       properties:
         orderId:
@@ -336,7 +360,7 @@ components:
           type: string
           description: "예외 메시지"
 
-    nextedCard:
+    Card:
       type: object
       title: '카드'
       description: "카드 정보"
@@ -354,10 +378,6 @@ components:
           type: string
           example: '23452345'
           description: '카드 번호'
-        installmentPlanMonths:
-          type: integer
-          example: 1
-          description: '할부 개월 수'
         approveNo:
           type: string
           example: 'dsfwf132'
@@ -403,7 +423,7 @@ components:
           example: "2021-01-30T08:31:00Z"
           description: "결제 승인 시간"
         card:
-          $ref: '#/components/schemas/nextedCard'
+          $ref: '#/components/schemas/Card'
         totalAmount:
           type: integer
           format: int64
