@@ -1,0 +1,16 @@
+plugins {
+    id 'web.server'
+    id 'openapi'
+}
+
+dependencies {
+    implementation project(":web:signup")
+    implementation project(":web:contract")
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+bootJar { enabled = false }
+jar { enabled = true }
