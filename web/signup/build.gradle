@@ -1,0 +1,14 @@
+plugins {
+    id 'web.server'
+    id 'openapi'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+}
+
+bootJar { enabled = false }
+jar { enabled = true }

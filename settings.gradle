@@ -1,1 +1,6 @@
 rootProject.name = 'gumi-payments'
+include 'payments'
+include 'web:apikey'
+include 'web:contract'
+include 'web:signup'
+include 'web:web-app'

@@ -1,0 +1,12 @@
+plugins {
+    id 'web.server'
+}
+
+dependencies {
+    implementation project(":web:signup")
+    implementation project(":web:contract")
+    implementation project(":web:apikey")
+
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    testImplementation 'org.springframework.security:spring-security-test'
+}

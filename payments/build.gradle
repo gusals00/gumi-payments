@@ -1,0 +1,8 @@
+plugins {
+    id 'web.server'
+    id 'openapi'
+}
+
+dependencies {
+    runtimeOnly 'com.mysql:mysql-connector-j'
+}
