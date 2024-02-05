@@ -17,7 +17,7 @@ paths: # 아래로 API Path를 명시한다
       operationId: paymentsApiKeyTest
       tags:
         - payments
-      summary: API 키 사용 예시 # 설명
+      summary: API 키(시크릿 키) 사용 예시 # 설명
       # api key basic 인증
       security:
         - basicAuth: []
