@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface ApiKeyRepository extends JpaRepository<ApiKey, Long> {
 
     Optional<ApiKey> findBySecretKey(String secretKey);
+
+    Optional<ApiKey> findBySecretKeyOrClientKey(String key);
 }
