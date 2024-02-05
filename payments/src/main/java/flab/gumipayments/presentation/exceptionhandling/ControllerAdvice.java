@@ -2,7 +2,6 @@ package flab.gumipayments.presentation.exceptionhandling;
 
 
 import flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode;
-import flab.gumipayments.presentation.exceptionhandling.ErrorCode.SystemErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

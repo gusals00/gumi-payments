@@ -1,6 +1,6 @@
-package flab.gumipayments.infrastructure;
+package flab.gumipayments.infrastructure.apikey;
 
-public class ApiKeyNotFoundException extends RuntimeException {
+public class ApiKeyNotFoundException extends RuntimeException{
     public ApiKeyNotFoundException() {
         super();
     }

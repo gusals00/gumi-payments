@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 
 import static flab.gumipayments.domain.ApiKeyCreateCommand.*;
+import static flab.gumipayments.domain.ApiKeyPair.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
@@ -24,10 +25,11 @@ class ApiKeyFactoryTest {
     @Mock
     private KeyEncrypt keyEncrypt;
     private ApiKeyCreateCommandBuilder apiKeyCreateCommandBuilder;
-
+    private ApiKeyPairBuilder apiKeyPairBuilder;
     @BeforeEach
     void setup() {
-        apiKeyCreateCommandBuilder = builder();
+        apiKeyCreateCommandBuilder = ApiKeyCreateCommand.builder();
+        apiKeyPairBuilder = ApiKeyPair.builder();
     }
 
     @Test
@@ -38,13 +40,23 @@ class ApiKeyFactoryTest {
                 .accountId(1L)
                 .expireDate(LocalDateTime.now())
                 .build();
-        String secretKey = "123";
-        String encryptedKey = "encrypted";
-        when(keyEncrypt.encrypt(any())).thenReturn(encryptedKey);
+        ApiKeyPair apiKeyPair = apiKeyPairBuilder
+                .clientKey("123")
+                .secretKey("345")
+                .build();
 
-        ApiKey apiKey = sut.create(createCommand, secretKey);
+        String encryptedSecretKey = "encryptedSecret";
+        String encryptedClientKey = "encryptedClient";
 
-        assertThat(apiKey.getSecretKey()).isEqualTo(encryptedKey);
+
+        when(keyEncrypt.encrypt(any()))
+                .thenReturn(encryptedSecretKey)
+                .thenReturn(encryptedClientKey);
+
+        ApiKey apiKey = sut.create(createCommand, apiKeyPair);
+
+        assertThat(apiKey.getSecretKey()).isEqualTo(encryptedSecretKey);
+        assertThat(apiKey.getClientKey()).isEqualTo(encryptedClientKey);
         assertThat(apiKey.getAccountId()).isEqualTo(createCommand.getAccountId());
         assertThat(apiKey.getExpireDate()).isEqualTo(createCommand.getExpireDate());
         assertThat(apiKey.getType()).isEqualTo(createCommand.getKeyType());
