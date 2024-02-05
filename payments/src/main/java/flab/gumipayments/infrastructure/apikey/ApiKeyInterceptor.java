@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 
@@ -22,18 +23,38 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String decodedApiKey = apiKeyDecoder.decodeApiKey(request);
-
-        validateKey(decodedApiKey);
+        validateKey(decodedApiKey, handler);
 
         return true;
     }
 
-    private void validateKey(String decodedApiKey) {
-        ApiKey apikey = apiKeyRepository.findBySecretKey(keyEncrypt.encrypt(decodedApiKey))
-                .orElseThrow(() -> new ApiKeyNotFoundException("존재하지 않는 ApiKey 입니다."));
+    private void validateKey(String decodedApiKey, Object handler) {
+        if (handler instanceof HandlerMethod handlerMethod) {
+            ApiKeyPairType keyPairType = handlerMethod.getMethodAnnotation(ApiKeyPairType.class);
 
-        if(apikey.getExpireDate().isBefore(LocalDateTime.now())) { // 만료시간 < 현재시간 인 경우
-            throw new ApiKeyExpiredException("만료된 ApiKey 입니다.");
+            ApiKey apiKey = getKey(decodedApiKey, keyPairType);
+
+            if (apiKey.getExpireDate().isBefore(LocalDateTime.now())) { // 만료시간 < 현재시간 인 경우
+                throw new ApiKeyExpiredException("만료된 ApiKey 입니다.");
+            }
         }
     }
+
+    private ApiKey getKey(String decodedApiKey, ApiKeyPairType keyPairType) {
+        ApiKey apiKey = null;
+        if (isClientKey(keyPairType)) {
+            apiKey = apiKeyRepository.findByClientKey(keyEncrypt.encrypt(decodedApiKey))
+                    .orElseThrow(() -> new ApiKeyNotFoundException("존재하지 않는 Client ApiKey 입니다."));
+        } else {
+            apiKey = apiKeyRepository.findBySecretKey(keyEncrypt.encrypt(decodedApiKey))
+                    .orElseThrow(() -> new ApiKeyNotFoundException("존재하지 않는 Secret ApiKey 입니다."));
+        }
+        return apiKey;
+    }
+
+    private boolean isClientKey(ApiKeyPairType keyPairType) {
+        return keyPairType.type() == KeyPairType.CLIENT_KEY;
+    }
 }
+
+

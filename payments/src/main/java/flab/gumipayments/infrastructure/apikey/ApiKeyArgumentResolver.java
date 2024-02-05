@@ -27,7 +27,7 @@ public class ApiKeyArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String decodedApiKey = apiKeyDecoder.decodeApiKey((HttpServletRequest) webRequest.getNativeRequest());
-        ApiKey apikey = apiKeyRepository.findBySecretKey(keyEncrypt.encrypt(decodedApiKey))
+        ApiKey apikey = apiKeyRepository.findBySecretKeyOrClientKey(keyEncrypt.encrypt(decodedApiKey))
                 .orElseThrow(() -> new ApiKeyNotFoundException("존재하지 않는 ApiKey 입니다."));
 
         return new ApiKeyInfo(apikey.getId(), apikey.getType());
