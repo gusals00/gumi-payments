@@ -81,6 +81,8 @@ import java.util.concurrent.CompletableFuture;
 {{/async}}
 import {{javaxPackage}}.annotation.Generated;
 
+
+
 {{>generatedAnnotation}}
 {{#useBeanValidation}}
 @Validated
@@ -251,6 +253,9 @@ public interface {{classname}} {
 
     {{#vendorExtensions.x-sse}}@ResponseBody{{/vendorExtensions.x-sse}}
     {{#jdk8-default-interface}}default {{/jdk8-default-interface}}{{>responseType}} {{#delegate-method}}_{{/delegate-method}}{{operationId}}(
+
+        // API key 인증 확인 어노테이션
+        {{#vendorExtensions.x-api-key-check-annotation}}{{{.}}} flab.gumipayments.infrastructure.apikey.ApiKeyInfo apiKeyInfo{{#hasParams}},{{/hasParams}}{{/vendorExtensions.x-api-key-check-annotation}}
 
         {{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}{{>cookieParams}}{{^-last}},
         {{/-last}}{{/allParams}}{{#reactive}}{{#hasParams}},

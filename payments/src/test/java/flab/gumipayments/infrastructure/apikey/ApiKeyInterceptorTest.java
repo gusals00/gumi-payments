@@ -1,5 +1,5 @@
-/*
-package flab.gumipayments.infrastructure;
+
+package flab.gumipayments.infrastructure.apikey;
 
 import flab.gumipayments.domain.ApiKey;
 import flab.gumipayments.domain.ApiKeyRepository;
@@ -81,4 +81,3 @@ class ApiKeyInterceptorTest {
         assertThat(isValid).isTrue();
     }
 }
-*/

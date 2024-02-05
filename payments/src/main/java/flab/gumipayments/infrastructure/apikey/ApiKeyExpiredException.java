@@ -1,4 +1,4 @@
-package flab.gumipayments.infrastructure;
+package flab.gumipayments.infrastructure.apikey;
 
 public class ApiKeyExpiredException extends RuntimeException {
     public ApiKeyExpiredException() {
@@ -9,3 +9,4 @@ public class ApiKeyExpiredException extends RuntimeException {
         super(message);
     }
 }
+

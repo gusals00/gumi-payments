@@ -18,7 +18,7 @@ public class ApiKeyCreatorRequesterApplication {
         ApiKeyPair apiKeyPair = apiKeyPairFactory.create();
 
         // api 키 생성
-        ApiKey apiKey = apiKeyFactory.create(command, apiKeyPair.getSecretKey());
+        ApiKey apiKey = apiKeyFactory.create(command, apiKeyPair);
 
         return new ApiKeyResponse(apiKeyPair, apiKey);
     }
