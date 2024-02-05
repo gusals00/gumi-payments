@@ -3,10 +3,7 @@ package flab.gumipayments.presentation;
 
 import flab.gumipayments.apifirst.openapi.payments.domain.ApiKeyUseResponse;
 import flab.gumipayments.apifirst.openapi.payments.rest.PaymentsApi;
-import flab.gumipayments.infrastructure.apikey.ApiKeyExpiredException;
-import flab.gumipayments.infrastructure.apikey.ApiKeyFormatException;
-import flab.gumipayments.infrastructure.apikey.ApiKeyInfo;
-import flab.gumipayments.infrastructure.apikey.ApiKeyNotFoundException;
+import flab.gumipayments.infrastructure.apikey.*;
 import flab.gumipayments.presentation.exceptionhandling.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +20,7 @@ import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.Busines
 public class PaymentsController implements PaymentsApi {
 
     @GetMapping("/key-test")
+    @ApiKeyPairType(type = KeyPairType.SECRET_KEY)
     public ResponseEntity<ApiKeyUseResponse> paymentsApiKeyTest(ApiKeyInfo apiKeyInfo) {
         return ResponseEntity.ok(convert(apiKeyInfo));
     }
