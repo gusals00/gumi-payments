@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApiKey {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "apikey_id")
     private Long id;
 
@@ -30,12 +29,13 @@ public class ApiKey {
     private long count;
 
     @Builder
-    public ApiKey(String secretKey, String clientKey, Long accountId, ApiKeyType type, LocalDateTime expireDate) {
+    public ApiKey(Long id, String secretKey, String clientKey, Long accountId, ApiKeyType type, LocalDateTime expireDate, long count) {
+        this.id = id;
         this.secretKey = secretKey;
         this.clientKey = clientKey;
         this.accountId = accountId;
         this.type = type;
         this.expireDate = expireDate;
-        this.count = 0;
+        this.count = count;
     }
 }
