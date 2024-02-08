@@ -62,7 +62,7 @@ class ApiKeyArgumentResolverTest {
     void resolveFail() throws Exception {
         when(apiKeyDecoder.decodeApiKey(any())).thenReturn("decodedKey");
         when(keyEncrypt.encrypt(any())).thenReturn("encryptedKey");
-        when(apiKeyRepository.findBySecretKeyOrClientKey(any())).thenReturn(Optional.empty());
+        when(apiKeyRepository.findBySecretKeyOrClientKey(any(), any())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> sut.resolveArgument(null, null, getNativeWebRequestMock(), null))
                 .isInstanceOf(ApiKeyNotFoundException.class);
@@ -77,7 +77,7 @@ class ApiKeyArgumentResolverTest {
                 .build();
         when(apiKeyDecoder.decodeApiKey(any())).thenReturn("decodedKey");
         when(keyEncrypt.encrypt(any())).thenReturn("encryptedKey");
-        when(apiKeyRepository.findBySecretKeyOrClientKey(any())).thenReturn(Optional.of(apikey));
+        when(apiKeyRepository.findBySecretKeyOrClientKey(any(), any())).thenReturn(Optional.of(apikey));
 
         boolean isSupportsParameter = sut.supportsParameter(getMethodParameter("argumentResolverTest3", ApiKeyInfo.class));
         ApiKeyInfo apiKeyInfo = (ApiKeyInfo) sut.resolveArgument(null, null, getNativeWebRequestMock(), null);

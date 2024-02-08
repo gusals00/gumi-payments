@@ -8,5 +8,5 @@ public interface ApiKeyRepository extends JpaRepository<ApiKey, Long> {
 
     Optional<ApiKey> findBySecretKey(String secretKey);
     Optional<ApiKey> findByClientKey(String clientKey);
-    Optional<ApiKey> findBySecretKeyOrClientKey(String key);
+    Optional<ApiKey> findBySecretKeyOrClientKey(String secretKey, String clientKey);
 }
