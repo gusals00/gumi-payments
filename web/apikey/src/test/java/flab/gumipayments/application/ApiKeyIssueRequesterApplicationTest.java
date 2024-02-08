@@ -1,9 +1,7 @@
 package flab.gumipayments.application;
 
-import flab.gumipayments.domain.ApiKeyIssuePolicy;
-import flab.gumipayments.domain.ApiKeyRepository;
-import flab.gumipayments.domain.ApiKeyResponse;
-import flab.gumipayments.domain.IssueFactor;
+import flab.gumipayments.domain.*;
+import flab.gumipayments.infrastructure.kafka.ApiKeyProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,12 +10,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static flab.gumipayments.domain.ApiKey.*;
 import static flab.gumipayments.domain.ApiKeyResponse.*;
 import static flab.gumipayments.domain.IssueFactor.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ApiKeyIssueRequesterApplicationTest {
@@ -29,6 +27,9 @@ class ApiKeyIssueRequesterApplicationTest {
     private ApiKeyRepository apiKeyRepository;
 
     @Mock
+    private ApiKeyProducer apiKeyProducer;
+
+    @Mock
     private ApiKeyCreatorRequesterApplication apiKeyCreatorRequesterApplication;
 
     private ApiKeyIssuePolicy alwaysTrue = ApiKeyIssuePolicy.of(command -> true);
@@ -37,11 +38,13 @@ class ApiKeyIssueRequesterApplicationTest {
     private ApiKeyResponseBuilder apiKeyResponseBuilder;
 
     private IssueFactorBuilder issueFactorBuilder;
+    private ApiKeyBuilder apiKeyBuilder;
 
     @BeforeEach
     void setup() {
         apiKeyResponseBuilder = ApiKeyResponse.builder();
         issueFactorBuilder = IssueFactor.builder();
+        apiKeyBuilder = ApiKey.builder();
     }
 
     @Test
@@ -57,7 +60,8 @@ class ApiKeyIssueRequesterApplicationTest {
     @Test
     @DisplayName("성공: API 키 발급을 성공한다.")
     void issueApiKey() {
-        when(apiKeyCreatorRequesterApplication.create(any())).thenReturn(apiKeyResponseBuilder.build());
+        when(apiKeyCreatorRequesterApplication.create(any())).thenReturn(apiKeyResponseBuilder.apiKey(apiKeyBuilder.build()).build());
+        doNothing().when(apiKeyProducer).sendApiKeyMessage(any(), any());
         sut.setIssuePolicy(alwaysTrue);
 
         sut.issueApiKey(issueFactorBuilder.build());
