@@ -1,0 +1,11 @@
+//plugins {
+//    id 'org.openapi.generator'
+//}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.kafka:spring-kafka'
+}

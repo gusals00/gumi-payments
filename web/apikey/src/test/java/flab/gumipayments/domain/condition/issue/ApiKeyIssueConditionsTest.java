@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import static flab.gumipayments.domain.ApiKeyType.*;
 import static flab.gumipayments.domain.IssueFactor.*;
 import static flab.gumipayments.domain.condition.issue.ApiKeyIssueConditions.*;
-import static flab.gumipayments.support.specification.Condition.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ApiKeyIssueConditionsTest {

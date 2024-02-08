@@ -1,6 +1,7 @@
 plugins {
     id 'web.server'
     id 'openapi'
+    id 'kafka'
 }
 
 dependencies {
