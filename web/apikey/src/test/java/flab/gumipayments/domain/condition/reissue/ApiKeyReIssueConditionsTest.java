@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static flab.gumipayments.domain.ApiKeyType.PROD;
 import static flab.gumipayments.domain.ApiKeyType.TEST;
 import static flab.gumipayments.domain.ReIssueFactor.*;
-import static flab.gumipayments.domain.condition.reissue.ApiKeyReIssueConditions.*;
+import static flab.gumipayments.domain.condition.ApiKeyReIssueConditions.*;
 import static flab.gumipayments.support.specification.Condition.and;
 import static flab.gumipayments.support.specification.Condition.or;
 import static org.assertj.core.api.Assertions.assertThat;
