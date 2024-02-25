@@ -1,6 +1,8 @@
 package flab.gumipayments.application;
 
 import flab.gumipayments.domain.*;
+import flab.gumipayments.infrastructure.kafka.ApiKeyMessageDTO;
+import flab.gumipayments.infrastructure.kafka.ApiKeyProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static flab.gumipayments.domain.ApiKeyReIssuePolicy.*;
 import static flab.gumipayments.domain.condition.reissue.ApiKeyReIssueConditions.*;
+import static flab.gumipayments.infrastructure.kafka.MessageType.DELETE;
+import static flab.gumipayments.infrastructure.kafka.MessageType.INSERT;
 import static flab.gumipayments.support.specification.Condition.and;
 import static flab.gumipayments.support.specification.Condition.or;
 
@@ -18,6 +22,7 @@ public class ApiKeyReIssueRequesterApplication {
 
     private final ApiKeyRepository apiKeyRepository;
     private final ApiKeyCreatorRequesterApplication apiKeyCreatorRequesterApplication;
+    private final ApiKeyProducer producer;
 
     @Setter
     private ApiKeyReIssuePolicy reIssuePolicy = of(
@@ -42,7 +47,9 @@ public class ApiKeyReIssueRequesterApplication {
         ApiKeyResponse apiKeyResponse = apiKeyCreatorRequesterApplication.create(convert(reIssueFactor));
 
         //api 키 저장
-        apiKeyRepository.save(apiKeyResponse.getApiKey());
+        ApiKey apiKey = apiKeyResponse.getApiKey();
+        apiKeyRepository.save(apiKey);
+        producer.sendApiKeyMessage(convertToMessage(apiKey), INSERT);
 
         return apiKeyResponse.getApiKeyPair();
     }
@@ -63,5 +70,18 @@ public class ApiKeyReIssueRequesterApplication {
 
         //기존 api 키 삭제
         apiKeyRepository.delete(apiKey);
+        producer.sendApiKeyMessage(convertToMessage(apiKey), DELETE);
+    }
+
+    private ApiKeyMessageDTO convertToMessage(ApiKey apiKey) {
+        return ApiKeyMessageDTO.builder()
+                .id(apiKey.getId())
+                .secretKey(apiKey.getSecretKey())
+                .clientKey(apiKey.getClientKey())
+                .accountId(apiKey.getAccountId())
+                .type(apiKey.getType())
+                .expireDate(apiKey.getExpireDate())
+                .count(apiKey.getCount())
+                .build();
     }
 }
