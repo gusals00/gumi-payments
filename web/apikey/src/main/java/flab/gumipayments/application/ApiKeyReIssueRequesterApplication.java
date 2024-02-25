@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static flab.gumipayments.domain.ApiKeyReIssuePolicy.*;
-import static flab.gumipayments.domain.condition.reissue.ApiKeyReIssueConditions.*;
+import static flab.gumipayments.domain.condition.ApiKeyReIssueConditions.*;
 import static flab.gumipayments.infrastructure.kafka.MessageType.DELETE;
 import static flab.gumipayments.infrastructure.kafka.MessageType.INSERT;
 import static flab.gumipayments.support.specification.Condition.and;

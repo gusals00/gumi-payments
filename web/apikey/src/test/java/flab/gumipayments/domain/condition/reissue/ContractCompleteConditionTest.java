@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static flab.gumipayments.domain.ReIssueFactor.*;
-import static flab.gumipayments.domain.condition.reissue.ApiKeyReIssueConditions.IS_CONTRACT_COMPLETE;
+import static flab.gumipayments.domain.condition.ApiKeyReIssueConditions.IS_CONTRACT_COMPLETE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ContractCompleteConditionTest {

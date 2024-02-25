@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import static flab.gumipayments.domain.ApiKeyType.PROD;
 import static flab.gumipayments.domain.ApiKeyType.TEST;
 import static flab.gumipayments.domain.ReIssueFactor.*;
-import static flab.gumipayments.domain.condition.reissue.ApiKeyReIssueConditions.IS_PROD_API_KEY;
-import static flab.gumipayments.domain.condition.reissue.ApiKeyReIssueConditions.IS_TEST_API_KEY;
+import static flab.gumipayments.domain.condition.ApiKeyReIssueConditions.IS_PROD_API_KEY;
+import static flab.gumipayments.domain.condition.ApiKeyReIssueConditions.IS_TEST_API_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ApiKeyTypeConditionTest{

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static flab.gumipayments.domain.IssueFactor.*;
-import static flab.gumipayments.domain.condition.issue.ApiKeyIssueConditions.EXIST_ACCOUNT;
+import static flab.gumipayments.domain.condition.ApiKeyIssueConditions.EXIST_ACCOUNT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ExistAccountConditionTest {

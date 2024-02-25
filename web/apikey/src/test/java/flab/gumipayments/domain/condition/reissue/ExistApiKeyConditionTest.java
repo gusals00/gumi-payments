@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static flab.gumipayments.domain.ReIssueFactor.*;
-import static flab.gumipayments.domain.condition.reissue.ApiKeyReIssueConditions.EXIST_API_KEY;
+import static flab.gumipayments.domain.condition.ApiKeyReIssueConditions.EXIST_API_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ExistApiKeyConditionTest {
