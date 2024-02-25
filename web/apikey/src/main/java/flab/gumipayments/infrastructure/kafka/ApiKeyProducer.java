@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 public class ApiKeyProducer {
 
     private final KafkaTemplate<String, ApiKeyMessageDTO> kafkaTemplate;
-    private final String topic = "api-key";
+    private static final String TOPIC = "api-key";
 
     public void sendApiKeyMessage(ApiKeyMessageDTO message, MessageType type) {
-        log.info("producer/ topic = {}, type = {}", topic, type);
-        kafkaTemplate.send(topic, type.name(), message);
+        log.info("producer : topic = {}, type = {}", TOPIC, type);
+        kafkaTemplate.send(TOPIC, type.name(), message);
     }
 
 }

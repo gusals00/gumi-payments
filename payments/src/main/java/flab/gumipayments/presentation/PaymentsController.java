@@ -1,16 +1,13 @@
 package flab.gumipayments.presentation;
 
 
-import flab.gumipayments.apifirst.openapi.payments.domain.ApiKeyUseResponse;
+import flab.gumipayments.apifirst.openapi.payments.domain.*;
 import flab.gumipayments.apifirst.openapi.payments.rest.PaymentsApi;
 import flab.gumipayments.infrastructure.apikey.*;
 import flab.gumipayments.presentation.exceptionhandling.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode.*;
 
@@ -23,6 +20,27 @@ public class PaymentsController implements PaymentsApi {
     @ApiKeyPairType(type = KeyPairType.SECRET_KEY)
     public ResponseEntity<ApiKeyUseResponse> paymentsApiKeyTest(ApiKeyInfo apiKeyInfo) {
         return ResponseEntity.ok(convert(apiKeyInfo));
+    }
+
+    @PostMapping("/request")
+    @ApiKeyPairType(type = KeyPairType.CLIENT_KEY)
+    @Override
+    public ResponseEntity<PaymentProcessResponse> processPaymentRequest(ApiKeyInfo apiKeyInfo, PaymentRequest paymentRequest) {
+        return PaymentsApi.super.processPaymentRequest(apiKeyInfo, paymentRequest);
+    }
+
+    @GetMapping("/accept")
+    @ApiKeyPairType(type = KeyPairType.CLIENT_KEY)
+    @Override
+    public ResponseEntity<RedirectResponse> acceptPaymentRequest(String key, Long paymentKey, Boolean isSuccess) {
+        return PaymentsApi.super.acceptPaymentRequest(key, paymentKey, isSuccess);
+    }
+
+    @GetMapping("/confirm")
+    @ApiKeyPairType(type = KeyPairType.SECRET_KEY)
+    @Override
+    public ResponseEntity<PaymentConfirmResponse> confirmPayment(ApiKeyInfo apiKeyInfo, PaymentConfirmRequest paymentConfirmRequest, String idempotencyKey) {
+        return PaymentsApi.super.confirmPayment(apiKeyInfo, paymentConfirmRequest, idempotencyKey);
     }
 
     @ExceptionHandler(value = ApiKeyNotFoundException.class)
