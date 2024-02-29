@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Version;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -42,6 +43,7 @@ public class Payment {
 
     private String lastTransactionKey;
 
+    @Embedded
     private Card card;
 
     @Enumerated(EnumType.STRING)
@@ -55,6 +57,26 @@ public class Payment {
     private String successUrl;
 
     private String failUrl;
+
+    public void updateDone(PaymentStatus paymentStatus) {
+        if(paymentStatus != PaymentStatus.IN_PROGRESS) {
+            throw new IllegalStateException("올바르지 않은 결제 status 변경입니다.");
+        }
+        this.status = paymentStatus;
+    }
+
+    public Transaction createTransactionByConfirm(ConfirmCommand confirmCommand) {
+        String transactionKey = UUID.randomUUID().toString();
+        this.lastTransactionKey = transactionKey;
+
+        return Transaction.builder()
+                .amount(confirmCommand.getAmount())
+                .transactionKey(transactionKey)
+                .transactionAt(LocalDateTime.now())
+                .payment(this)
+                .refundableAmount(confirmCommand.getAmount())
+                .build();
+    }
 
     @Builder
     public Payment(String paymentKey, PaymentStatus status, String orderId, String orderName, LocalDateTime requestAt, LocalDateTime approveAt, LocalDateTime expiredAt, PaymentMethod method, Long totalAmount, Long balanceAmount, String lastTransactionKey, Card card, EasyPayType easyPayType, Customer customer, Long contractId, String successUrl, String failUrl) {

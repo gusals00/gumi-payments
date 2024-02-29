@@ -3,40 +3,40 @@ package flab.gumipayments.presentation;
 
 import flab.gumipayments.apifirst.openapi.payments.domain.*;
 import flab.gumipayments.apifirst.openapi.payments.rest.PaymentsApi;
+import flab.gumipayments.application.PaymentProcessorApplication;
+import flab.gumipayments.domain.ConfirmCommand;
 import flab.gumipayments.infrastructure.apikey.*;
 import flab.gumipayments.presentation.exceptionhandling.ExceptionResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode.*;
 
-
 @RestController
-@RequestMapping("/api/payments")
+@RequiredArgsConstructor
 public class PaymentsController implements PaymentsApi {
 
-    @GetMapping("/key-test")
+    private final PaymentProcessorApplication paymentProcessorApplication;
+
     @ApiKeyPairType(type = KeyPairType.SECRET_KEY)
     public ResponseEntity<ApiKeyUseResponse> paymentsApiKeyTest(ApiKeyInfo apiKeyInfo) {
         return ResponseEntity.ok(convert(apiKeyInfo));
     }
 
-    @PostMapping("/request")
     @ApiKeyPairType(type = KeyPairType.CLIENT_KEY)
     @Override
     public ResponseEntity<PaymentProcessResponse> processPaymentRequest(ApiKeyInfo apiKeyInfo, PaymentRequest paymentRequest) {
         return PaymentsApi.super.processPaymentRequest(apiKeyInfo, paymentRequest);
     }
 
-    @GetMapping("/accept")
     @ApiKeyPairType(type = KeyPairType.CLIENT_KEY)
     @Override
     public ResponseEntity<RedirectResponse> acceptPaymentRequest(String key, Long paymentKey, Boolean isSuccess) {
         return PaymentsApi.super.acceptPaymentRequest(key, paymentKey, isSuccess);
     }
 
-    @GetMapping("/confirm")
     @ApiKeyPairType(type = KeyPairType.SECRET_KEY)
     @Override
     public ResponseEntity<PaymentConfirmResponse> confirmPayment(ApiKeyInfo apiKeyInfo, PaymentConfirmRequest paymentConfirmRequest, String idempotencyKey) {
@@ -62,6 +62,16 @@ public class PaymentsController implements PaymentsApi {
         return ApiKeyUseResponse.builder()
                 .apiKeyType(apiKeyInfo.getType().name())
                 .id(apiKeyInfo.getApiKeyId())
+                .build();
+    }
+
+    private ConfirmCommand convertToConfirmCommand(ApiKeyInfo apiKeyInfo, PaymentConfirmRequest paymentConfirmRequest, String idempotencyKey) {
+        return ConfirmCommand.builder()
+                .apiKeyId(apiKeyInfo.getApiKeyId())
+                .paymentKey(paymentConfirmRequest.getPaymentKey())
+                .amount(paymentConfirmRequest.getAmount())
+                .orderId(paymentConfirmRequest.getOrderId())
+                .idempotencyKey(idempotencyKey)
                 .build();
     }
 }
