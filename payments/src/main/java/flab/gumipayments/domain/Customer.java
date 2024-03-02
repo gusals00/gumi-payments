@@ -12,15 +12,12 @@ import lombok.NoArgsConstructor;
 public class Customer {
 
     private String customerName;
-
     private String customerEmail;
 
-    private String customerPhone;
 
     @Builder
-    public Customer(String customerName, String customerEmail, String customerPhone) {
+    public Customer(String customerName, String customerEmail) {
         this.customerName = customerName;
         this.customerEmail = customerEmail;
-        this.customerPhone = customerPhone;
     }
 }

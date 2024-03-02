@@ -8,4 +8,5 @@ public enum CardCompany {
     SAEMAUL,
     HYUNDAI,
     NONGHYEOP
+
 }

@@ -64,18 +64,7 @@ paths: # 아래로 API Path를 명시한다
             application/json:
               schema:
                 $ref: '#/components/schemas/PaymentProcessResponse'
-        '401':
-          description: "올바르지 않은 clientKey"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '400':
-          description: "바인딩 예외"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+
   '/api/payments/accept':
     get: # HTTP get Method를 사용한다.
       operationId: acceptPaymentRequest
@@ -96,8 +85,7 @@ paths: # 아래로 API Path를 명시한다
           required: true
           description: "paymentKey"
           schema:
-            type: integer
-            format: int64
+            type: string
         - in: query
           name: isSuccess
           required: true
@@ -174,25 +162,15 @@ components:
           type: string
           example: "성호창"
           description: "주문자 이름"
-        customerMobilePhone:
-          type: integer
-          example: "01045442456"
-          description: "주문자 전화번호"
-          minLength: 11
-          maxLength: 11
-        customerKey:
-          type: string
-          example: "sdfwef@sdfwq112"
-          description: "주문자 Key"
         amount:
           type: integer
           format: int64
           example: "50000"
           description: "결제 금액"
-        method:
+        cardCompany:
           type: string
-          example: "KAKAO PAY"
-          description: "결제 수단(카카오 페이, 국민 카드, 농협 카드 ...)"
+          example: "국민 카드, 농협 카드 ..."
+          description: "카드 이름"
         successUrl:
           type: string
           example: "127.0.0.1:8080/success"
