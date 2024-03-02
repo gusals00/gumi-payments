@@ -33,3 +33,5 @@ out/
 .vscode/
 #SECRET FILES
 **/src/main/resources/application-secretfile.yml
+
+docker-compose.yml

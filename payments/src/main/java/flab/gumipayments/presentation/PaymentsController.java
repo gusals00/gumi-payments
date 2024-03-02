@@ -3,24 +3,27 @@ package flab.gumipayments.presentation;
 
 import flab.gumipayments.apifirst.openapi.payments.domain.*;
 import flab.gumipayments.apifirst.openapi.payments.rest.PaymentsApi;
-import flab.gumipayments.application.PaymentProcessorApplication;
-import flab.gumipayments.domain.ConfirmCommand;
+import flab.gumipayments.application.*;
+import flab.gumipayments.domain.*;
 import flab.gumipayments.infrastructure.apikey.*;
-import flab.gumipayments.presentation.exceptionhandling.ExceptionResponse;
+import flab.gumipayments.presentation.exceptionhandling.ErrorCode.AcceptErrorCode;
+import flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import static flab.gumipayments.presentation.exceptionhandling.ErrorCode.BusinessErrorCode.*;
 
 @RestController
 @RequiredArgsConstructor
 public class PaymentsController implements PaymentsApi {
 
     private final PaymentProcessorApplication paymentProcessorApplication;
+    private final PaymentRequesterApplication paymentRequesterApplication;
+    private final RequestCommandCreatorApplication requestCommandCreatorApplication;
+    private final PaymentAcceptRequester paymentAcceptRequester;
+
 
     @ApiKeyPairType(type = KeyPairType.SECRET_KEY)
+    @Override
     public ResponseEntity<ApiKeyUseResponse> paymentsApiKeyTest(ApiKeyInfo apiKeyInfo) {
         return ResponseEntity.ok(convert(apiKeyInfo));
     }
@@ -28,13 +31,20 @@ public class PaymentsController implements PaymentsApi {
     @ApiKeyPairType(type = KeyPairType.CLIENT_KEY)
     @Override
     public ResponseEntity<PaymentProcessResponse> processPaymentRequest(ApiKeyInfo apiKeyInfo, PaymentRequest paymentRequest) {
-        return PaymentsApi.super.processPaymentRequest(apiKeyInfo, paymentRequest);
+        RequestCommand requestCommand = requestCommandCreatorApplication.getRequestCommand(convert(paymentRequest, apiKeyInfo));
+
+        String paymentUrl = paymentRequesterApplication.requestPayment(requestCommand);
+        return ResponseEntity.ok(PaymentProcessResponse.builder().paymentUrl(paymentUrl).build());
     }
 
     @ApiKeyPairType(type = KeyPairType.CLIENT_KEY)
     @Override
-    public ResponseEntity<RedirectResponse> acceptPaymentRequest(String key, Long paymentKey, Boolean isSuccess) {
-        return PaymentsApi.super.acceptPaymentRequest(key, paymentKey, isSuccess);
+    public ResponseEntity<RedirectResponse> acceptPaymentRequest(String key, String paymentKey, Boolean isSuccess) {
+        String redirectUrl = paymentAcceptRequester.authenticate(paymentKey, key, isSuccess);
+
+        return ResponseEntity.ok(RedirectResponse.builder()
+                .redirectUrl(redirectUrl)
+                .build());
     }
 
     @ApiKeyPairType(type = KeyPairType.SECRET_KEY)
@@ -43,21 +53,18 @@ public class PaymentsController implements PaymentsApi {
         return PaymentsApi.super.confirmPayment(apiKeyInfo, paymentConfirmRequest, idempotencyKey);
     }
 
-    @ExceptionHandler(value = ApiKeyNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> notFoundExceptionHandler(ApiKeyNotFoundException e) {
-        return ExceptionResponse.of(NOT_FOUND, HttpStatus.UNAUTHORIZED, e.getMessage());
+    // 인증사 인증 실패시 전달 url 시작
+    @ExceptionHandler(value = AuthenticatorAcceptException.class)
+    public ResponseEntity<FailUrlResponse> authenticatorAcceptExceptionHandler(AuthenticatorAcceptException e) {
+        return FailUrlResponse.of(AcceptErrorCode.AUTHENTICATOR, e.getMessage(), e.getFailUrl(), e.getOrderId());
     }
 
-    @ExceptionHandler(value = ApiKeyExpiredException.class)
-    public ResponseEntity<ExceptionResponse> expiredExceptionHandler(ApiKeyExpiredException e) {
-        return ExceptionResponse.of(EXPIRED, HttpStatus.UNAUTHORIZED, e.getMessage());
+    @ExceptionHandler(value = PaymentAcceptException.class)
+    public ResponseEntity<FailUrlResponse> paymentAcceptExceptionHandler(AuthenticatorAcceptException e) {
+        return FailUrlResponse.of(AcceptErrorCode.PAYMENT, e.getMessage(), e.getFailUrl(), e.getOrderId());
     }
 
-    @ExceptionHandler(value = ApiKeyFormatException.class)
-    public ResponseEntity<ExceptionResponse> formatExceptionHandler(ApiKeyFormatException e) {
-        return ExceptionResponse.of(BINDING, HttpStatus.UNAUTHORIZED, e.getMessage());
-    }
-
+    // 종료
     private ApiKeyUseResponse convert(ApiKeyInfo apiKeyInfo) {
         return ApiKeyUseResponse.builder()
                 .apiKeyType(apiKeyInfo.getType().name())
@@ -72,6 +79,20 @@ public class PaymentsController implements PaymentsApi {
                 .amount(paymentConfirmRequest.getAmount())
                 .orderId(paymentConfirmRequest.getOrderId())
                 .idempotencyKey(idempotencyKey)
+                .build();
+    }
+
+    private PaymentRequestCreateCommand convert(PaymentRequest paymentRequest, ApiKeyInfo apiKeyInfo) {
+        return PaymentRequestCreateCommand.builder()
+                .orderId(paymentRequest.getOrderId())
+                .orderName(paymentRequest.getOrderName())
+                .customerEmail(paymentRequest.getCustomerEmail())
+                .customerName(paymentRequest.getCustomerName())
+                .amount(paymentRequest.getAmount())
+                .cardCompany(paymentRequest.getCardCompany())
+                .successUrl(paymentRequest.getSuccessUrl())
+                .failUrl(paymentRequest.getFailUrl())
+                .apiKeyId(apiKeyInfo.getApiKeyId())
                 .build();
     }
 }

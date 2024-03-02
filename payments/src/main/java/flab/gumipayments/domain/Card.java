@@ -12,9 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Card {
 
-    @Enumerated(EnumType.STRING)
-    private CardCompany company;
-
     private String number;
 
     @Enumerated(EnumType.STRING)

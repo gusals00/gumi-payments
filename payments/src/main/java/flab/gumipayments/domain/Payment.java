@@ -10,6 +10,9 @@ import org.springframework.data.annotation.Version;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static flab.gumipayments.domain.PaymentStatus.*;
+import static java.time.LocalDateTime.*;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -47,6 +50,9 @@ public class Payment {
     private Card card;
 
     @Enumerated(EnumType.STRING)
+    private CardCompany cardCompany;
+
+    @Enumerated(EnumType.STRING)
     private EasyPayType easyPayType;
 
     @Embedded
@@ -59,10 +65,17 @@ public class Payment {
     private String failUrl;
 
     public void updateDone(PaymentStatus paymentStatus) {
-        if(paymentStatus != PaymentStatus.IN_PROGRESS) {
+        if (paymentStatus != IN_PROGRESS) {
             throw new IllegalStateException("올바르지 않은 결제 status 변경입니다.");
         }
         this.status = paymentStatus;
+    }
+
+    public void updateInProgress() {
+        if (status != READY) {
+            throw new IllegalStateException("올바르지 않은 결제 status 변경입니다.");
+        }
+        this.status = IN_PROGRESS;
     }
 
     public Transaction createTransactionByConfirm(ConfirmCommand confirmCommand) {
@@ -72,22 +85,20 @@ public class Payment {
         return Transaction.builder()
                 .amount(confirmCommand.getAmount())
                 .transactionKey(transactionKey)
-                .transactionAt(LocalDateTime.now())
+                .transactionAt(now())
                 .payment(this)
                 .refundableAmount(confirmCommand.getAmount())
                 .build();
     }
 
     @Builder
-    public Payment(String paymentKey, PaymentStatus status, String orderId, String orderName, LocalDateTime requestAt, LocalDateTime approveAt, LocalDateTime expiredAt, PaymentMethod method, Long totalAmount, Long balanceAmount, String lastTransactionKey, Card card, EasyPayType easyPayType, Customer customer, Long contractId, String successUrl, String failUrl) {
+    public Payment(String paymentKey, PaymentStatus status, String orderId, String orderName, PaymentMethod method, Long totalAmount, Long balanceAmount, String lastTransactionKey, Card card, EasyPayType easyPayType, Customer customer, Long contractId, String successUrl, String failUrl, CardCompany cardCompany) {
         this.paymentKey = paymentKey;
         this.status = status;
         this.orderId = orderId;
         this.orderName = orderName;
-        this.requestAt = requestAt;
-        this.approveAt = approveAt;
-        this.expiredAt = expiredAt;
         this.method = method;
+        this.cardCompany = cardCompany;
         this.totalAmount = totalAmount;
         this.balanceAmount = balanceAmount;
         this.lastTransactionKey = lastTransactionKey;
@@ -98,4 +109,13 @@ public class Payment {
         this.successUrl = successUrl;
         this.failUrl = failUrl;
     }
+
+    @PrePersist
+    private void initPeriod() {
+        LocalDateTime now = now();
+        expiredAt = now;
+        approveAt = now;
+        requestAt = now;
+    }
+
 }
